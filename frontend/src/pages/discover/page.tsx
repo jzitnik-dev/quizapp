@@ -36,9 +36,8 @@ export default function Discover() {
       createDate: new Date("03/25/2015"),
       author: {
         displayName: "Jakub Žitník",
-        userName: "jzitnik",
-        email: "email@jzitnik.dev",
-        about:
+        username: "jzitnik",
+        bio:
           "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia.",
       },
     },
@@ -62,14 +61,14 @@ export default function Discover() {
         </Flex>
 
         {quizes.map((el) => (
-          <Link to={`/user/${el.author.userName}/quiz/${el.id}`}>
+          <Link to={`/user/${el.author.username}/quiz/${el.id}`}>
             <Card>
               <Heading>{el.title}</Heading>
               <Text>{el.description}</Text>
               <br />
               <HoverCard.Root>
                 <HoverCard.Trigger>
-                  <Link to={"/user/" + el.author.userName}>
+                  <Link to={"/user/" + el.author.username}>
                     <Badge>{el.author.displayName}</Badge>
                   </Link>
                 </HoverCard.Trigger>
@@ -87,7 +86,7 @@ export default function Discover() {
                           {el.author.displayName}
                         </Heading>
                         <Text as="div" size="2" color="gray">
-                          @{el.author.userName}
+                          @{el.author.username}
                         </Text>
                       </Box>
                     </Flex>

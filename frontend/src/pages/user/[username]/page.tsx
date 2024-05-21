@@ -32,9 +32,8 @@ export default function User() {
       createDate: new Date("03/25/2015"),
       author: {
         displayName: "Jakub Žitník",
-        userName: "jzitnik",
-        email: "email@jzitnik.dev",
-        about: "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia."
+        username: "jzitnik",
+        bio: "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia."
       },
     },
   ];
@@ -84,7 +83,7 @@ export default function User() {
         <Container p="8">
           <Flex direction="column" gap="3" align="center">
             {quizes.map((el) => (
-              <Link to={`/user/${el.author.userName}/quiz/${el.id}`}>
+              <Link to={`/user/${el.author.username}/quiz/${el.id}`}>
                 <Card>
                   <Heading>{el.title}</Heading>
                   <Text>{el.description}</Text>

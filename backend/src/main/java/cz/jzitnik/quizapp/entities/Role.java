@@ -1,4 +1,4 @@
-package cz.jzitnik.quizapp.models;
+package cz.jzitnik.quizapp.entities;
 
 import jakarta.persistence.*;
 

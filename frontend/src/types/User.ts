@@ -1,6 +1,5 @@
 export default interface User {
   displayName: string,
-  userName: string,
-  email: string,
-  about: string,
+  username: string,
+  bio?: string,
 }

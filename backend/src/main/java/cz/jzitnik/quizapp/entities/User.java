@@ -1,10 +1,10 @@
-package cz.jzitnik.quizapp.models;
+package cz.jzitnik.quizapp.entities;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -12,7 +12,6 @@ import jakarta.validation.constraints.Size;
 @Table(name = "users", 
     uniqueConstraints = { 
       @UniqueConstraint(columnNames = "username"),
-      @UniqueConstraint(columnNames = "email") 
     })
 public class User {
   @Id
@@ -25,8 +24,7 @@ public class User {
 
   @NotBlank
   @Size(max = 50)
-  @Email
-  private String email;
+  private String displayName;
 
   @NotBlank
   @Size(max = 120)
@@ -38,13 +36,17 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 
+  @Size(max = 350)
+  private String bio;
+
   public User() {
+
   }
 
-  public User(String username, String email, String password) {
+  public User(String username, String password) {
     this.username = username;
-    this.email = email;
     this.password = password;
+    this.displayName = username;
   }
 
   public Long getId() {
@@ -63,14 +65,23 @@ public class User {
     this.username = username;
   }
 
-  public String getEmail() {
-    return email;
+  public String getDisplayName() {
+    return displayName;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
   }
 
+  public String getBio() {
+    return bio;
+  }
+
+  public void setBio(String bio) {
+    this.bio = bio;
+  }
+
+  @JsonIgnore
   public String getPassword() {
     return password;
   }
@@ -86,4 +97,5 @@ public class User {
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
   }
+
 }

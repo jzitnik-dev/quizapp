@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cz.jzitnik.quizapp.models.ERole;
-import cz.jzitnik.quizapp.models.Role;
-import cz.jzitnik.quizapp.models.User;
+import cz.jzitnik.quizapp.entities.ERole;
+import cz.jzitnik.quizapp.entities.Role;
+import cz.jzitnik.quizapp.entities.User;
 import cz.jzitnik.quizapp.payload.request.LoginRequest;
 import cz.jzitnik.quizapp.payload.request.SignupRequest;
 import cz.jzitnik.quizapp.payload.response.JwtResponse;
@@ -67,8 +67,7 @@ public class AuthController {
 
     return ResponseEntity.ok(new JwtResponse(jwt, 
                          userDetails.getId(), 
-                         userDetails.getUsername(), 
-                         userDetails.getEmail(), 
+                         userDetails.getUsername(),
                          roles));
   }
 
@@ -80,15 +79,9 @@ public class AuthController {
           .body(new MessageResponse("Chyba: Uživatelské jméno je již zaregistrováno!"));
     }
 
-    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-      return ResponseEntity
-          .badRequest()
-          .body(new MessageResponse("Chyba: Tento email se již používá!"));
-    }
 
     // Create new user's account
-    User user = new User(signUpRequest.getUsername(), 
-               signUpRequest.getEmail(),
+    User user = new User(signUpRequest.getUsername(),
                encoder.encode(signUpRequest.getPassword()));
 
     Set<Role> roles = new HashSet<>();

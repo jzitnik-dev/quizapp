@@ -1,6 +1,5 @@
 export default async function register(
   username: string,
-  email: string,
   password: string,
 ) {
   const url = new URL(import.meta.env.VITE_BACKEND);
@@ -13,7 +12,6 @@ export default async function register(
     },
     body: JSON.stringify({
       username: username,
-      email: email,
       password: password,
     }),
   });

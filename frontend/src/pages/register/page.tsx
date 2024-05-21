@@ -9,10 +9,11 @@ import {
   Text,
   Spinner,
 } from "@radix-ui/themes";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import register from "../../api/register";
 import { CheckIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import isLogedIn from "../../utils/logedin";
 
 export default function Register() {
   const [done, setDone] = useState(false);
@@ -22,9 +23,16 @@ export default function Register() {
 
   // Form data
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLogedIn()) {
+      navigate("/");
+    }
+  }, []);
 
   async function submitForm(e: FormEvent) {
     e.preventDefault();
@@ -38,13 +46,17 @@ export default function Register() {
     }
 
     try {
-      await register(username, email, passwordAgain);
+      await register(username, passwordAgain);
       setDone(true);
     } catch (e: any) {
       setErrorMessage(e.message);
       setError(true);
       setLoading(false);
     }
+  }
+
+  if (isLogedIn()) {
+    navigate("/");
   }
 
   return (
@@ -92,14 +104,6 @@ export default function Register() {
                     required
                   ></TextField.Root>
                   <TextField.Root
-                    size="3"
-                    placeholder="Email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  ></TextField.Root>
-                  <TextField.Root
                     type="password"
                     size="3"
                     placeholder="Heslo"
@@ -130,7 +134,7 @@ export default function Register() {
               <CheckIcon />
             </Callout.Icon>
             <Callout.Text>
-              <Flex direction="column" align="center" gap="3">
+              <Flex direction="column" align="center" gap="3" as="span">
                 <Text>
                   Váš účet byl úspěšně zaregistrován. Nyní se můžete přihlásit.
                 </Text>

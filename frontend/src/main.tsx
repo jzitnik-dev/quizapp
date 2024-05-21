@@ -8,12 +8,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Page from "./components/page/Page";
 import { lazy } from "react";
 import Header from "./components/header/Header";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const Index = lazy(() => import("./pages/index/page"));
 const Login = lazy(() => import("./pages/login/page"));
 const Register = lazy(() => import("./pages/register/page"));
 const Discover = lazy(() => import("./pages/discover/page"));
 const UserProfile = lazy(() => import("./pages/user/[username]/page"));
+const Me = lazy(() => import("./pages/me/page"));
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -22,6 +25,18 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Suspense fallback={<></>}>
           <BrowserRouter>
             <Header />
+            <ToastContainer
+              position="top-left"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
             <Routes>
               <Route
                 path="/"
@@ -60,6 +75,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 element={
                   <Page title="QuizAPP - Uživatel">
                     <UserProfile />
+                  </Page>
+                }
+              ></Route>
+              <Route
+                path="/me"
+                element={
+                  <Page title="QuizAPP - Uživatel">
+                    <Me />
                   </Page>
                 }
               ></Route>

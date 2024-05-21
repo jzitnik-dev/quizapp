@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import cz.jzitnik.quizapp.models.ERole;
-import cz.jzitnik.quizapp.models.Role;
+import cz.jzitnik.quizapp.entities.ERole;
+import cz.jzitnik.quizapp.entities.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {

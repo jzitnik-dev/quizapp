@@ -9,9 +9,10 @@ import {
   Spinner,
 } from "@radix-ui/themes";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import login from "../../api/login";
 import { useNavigate } from "react-router-dom";
+import isLogedIn from "../../utils/logedin";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function Login() {
     try {
       const res = await login(username, password);
       localStorage.setItem("accessToken", res.accessToken);
-      navigate("/")
+      navigate("/");
     } catch (e: any) {
       setErrorMessage(
         e.message == "Bad credentials"
@@ -42,6 +43,12 @@ export default function Login() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (isLogedIn()) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <Section position="relative">
