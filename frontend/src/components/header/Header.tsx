@@ -1,8 +1,9 @@
 import { Flex, Heading, TabNav, Button } from "@radix-ui/themes";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
   return (
     <Flex
       className="h-14 border-b border-gray-800 px-8"
@@ -14,12 +15,28 @@ export default function Header() {
       </Link>
       <Flex align="center" gap="3">
         <TabNav.Root>
-          <Link to="/">
-            <TabNav.Link active={location.pathname == "/"}>Domov</TabNav.Link>
-          </Link>
-          <Link to="/discover">
-            <TabNav.Link active={location.pathname == "/discover"}>Procházet kvízy</TabNav.Link>
-          </Link>
+          <TabNav.Link
+            href="/"
+            onClick={(e) => {
+              // If you reading this, sadly this is the only way to use Radix.ui TabNav.Link element with react-router-dom.
+              // If i wrapped this with Link component from react-router-dom, it will cause hydration error. Yeah, react is shit.
+              e.preventDefault();
+              navigate("/");
+            }}
+            active={location.pathname == "/"}
+          >
+            Domov
+          </TabNav.Link>
+          <TabNav.Link
+            href="/discover"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/discover");
+            }}
+            active={location.pathname == "/discover"}
+          >
+            Procházet kvízy
+          </TabNav.Link>
         </TabNav.Root>
         <Flex gap="1">
           <Link to="/login">

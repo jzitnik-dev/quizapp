@@ -1,13 +1,13 @@
-package cz.jzitnik.quizappbackend;
+package cz.jzitnik.quizapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class QuizappBackendApplication {
+public class Main {
 
 	public static void main(String[] args) {
-		SpringApplication.run(QuizappBackendApplication.class, args);
+    SpringApplication.run(Main.class, args);
 	}
 
 }

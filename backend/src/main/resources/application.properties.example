@@ -1,0 +1,17 @@
+spring.application.name=quizapp
+
+#spring.datasource.url=jdbc:h2:/tmp/social
+#spring.datasource.username=admin
+#spring.datasource.password=admin
+#spring.h2.console.enabled=true
+
+spring.datasource.url=jdbc:mysql://localhost:3306/QuizAPP
+spring.datasource.username=root
+spring.datasource.password=1234
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+
+spring.jpa.hibernate.ddl-auto=update
+
+# App Properties
+bezkoder.app.jwtSecret= ======================BezKoder=Spring===========================
+bezkoder.app.jwtExpirationMs=86400000

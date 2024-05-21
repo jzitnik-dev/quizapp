@@ -1,13 +1,13 @@
-package cz.jzitnik.quizappbackend;
+package cz.jzitnik.quizapp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class QuizappBackendApplicationTests {
+public class SpringBootSecurityJwtApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
 	}
 
 }

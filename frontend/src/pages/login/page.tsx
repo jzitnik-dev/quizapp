@@ -5,14 +5,61 @@ import {
   Flex,
   TextField,
   Button,
-  Text,
-  Checkbox,
+  Callout,
+  Spinner,
 } from "@radix-ui/themes";
+import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { FormEvent, useState } from "react";
+import login from "../../api/login";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState();
+  const [loading, setLoading] = useState(false);
+
+  // Form data
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function formSubmit(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(false);
+
+    try {
+      const res = await login(username, password);
+      localStorage.setItem("accessToken", res.accessToken);
+      navigate("/")
+    } catch (e: any) {
+      setErrorMessage(
+        e.message == "Bad credentials"
+          ? "Špatné uživatelské jméno nebo heslo"
+          : e.message,
+      );
+      setError(true);
+      setLoading(false);
+    }
+  }
+
   return (
     <Section position="relative">
-      <Flex align="center" justify="center">
+      <Flex align="center" justify="center" direction="column" gap="2">
+        {error ? (
+          <Callout.Root
+            color="red"
+            style={{
+              width: "100%",
+              maxWidth: "500px",
+            }}
+          >
+            <Callout.Icon>
+              <CrossCircledIcon />
+            </Callout.Icon>
+            <Callout.Text>{errorMessage}</Callout.Text>
+          </Callout.Root>
+        ) : null}
         <Card
           style={{
             height: "100%",
@@ -22,32 +69,38 @@ export default function Login() {
             aspectRatio: "1/1",
           }}
         >
-          <Heading size="8" align="center">
-            Přihlášení
-          </Heading>
-          <Flex direction="column" justify="center" height="calc(100% - 110px)">
-            <Flex gap="2" direction="column">
-              <TextField.Root
-                size="3"
-                placeholder="Uživatelské jméno"
-              ></TextField.Root>
-              <TextField.Root
-                type="password"
-                size="3"
-                placeholder="Heslo"
-              ></TextField.Root>
+          <form onSubmit={formSubmit} style={{ height: "100%" }}>
+            <Heading size="8" align="center">
+              Přihlášení
+            </Heading>
+            <Flex
+              direction="column"
+              justify="center"
+              height="calc(100% - 90px)"
+            >
+              <Flex gap="2" direction="column">
+                <TextField.Root
+                  size="3"
+                  placeholder="Uživatelské jméno"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                ></TextField.Root>
+                <TextField.Root
+                  type="password"
+                  size="3"
+                  placeholder="Heslo"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                ></TextField.Root>
+              </Flex>
             </Flex>
-          </Flex>
-          <Text as="label" size="2">
-            <Flex gap="2">
-              <Checkbox defaultChecked />
-              Zůstat přihlášený
-            </Flex>
-          </Text>
 
-          <Flex direction="column" style={{marginTop: "10px"}}>
-            <Button size="3">Přihlásit se</Button>
-          </Flex>
+            <Flex direction="column" style={{ marginTop: "10px" }}>
+              <Button size="3">{loading ? <Spinner /> : "Přihlásit se"}</Button>
+            </Flex>
+          </form>
         </Card>
       </Flex>
     </Section>
