@@ -46,7 +46,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isLogedIn()) {
-      navigate("/");
+      navigate("/me");
     }
   }, []);
 

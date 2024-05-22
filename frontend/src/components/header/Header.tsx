@@ -11,8 +11,8 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import isLogedIn from "../../utils/logedin";
-import { CaretDownIcon } from "@radix-ui/react-icons";
-import me from "../../api/me";
+import { CaretDownIcon, PlusIcon } from "@radix-ui/react-icons";
+import { meHeader } from "../../api/me";
 import User from "../../types/User";
 
 export default function Header() {
@@ -23,18 +23,19 @@ export default function Header() {
   const [name, setName] = useState("");
 
   useEffect(() => {
-    const fun = (async () => {
-      const response = (await me()) as User;
+    const fun = async () => {
+      if (!logedIn) return;
+      const response = (await meHeader()) as User;
       setName(response.displayName);
-      setFetching(false)
-    });
-    fun()
+      setFetching(false);
+    };
+    fun();
 
     const id = setInterval(fun, 1000);
 
     return () => {
-      clearInterval(id)
-    }
+      clearInterval(id);
+    };
   }, [logedIn]);
 
   function logout() {
@@ -77,6 +78,14 @@ export default function Header() {
           </TabNav.Link>
         </TabNav.Root>
         {logedIn ? (
+          <Link to="/create">
+            <Button>
+              <PlusIcon />
+              Vytvořit kvíz
+            </Button>
+          </Link>
+        ) : null}
+        {logedIn ? (
           fetching ? (
             <Flex align="center" gap="2">
               <Avatar size="3" fallback="" radius="full" />
@@ -110,7 +119,11 @@ export default function Header() {
 
                 <DropdownMenu.Separator />
 
-                <DropdownMenu.Item style={{ cursor: "pointer" }} color="red" onClick={logout}>
+                <DropdownMenu.Item
+                  style={{ cursor: "pointer" }}
+                  color="red"
+                  onClick={logout}
+                >
                   Odhlásit se
                 </DropdownMenu.Item>
               </DropdownMenu.Content>

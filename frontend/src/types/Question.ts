@@ -1,9 +1,9 @@
 import QuestionType from "./QuestionType";
 
 export default interface Question {
-  id: number;
+  id?: number;
   question: string;
   type: QuestionType;
-  options?: String;
-  answer: String
+  options?: string;
+  answer: string
 }

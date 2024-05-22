@@ -1,16 +1,20 @@
 package cz.jzitnik.quizapp.controllers;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import cz.jzitnik.quizapp.repository.UserRepository;
+import cz.jzitnik.quizapp.responses.MeHeaderResponse;
 import cz.jzitnik.quizapp.services.UserService;
 import jakarta.validation.Valid;
 
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,16 +51,33 @@ public class UserController {
         return userService.getCurrentUser();
     }
 
+    @GetMapping
+    public ResponseEntity<User> getUser(@RequestParam("username") String username) {
+        Optional<User> user =  userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user.get());
+    }
+
+    @GetMapping("/me/header")
+    @PreAuthorize("isAuthenticated()")
+    public MeHeaderResponse meDisplayName() {
+        var logedUser = userService.getCurrentUser();
+        return new MeHeaderResponse(
+                logedUser.getUsername(),
+                logedUser.getDisplayName()
+        );
+    }
+
     @PatchMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> authenicateUser(@RequestBody User user) {
-        var logedUser = userService.getCurrentUser();
-        logedUser.setUsername(user.getUsername());
-        logedUser.setDisplayName(user.getDisplayName());
-        logedUser.setBio(user.getBio());
+        var loggedUser = userService.getCurrentUser();
+        loggedUser.setDisplayName(user.getDisplayName());
+        loggedUser.setBio(user.getBio());
 
-        userRepository.save(logedUser);
-
+        userRepository.save(loggedUser);
         return ResponseEntity.ok("Uživatelský profil byl upraven!");
     }
 }

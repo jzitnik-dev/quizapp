@@ -17,6 +17,7 @@ const Register = lazy(() => import("./pages/register/page"));
 const Discover = lazy(() => import("./pages/discover/page"));
 const UserProfile = lazy(() => import("./pages/user/[username]/page"));
 const Me = lazy(() => import("./pages/me/page"));
+const Create = lazy(() => import("./pages/create/page"));
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -83,6 +84,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 element={
                   <Page title="QuizAPP - Uživatel">
                     <Me />
+                  </Page>
+                }
+              ></Route>
+              <Route
+                path="/create"
+                element={
+                  <Page title="QuizAPP - Vytvořit kvíz">
+                    <Create />
                   </Page>
                 }
               ></Route>

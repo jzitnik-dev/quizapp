@@ -18,7 +18,7 @@ import Quiz from "../../types/Quiz";
 import QuestionType from "../../types/QuestionType";
 
 export default function Discover() {
-  const quizes: Quiz[] = [
+  const quizzes: Quiz[] = [
     {
       id: 1,
       title:
@@ -60,7 +60,7 @@ export default function Discover() {
           </Flex>
         </Flex>
 
-        {quizes.map((el) => (
+        {quizzes.map((el) => (
           <Link to={`/user/${el.author.username}/quiz/${el.id}`}>
             <Card>
               <Heading>{el.title}</Heading>
@@ -93,7 +93,7 @@ export default function Discover() {
                   </Link>
                 </HoverCard.Content>{" "}
               </HoverCard.Root>
-              <Badge color="sky">{el.createDate.toLocaleDateString()}</Badge>{" "}
+              <Badge color="sky">{new Date(el.createDate).toLocaleDateString()}</Badge>{" "}
               <Badge color="green">
                 {el.questions.length == 1
                   ? el.questions.length + " otázka"

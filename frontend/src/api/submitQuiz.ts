@@ -1,24 +1,19 @@
+import Quiz from "../types/Quiz";
 import isLogedIn from "../utils/logedin";
 
-export default async function updateMe(
-  displayName: string,
-  bio: string,
-) {
+export default async function submitQuiz(quiz: Quiz) {
   if (!isLogedIn()) throw new Error("Not loged in!");
 
   const url = new URL(import.meta.env.VITE_BACKEND);
-  url.pathname = "/api/user/me";
+  url.pathname = "/api/quiz/create";
 
   const response = await fetch(url.toString(), {
-    method: "PATCH",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
     },
-    body: JSON.stringify({
-      displayName: displayName,
-      bio: bio,
-    }),
+    body: JSON.stringify(quiz),
   });
   if (!response.ok) {
     const errorData = await response.json();
@@ -26,7 +21,7 @@ export default async function updateMe(
       localStorage.removeItem("accessToken");
       throw new Error(errorData.message);
     }
-    throw new Error(errorData.message || "Registration failed");
+    throw new Error(errorData.message || "Error");
   }
   return await response.json();
 }

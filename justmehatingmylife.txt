@@ -1,0 +1,3 @@
+1. Am I really getting a Java error that is 1263 fucking lines? Error: ./backend/idk/idkwhatiswrong.txt
+2. Ah, yes, this fucking line throws the 1263 lines error. Why? Java why? return ResponseEntity.ok(savedQuiz);
+3. Finally fixed it. It was infinite loop in a JSON compiler. I forgot to put @JsonManagedReference and @JsonBackReference reference. Took me like 3 hours to figure it out.

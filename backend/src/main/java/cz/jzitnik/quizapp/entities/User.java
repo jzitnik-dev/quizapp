@@ -3,16 +3,17 @@ package cz.jzitnik.quizapp.entities;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "users", 
-    uniqueConstraints = { 
-      @UniqueConstraint(columnNames = "username"),
-    })
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+        })
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,16 +32,19 @@ public class User {
   private String password;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(  name = "user_roles", 
-        joinColumns = @JoinColumn(name = "user_id"), 
-        inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @JoinTable(  name = "user_roles",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 
   @Size(max = 350)
   private String bio;
 
-  public User() {
+  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonManagedReference // Prevents infinite recursion when serializing to JSON
+  private Set<Quiz> quizzes = new HashSet<>();
 
+  public User() {
   }
 
   public User(String username, String password) {
@@ -98,4 +102,11 @@ public class User {
     this.roles = roles;
   }
 
+  public Set<Quiz> getQuizzes() {
+    return quizzes;
+  }
+
+  public void setQuizzes(Set<Quiz> quizzes) {
+    this.quizzes = quizzes;
+  }
 }

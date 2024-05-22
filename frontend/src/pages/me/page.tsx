@@ -13,6 +13,7 @@ import {
   TextField,
   Skeleton,
   TextArea,
+  DropdownMenu,
 } from "@radix-ui/themes";
 import Quiz from "../../types/Quiz";
 import User from "../../types/User";
@@ -21,27 +22,22 @@ import { useEffect, useState } from "react";
 import me from "../../api/me";
 import isLogedIn from "../../utils/logedin";
 import { UploadIcon } from "@radix-ui/react-icons";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import updateMe from "../../api/updateProfile";
 
 export default function Me() {
-  const quizes: Quiz[] = [];
+  const quizzes: Quiz[] = [];
   const navigate = useNavigate();
   const [fetching, setFetching] = useState(true);
   const [data, setData] = useState<User | undefined>();
 
   // Form data
-  const [username, setUsername] = useState<string | undefined>();
   const [displayName, setDisplayName] = useState<string | undefined>();
   const [bio, setBio] = useState<string | undefined>();
 
   async function submitChanges() {
-    let xusername = username;
     let xbio = bio;
     let xdisplayName = displayName;
-    if (username === undefined) {
-      xusername = data?.username;
-    }
     if (bio === undefined) {
       xbio = data?.bio;
     }
@@ -52,23 +48,16 @@ export default function Me() {
     if (xdisplayName?.length == 0) {
       return toast.error("Uživatelské jméno nesmí být prázdné.");
     }
-    if (xusername?.length == 0) {
-      return toast.error("Uživatelské jméno nesmí být prázdné.");
-    }
 
     if (xbio?.length == 0) xbio = undefined;
 
-    const response = await updateMe(xusername || "", xdisplayName || "", xbio || "");
-
-    if (data) {
-      data.username = username || "";
-      data.displayName = displayName || "";
-      data.bio = bio || "";
+    try {
+      const response = await updateMe(xdisplayName || "", xbio || "");
+      navigate("/");
+      toast.success(response);
+    } catch (e: any) {
+      toast.error(e.message);
     }
-
-    navigate("/")
-
-    toast.success(response);
   }
 
   useEffect(() => {
@@ -122,7 +111,7 @@ export default function Me() {
                   {fetching ? (
                     <Skeleton height="20px" width="50px" />
                   ) : (
-                    `17 kvízů`
+                    `${data?.quizzes.length} kvízů`
                   )}
                 </Badge>
               </Flex>
@@ -157,16 +146,6 @@ export default function Me() {
                         defaultValue={data?.displayName}
                         placeholder="Zadejte zobrazované jméno"
                         onChange={(e) => setDisplayName(e.target.value)}
-                      />
-                    </label>
-                    <label>
-                      <Text as="div" size="2" mb="1" weight="bold">
-                        Uživatelské jméno
-                      </Text>
-                      <TextField.Root
-                        defaultValue={data?.username}
-                        placeholder="Zadejte uživatelské jméno"
-                        onChange={(e) => setUsername(e.target.value)}
                       />
                     </label>
                     <label>
@@ -212,14 +191,14 @@ export default function Me() {
         </Heading>
         <Container p="8">
           <Flex direction="column" gap="3" align="center">
-            {quizes.map((el) => (
-              <Link to={`/user/${el.author.username}/quiz/${el.id}`}>
+            {data?.quizzes.map((el) => (
+              <Link to={`/user/${data.username}/quiz/${el.id}`}>
                 <Card>
                   <Heading>{el.title}</Heading>
                   <Text>{el.description}</Text>
                   <br />
                   <Badge color="sky">
-                    {el.createDate.toLocaleDateString()}
+                    {new Date(el.createDate).toLocaleDateString()}
                   </Badge>{" "}
                   <Badge color="green">
                     {el.questions.length == 1
