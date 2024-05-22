@@ -16,9 +16,11 @@ import getUser from "../../../api/getUser";
 import { useParams } from "react-router-dom";
 import isLogedIn from "../../../utils/logedin";
 import me from "../../../api/me";
+import getProfilePictureUrl from "../../../api/getProfilePictureUrl";
 
 export default function UserPage() {
   const [data, setData] = useState<User | undefined>();
+  const [notfound, setNotFound] = useState(false);
   const { username } = useParams();
   const navigate = useNavigate();
 
@@ -31,11 +33,31 @@ export default function UserPage() {
           return;
         }
       }
-
-      const res = await getUser(username?.trim() || "");
-      setData(res);
+      try {
+        const res = await getUser(username?.trim() || "");
+        setData(res);
+      } catch (e: any) {
+        if (e.status == "404") {
+          setNotFound(true);
+        }
+      }
     })();
   }, []);
+
+  if (notfound) {
+    return (
+      <Section>
+        <Container>
+          <Heading size="9" align="center">
+            Nenalezeno!
+          </Heading>
+          <Text align="center" style={{ display: "block" }}>
+            Uživatel nebyl nalezen.
+          </Text>
+        </Container>
+      </Section>
+    );
+  }
 
   return (
     <>
@@ -50,7 +72,7 @@ export default function UserPage() {
             <Avatar
               fallback="R"
               radius="full"
-              src="https://pbs.twimg.com/profile_images/1337055608613253126/r_eiMp2H_400x400.png"
+              src={getProfilePictureUrl(username || "")}
               style={{
                 height: "auto",
                 width: "30%",

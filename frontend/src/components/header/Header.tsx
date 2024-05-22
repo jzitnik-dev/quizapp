@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import isLogedIn from "../../utils/logedin";
 import { CaretDownIcon, PlusIcon } from "@radix-ui/react-icons";
 import { meHeader } from "../../api/me";
-import User from "../../types/User";
+import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 
 export default function Header() {
   const location = useLocation();
@@ -21,12 +21,14 @@ export default function Header() {
   const [fetching, setFetching] = useState(true);
   const logedIn = isLogedIn();
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     const fun = async () => {
       if (!logedIn) return;
-      const response = (await meHeader()) as User;
+      const response = (await meHeader());
       setName(response.displayName);
+      setUsername(response.username);
       setFetching(false);
     };
     fun();
@@ -100,9 +102,9 @@ export default function Header() {
                 <Flex align="center" gap="2" style={{ cursor: "pointer" }}>
                   <Avatar
                     size="3"
-                    fallback=""
+                    fallback={name[0]}
                     radius="full"
-                    src="https://jzitnik.dev/images/instagram_profile_picture.jpg"
+                    src={getProfilePictureUrl(username)}
                   />
                   <Flex align="center">
                     <Text>{name}</Text>

@@ -8,8 +8,7 @@ export default async function getUser(username: string) {
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Registration failed");
+    throw response
   }
   return await response.json();
 }

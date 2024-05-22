@@ -13,23 +13,24 @@ import {
   TextField,
   Skeleton,
   TextArea,
-  DropdownMenu,
 } from "@radix-ui/themes";
-import Quiz from "../../types/Quiz";
 import User from "../../types/User";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import me from "../../api/me";
 import isLogedIn from "../../utils/logedin";
 import { UploadIcon } from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
 import updateMe from "../../api/updateProfile";
+import updateProfilePicture from "../../api/updateProfilePicture";
+import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 
 export default function Me() {
-  const quizzes: Quiz[] = [];
   const navigate = useNavigate();
   const [fetching, setFetching] = useState(true);
   const [data, setData] = useState<User | undefined>();
+  const input = useRef<HTMLInputElement | null>(null);
+  const [fileUploaded, setFileUploaded] = useState(false);
 
   // Form data
   const [displayName, setDisplayName] = useState<string | undefined>();
@@ -53,6 +54,11 @@ export default function Me() {
 
     try {
       const response = await updateMe(xdisplayName || "", xbio || "");
+
+      if (fileUploaded && input.current?.files && input.current.files[0]) {
+        await updateProfilePicture(input.current?.files[0]);
+      }
+
       navigate("/");
       toast.success(response);
     } catch (e: any) {
@@ -73,6 +79,13 @@ export default function Me() {
   return (
     <>
       <Section>
+        <input
+          ref={input}
+          style={{ display: "none" }}
+          type="file"
+          accept="image/*"
+          onChange={() => setFileUploaded(true)}
+        />
         <Container>
           <Flex
             width="60%"
@@ -83,7 +96,7 @@ export default function Me() {
             <Avatar
               fallback={data?.username[0] || "U"}
               radius="full"
-              src="https://jzitnik.dev/images/instagram_profile_picture.jpg"
+              src={getProfilePictureUrl(data?.username || "")}
               size="9"
               style={{
                 height: "auto",
@@ -163,7 +176,12 @@ export default function Me() {
                       <Text as="div" size="2" mb="1" weight="bold">
                         Profilový obrázek
                       </Text>
-                      <Button color="gray" highContrast variant="soft">
+                      <Button
+                        color="gray"
+                        highContrast
+                        variant="soft"
+                        onClick={() => input.current?.click()}
+                      >
                         <UploadIcon />
                         Nahrát obrázek
                       </Button>

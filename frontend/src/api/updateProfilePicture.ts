@@ -1,24 +1,20 @@
 import isLogedIn from "../utils/logedin";
 
-export default async function updateMe(
-  displayName: string,
-  bio: string,
-) {
+export default async function updateProfilePicture(profilePicture: File) {
   if (!isLogedIn()) throw new Error("Not loged in!");
 
   const url = new URL(import.meta.env.VITE_BACKEND);
-  url.pathname = "/api/user/me";
+  url.pathname = "/api/user/profilepicture";
+
+  const formData = new FormData();
+  formData.append("file", profilePicture);
 
   const response = await fetch(url.toString(), {
-    method: "PATCH",
+    method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
     },
-    body: JSON.stringify({
-      displayName: displayName,
-      bio: bio,
-    }),
+    body: formData,
   });
   if (!response.ok) {
     const errorData = await response.text();
