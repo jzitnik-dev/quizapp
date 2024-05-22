@@ -3,6 +3,7 @@ package cz.jzitnik.quizapp.controllers;
 import cz.jzitnik.quizapp.repository.UserRepository;
 import cz.jzitnik.quizapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.rsocket.context.RSocketPortInfoApplicationContextInitializer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 
 @RestController
@@ -44,8 +46,11 @@ public class ProfilePictureController {
         String rootPath = System.getProperty("user.dir");
         String fullPath = rootPath + File.separator + "ProfilePictures" + File.separator + user.get().getId();
 
-        byte[] imageData = Files.readAllBytes(Paths.get(fullPath));
-
-        return ResponseEntity.ok().body(imageData);
+        try {
+            byte[] imageData = Files.readAllBytes(Paths.get(fullPath));
+            return ResponseEntity.ok().body(imageData);
+        } catch (NoSuchFileException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

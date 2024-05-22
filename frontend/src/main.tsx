@@ -18,6 +18,7 @@ const Discover = lazy(() => import("./pages/discover/page"));
 const UserProfile = lazy(() => import("./pages/user/[username]/page"));
 const Me = lazy(() => import("./pages/me/page"));
 const Create = lazy(() => import("./pages/create/page"));
+const Quiz = lazy(() => import("./pages/quiz/[quizid]/page"))
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -68,6 +69,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 element={
                   <Page title="QuizAPP - Procházet kvízy">
                     <Discover />
+                  </Page>
+                }
+              ></Route>
+              <Route
+                path="/quiz/:id"
+                element={
+                  <Page title="QuizAPP - Kvíz">
+                    <Quiz />
                   </Page>
                 }
               ></Route>

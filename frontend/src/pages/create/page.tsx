@@ -28,7 +28,6 @@ import QuestionCard from "./questionCard";
 import Question from "../../types/Question";
 import Quiz from "../../types/Quiz";
 import submitQuiz from "../../api/submitQuiz";
-import me from "../../api/me";
 
 export default function Create() {
   const navigate = useNavigate();
@@ -37,7 +36,6 @@ export default function Create() {
   const [fetching, setFetching] = useState(false);
   const [sent, setSent] = useState(false);
   const [quizId, setQuizId] = useState<number | undefined>();
-  const [username, setUsername] = useState("");
 
   // Form data
   const [name, setName] = useState("");
@@ -95,12 +93,10 @@ export default function Create() {
     setFetching(true);
 
     const res = await submitQuiz(finalQuiz);
-    const meRes = await me();
 
     setFetching(false);
     setSent(true);
     setQuizId(res.id);
-    setUsername(meRes.username)
   }
 
   return (
@@ -168,7 +164,7 @@ export default function Create() {
               Kvíz byl publikován!
               <br />
               <Link
-                to={`/user/${username}/quiz/${quizId}`}
+                to={`/quiz/${quizId}`}
               >
                 <Button mt="1" color="indigo">
                   Přejít na kvíz

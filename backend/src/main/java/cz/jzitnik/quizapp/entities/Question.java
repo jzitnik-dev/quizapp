@@ -1,6 +1,8 @@
 package cz.jzitnik.quizapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +23,7 @@ public class Question {
     private String options;
 
     @NotBlank
+    @JsonIgnore
     private String answer;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -58,8 +61,14 @@ public class Question {
         return options;
     }
 
-    public @NotBlank String getAnswer() {
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public String getAnswer() {
         return answer;
+    }
+
+    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
+    public void setAnswer(@NotBlank String answer) {
+        this.answer = answer;
     }
 
     public Quiz getQuiz() {
@@ -80,10 +89,6 @@ public class Question {
 
     public void setOptions(@Nullable String options) {
         this.options = options;
-    }
-
-    public void setAnswer(@NotBlank String answer) {
-        this.answer = answer;
     }
 
     public void setQuiz(Quiz quiz) {

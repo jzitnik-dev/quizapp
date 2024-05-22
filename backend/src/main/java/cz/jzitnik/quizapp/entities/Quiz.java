@@ -29,7 +29,7 @@ public class Quiz {
     @JsonManagedReference
     private Set<Question> questions = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonBackReference // Prevents infinite recursion when serializing to JSON
     private User author;

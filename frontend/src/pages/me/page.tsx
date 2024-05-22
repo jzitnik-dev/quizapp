@@ -210,7 +210,7 @@ export default function Me() {
         <Container p="8">
           <Flex direction="column" gap="3" align="center">
             {data?.quizzes.map((el) => (
-              <Link to={`/user/${data.username}/quiz/${el.id}`}>
+              <Link to={`/quiz/${el.id}`}>
                 <Card>
                   <Heading>{el.title}</Heading>
                   <Text>{el.description}</Text>

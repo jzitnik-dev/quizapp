@@ -61,7 +61,7 @@ export default function Discover() {
         </Flex>
 
         {quizzes.map((el) => (
-          <Link to={`/user/${el.author.username}/quiz/${el.id}`}>
+          <Link to={`/quiz/${el.id}`}>
             <Card>
               <Heading>{el.title}</Heading>
               <Text>{el.description}</Text>
