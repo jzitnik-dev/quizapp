@@ -26,7 +26,7 @@ public class Quiz {
     private String description;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonManagedReference(value = "quiz-questions")
     private Set<Question> questions = new HashSet<>();
 
     public Set<ValidatedQuizAnswer> getValidatedQuizAnswers() {
@@ -38,7 +38,7 @@ public class Quiz {
     }
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @JsonManagedReference(value = "quiz-validatedQuizAnswers")
     private Set<ValidatedQuizAnswer> validatedQuizAnswers;
 
     @ManyToOne(fetch = FetchType.EAGER)

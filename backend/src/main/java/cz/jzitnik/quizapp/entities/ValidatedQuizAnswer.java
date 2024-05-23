@@ -21,7 +21,7 @@ public class ValidatedQuizAnswer {
 
     @ManyToOne
     @JoinColumn(name = "quiz_id", nullable = false)
-    @JsonManagedReference
+    @JsonBackReference(value = "quiz-validatedQuizAnswers")
     private Quiz quiz;
 
     @NotNull
