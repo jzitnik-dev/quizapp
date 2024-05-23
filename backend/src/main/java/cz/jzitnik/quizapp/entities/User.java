@@ -44,6 +44,18 @@ public class User {
   @JsonManagedReference // Prevents infinite recursion when serializing to JSON
   private Set<Quiz> quizzes = new HashSet<>();
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonManagedReference
+  private Set<ValidatedQuizAnswer> validatedQuizAnswers;
+
+  public Set<ValidatedQuizAnswer> getValidatedQuizAnswers() {
+    return validatedQuizAnswers;
+  }
+
+  public void setValidatedQuizAnswers(Set<ValidatedQuizAnswer> validatedQuizAnswers) {
+    this.validatedQuizAnswers = validatedQuizAnswers;
+  }
+
   public User() {
   }
 

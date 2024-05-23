@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import cz.jzitnik.quizapp.repository.PlayingStateRepository;
 import cz.jzitnik.quizapp.repository.UserRepository;
 import cz.jzitnik.quizapp.responses.MeHeaderResponse;
 import cz.jzitnik.quizapp.services.UserService;
@@ -45,6 +46,9 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    PlayingStateRepository playingStateRepository;
+
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public User authenticateUser() {
@@ -68,6 +72,19 @@ public class UserController {
                 logedUser.getUsername(),
                 logedUser.getDisplayName()
         );
+    }
+
+    @GetMapping("/me/playing")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity mePlaying() {
+        var user = userService.getCurrentUser();
+        var stateOptional = playingStateRepository.findByUser(user);
+
+        if (stateOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/me")

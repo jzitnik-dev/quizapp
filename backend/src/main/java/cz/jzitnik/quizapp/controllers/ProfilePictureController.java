@@ -3,7 +3,6 @@ package cz.jzitnik.quizapp.controllers;
 import cz.jzitnik.quizapp.repository.UserRepository;
 import cz.jzitnik.quizapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.rsocket.context.RSocketPortInfoApplicationContextInitializer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

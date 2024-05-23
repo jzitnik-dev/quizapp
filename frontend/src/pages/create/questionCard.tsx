@@ -41,8 +41,8 @@ export default function QuestionCard({
           : question.type == QuestionType.TrueFalse
             ? "Pravda / Nepravda"
             : question.type == QuestionType.Singleselect
-              ? "Jedno násobný výběr"
-              : "Více násobný výběr"}
+              ? "Otázka s jednou odpovědí"
+              : "Otázka s několika odpověďmi"}
       </Badge>
       <Flex mt="2" gap="1" justify="end">
         <QuestionDialog

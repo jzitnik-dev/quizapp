@@ -172,10 +172,10 @@ export default function QuestionDialog({
                 <Select.Group>
                   <Select.Item value="default">Výchozí</Select.Item>
                   <Select.Item value="multiselect">
-                    Více násobný výběr
+                    Otázka s několika odpověďmi
                   </Select.Item>
                   <Select.Item value="singleselect">
-                    Jedno násobný výběr
+                    Otázka s jednou odpovědí
                   </Select.Item>
                   <Select.Item value="truefalse">Pravda / Nepravda</Select.Item>
                 </Select.Group>

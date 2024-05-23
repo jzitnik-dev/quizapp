@@ -29,7 +29,9 @@ export default function UserPage() {
       if (isLogedIn()) {
         const res = await me();
         if (res.username.trim() == username?.trim()) {
-          navigate("/me");
+          navigate("/me", {
+            replace: true
+          });
           return;
         }
       }

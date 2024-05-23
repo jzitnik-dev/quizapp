@@ -9,20 +9,27 @@ import {
   Avatar,
   Box,
   Button,
+  AlertDialog,
+  Spinner,
 } from "@radix-ui/themes";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Quiz from "../../../types/Quiz";
 import getQuiz from "../../../api/getQuiz";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import User from "../../../types/User";
 import getAuthor from "../../../api/getAuthor";
 import getProfilePictureUrl from "../../../api/getProfilePictureUrl";
+import play, { isPlaying } from "../../../api/play";
+import isLogedIn from "../../../utils/logedin";
 
 export default function quiz() {
   const [data, setData] = useState<Quiz>();
   const [author, setAuthor] = useState<User | undefined>();
   const { id } = useParams();
+  const navigate = useNavigate();
+  const dialog = useRef<HTMLButtonElement>(null);
+  const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -32,8 +39,51 @@ export default function quiz() {
       setAuthor(resAuthor);
     })();
   }, []);
+
+  async function playHandle() {
+    setFetching(true);
+    if (isLogedIn()) {
+      if (await isPlaying()) {
+        dialog.current?.click();
+        return;
+      }
+      await newGameHandle();
+    } else {
+      navigate(`/play/${id}`);
+    }
+  }
+  async function newGameHandle() {
+    const key = await play(id || "");
+    navigate(`/play/${id}/?key=${key}`);
+  }
+
   return (
     <Section>
+      <AlertDialog.Root>
+        <AlertDialog.Trigger>
+          <Button ref={dialog} style={{ display: "none" }}></Button>
+        </AlertDialog.Trigger>
+        <AlertDialog.Content maxWidth="450px">
+          <AlertDialog.Title>Probíhající hra</AlertDialog.Title>
+          <AlertDialog.Description size="2">
+            Na Vašem účtu hra již probíhá! Pokud začněte novou hru, předchozí
+            hra se zruší!
+          </AlertDialog.Description>
+
+          <Flex gap="3" mt="4" justify="end">
+            <AlertDialog.Cancel>
+              <Button variant="soft" color="gray" onClick={() => setFetching(false)}>
+                Zrušit
+              </Button>
+            </AlertDialog.Cancel>
+            <AlertDialog.Action>
+              <Button variant="solid" color="red" onClick={newGameHandle}>
+                Začít novou hru
+              </Button>
+            </AlertDialog.Action>
+          </Flex>
+        </AlertDialog.Content>
+      </AlertDialog.Root>
       <Container>
         <Heading size="9">{data?.title}</Heading>
         <Flex my="1" gap="1">
@@ -75,9 +125,9 @@ export default function quiz() {
         </Flex>
         <Text>{data?.description}</Text>
         <Flex justify="center" mt="2">
-          <Link to={"/play/" + data?.id}>
-            <Button size="4">Spustit kvíz</Button>
-          </Link>
+          <Button size="4" onClick={() => playHandle()} disabled={fetching}>
+            {fetching ? <Spinner /> : "Spustit kvíz"}
+          </Button>
         </Flex>
       </Container>
     </Section>
