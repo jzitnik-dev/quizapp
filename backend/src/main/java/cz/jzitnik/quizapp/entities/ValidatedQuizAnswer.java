@@ -1,7 +1,6 @@
 package cz.jzitnik.quizapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import cz.jzitnik.quizapp.utils.JsonConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
