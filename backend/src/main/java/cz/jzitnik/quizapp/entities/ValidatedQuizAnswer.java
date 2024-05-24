@@ -38,6 +38,14 @@ public class ValidatedQuizAnswer {
     @Column(columnDefinition = "json")
     private List<String> allUserAnswers;
 
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
     private boolean finished;
 
     public ValidatedQuizAnswer(User user, Quiz quiz, List<String> correctAnswers, List<String> wrongAnswers, List<String> allUserAnswers, boolean finished) {

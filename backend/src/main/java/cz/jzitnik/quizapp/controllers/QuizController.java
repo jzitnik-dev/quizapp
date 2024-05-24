@@ -3,7 +3,9 @@ package cz.jzitnik.quizapp.controllers;
 
 import cz.jzitnik.quizapp.entities.Question;
 import cz.jzitnik.quizapp.entities.Quiz;
+import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
 import cz.jzitnik.quizapp.repository.QuizRepository;
+import cz.jzitnik.quizapp.repository.ValidatedQuizAnswerRepository;
 import cz.jzitnik.quizapp.services.UserService;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class QuizController {
 
     @Autowired
     QuizRepository quizRepository;
+
+    @Autowired
+    ValidatedQuizAnswerRepository validatedQuizAnswerRepository;
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
@@ -64,4 +69,20 @@ public class QuizController {
         return ResponseEntity.ok(author);
     }
 
+    @GetMapping("/answer/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ValidatedQuizAnswer> getAnswer(@PathVariable Long id) {
+        User loggedUser = userService.getCurrentUser();
+        var quiz = quizRepository.findById(id);
+        if (quiz.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var validatedQuizAnswer = validatedQuizAnswerRepository.findByUserAndQuiz(loggedUser, quiz.get());
+
+        if (validatedQuizAnswer.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(validatedQuizAnswer.get());
+    }
 }

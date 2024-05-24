@@ -4,4 +4,5 @@ export default interface ValidatedQuizAnswer {
   correctAnswers: string[];
   wrongAnswers: string[];
   allUserAnswers: string[];
+  finished: boolean;
 }
