@@ -38,19 +38,18 @@ export default function quiz() {
       const resAuthor = await getAuthor((id || 0) as number);
       setAuthor(resAuthor);
     })();
+    if (!isLogedIn()) {
+      navigate("/login")
+    }
   }, []);
 
   async function playHandle() {
     setFetching(true);
-    if (isLogedIn()) {
-      if (await isPlaying()) {
-        dialog.current?.click();
-        return;
-      }
-      await newGameHandle();
-    } else {
-      navigate(`/play/${id}`);
+    if (await isPlaying()) {
+      dialog.current?.click();
+      return;
     }
+    await newGameHandle();
   }
   async function newGameHandle() {
     const key = await play(id || "");
@@ -59,7 +58,7 @@ export default function quiz() {
 
   return (
     <Section>
-      <AlertDialog.Root>
+      <AlertDialog.Root onOpenChange={open => setFetching(open)}>
         <AlertDialog.Trigger>
           <Button ref={dialog} style={{ display: "none" }}></Button>
         </AlertDialog.Trigger>
@@ -72,7 +71,11 @@ export default function quiz() {
 
           <Flex gap="3" mt="4" justify="end">
             <AlertDialog.Cancel>
-              <Button variant="soft" color="gray" onClick={() => setFetching(false)}>
+              <Button
+                variant="soft"
+                color="gray"
+                onClick={() => setFetching(false)}
+              >
                 Zrušit
               </Button>
             </AlertDialog.Cancel>

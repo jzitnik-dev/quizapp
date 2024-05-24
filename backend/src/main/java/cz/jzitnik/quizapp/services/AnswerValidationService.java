@@ -57,7 +57,7 @@ public class AnswerValidationService {
         }
 
 
-        var validatedQuizAnswer = new ValidatedQuizAnswer(user, quiz, correctAnswers, wrongAnsers, userAnswers);
+        var validatedQuizAnswer = new ValidatedQuizAnswer(user, quiz, correctAnswers, wrongAnsers, userAnswers, true);
 
         return validatedQuizAnswer;
     }

@@ -1,5 +1,7 @@
 package cz.jzitnik.quizapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.jzitnik.quizapp.utils.JsonConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -58,6 +60,7 @@ public class PlayingState {
 
     @ManyToOne
     @JoinColumn(name = "quiz_id", nullable = false)
+    @JsonIgnore
     private Quiz quiz;
 
     @NotNull

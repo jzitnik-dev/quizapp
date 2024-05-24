@@ -1,6 +1,5 @@
 package cz.jzitnik.quizapp.controllers;
 
-import cz.jzitnik.quizapp.entities.PlayingState;
 import cz.jzitnik.quizapp.entities.Question;
 import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
 import cz.jzitnik.quizapp.repository.PlayingStateRepository;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/play/question")
@@ -41,26 +41,42 @@ public class QuestionController {
     @Autowired
     private ValidatedQuizAnswerRepository validatedQuizAnswerRepository;
 
+    @GetMapping("/allquestions")
+    public ResponseEntity<List<Question>> getQuestions(@RequestParam("quizId") Long quizId) {
+        var quizOptional = quizRepository.findById(quizId);
+        if (quizOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Question> questionList = new ArrayList<>(quizOptional.get().getQuestions());
+        questionList.sort(Comparator.comparingLong(Question::getId));
+
+        return ResponseEntity.ok(questionList);
+    }
+
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Question> getQuestion(@RequestParam("key") String key, @RequestParam("question") int question) {
         var playingStateOptional = playingStateRepository.findBySecretKey(key);
         var loggedInUser = userService.getCurrentUser();
 
-        if (playingStateOptional.isEmpty() || playingStateOptional.get().getUser().getId() != loggedInUser.getId()) {
+        if (playingStateOptional.isEmpty() || !Objects.equals(playingStateOptional.get().getUser().getId(), loggedInUser.getId())) {
             return ResponseEntity.notFound().build();
         }
         var playingState = playingStateOptional.get();
+        var quiz = playingState.getQuiz();
 
-        if (playingState.getQuestionNumber() != question) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (playingState.getShowed()) {
+        if (playingState.getQuestionNumber() != question || playingState.getShowed()) {
+            // Question loaded again. User refreshed webpage.
+            var validated = new ValidatedQuizAnswer(loggedInUser, quiz, List.of(), List.of(), List.of(), false);
+            loggedInUser.getValidatedQuizAnswers().add(validated);
+            quiz.getValidatedQuizAnswers().add(validated);
+            quizRepository.save(quiz);
+            userRepository.save(loggedInUser);
+            validatedQuizAnswerRepository.save(validated);
+            playingStateRepository.delete(playingState);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        var quiz = playingState.getQuiz();
         var questions = quiz.getQuestions();
 
         List<Question> questionList = new ArrayList<>(questions);
@@ -79,7 +95,7 @@ public class QuestionController {
     public ResponseEntity skipQuestion(@RequestParam("key") String key) {
         var playingStateOptional = playingStateRepository.findBySecretKey(key);
         var loggedInUser = userService.getCurrentUser();
-        if (playingStateOptional.isEmpty() || playingStateOptional.get().getUser().getId() != loggedInUser.getId()) {
+        if (playingStateOptional.isEmpty() || !Objects.equals(playingStateOptional.get().getUser().getId(), loggedInUser.getId())) {
             return ResponseEntity.notFound().build();
         }
         var playingState = playingStateOptional.get();
@@ -106,7 +122,7 @@ public class QuestionController {
     public ResponseEntity answer(@RequestParam("key") String key, @RequestParam("answer") String answer) {
         var playingStateOptional = playingStateRepository.findBySecretKey(key);
         var loggedInUser = userService.getCurrentUser();
-        if (playingStateOptional.isEmpty() || playingStateOptional.get().getUser().getId() != loggedInUser.getId()) {
+        if (playingStateOptional.isEmpty() || !Objects.equals(playingStateOptional.get().getUser().getId(), loggedInUser.getId())) {
             return ResponseEntity.notFound().build();
         }
         var playingState = playingStateOptional.get();
@@ -133,12 +149,12 @@ public class QuestionController {
     public ResponseEntity<ValidatedQuizAnswer> finish(@RequestParam("key") String key) {
         var playingStateOptional = playingStateRepository.findBySecretKey(key);
         var loggedInUser = userService.getCurrentUser();
-        if (playingStateOptional.isEmpty() || playingStateOptional.get().getUser().getId() != loggedInUser.getId()) {
+        if (playingStateOptional.isEmpty() || !Objects.equals(playingStateOptional.get().getUser().getId(), loggedInUser.getId())) {
             return ResponseEntity.notFound().build();
         }
         var playingState = playingStateOptional.get();
         var quiz = playingState.getQuiz();
-        if (playingState.getQuestionNumber() != quiz.getQuestions().size()) {
+        if (playingState.getQuestionNumber() <= quiz.getQuestions().size()) {
             return ResponseEntity.badRequest().build();
         }
         var validated = answerValidationService.validateQuiz(loggedInUser, quiz, playingState.getAnswers());
@@ -152,5 +168,25 @@ public class QuestionController {
         playingStateRepository.delete(playingState);
 
         return ResponseEntity.ok(validated);
+    }
+
+    @PostMapping("/cancel")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity cancel(@RequestParam("key") String key) {
+        var playingStateOptional = playingStateRepository.findBySecretKey(key);
+        var loggedInUser = userService.getCurrentUser();
+        if (playingStateOptional.isEmpty() || !Objects.equals(playingStateOptional.get().getUser().getId(), loggedInUser.getId())) {
+            return ResponseEntity.notFound().build();
+        }
+        var playingState = playingStateOptional.get();
+        var quiz = playingState.getQuiz();
+        var validated = new ValidatedQuizAnswer(loggedInUser, quiz, List.of(), List.of(), List.of(), false);
+        loggedInUser.getValidatedQuizAnswers().add(validated);
+        quiz.getValidatedQuizAnswers().add(validated);
+        quizRepository.save(quiz);
+        userRepository.save(loggedInUser);
+        validatedQuizAnswerRepository.save(validated);
+        playingStateRepository.delete(playingState);
+        return ResponseEntity.ok().build();
     }
 }

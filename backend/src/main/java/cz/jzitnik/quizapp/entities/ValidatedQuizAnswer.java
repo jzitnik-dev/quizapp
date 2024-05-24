@@ -38,12 +38,15 @@ public class ValidatedQuizAnswer {
     @Column(columnDefinition = "json")
     private List<String> allUserAnswers;
 
-    public ValidatedQuizAnswer(User user, Quiz quiz, List<String> correctAnswers, List<String> wrongAnswers, List<String> allUserAnswers) {
+    private boolean finished;
+
+    public ValidatedQuizAnswer(User user, Quiz quiz, List<String> correctAnswers, List<String> wrongAnswers, List<String> allUserAnswers, boolean finished) {
         this.user = user;
         this.quiz = quiz;
         this.correctAnswers = correctAnswers;
         this.wrongAnswers = wrongAnswers;
         this.allUserAnswers = allUserAnswers;
+        this.finished = finished;
     }
 
     public ValidatedQuizAnswer() {

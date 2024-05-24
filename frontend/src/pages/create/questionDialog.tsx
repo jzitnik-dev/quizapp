@@ -134,7 +134,11 @@ export default function QuestionDialog({
   }
 
   return (
-    <Dialog.Root>
+    <Dialog.Root
+      onOpenChange={(e) => {
+        if (!e) cleanup();
+      }}
+    >
       <Dialog.Trigger>{children}</Dialog.Trigger>
       <Dialog.Content maxWidth="450px">
         <Dialog.Title>{questionMessage}</Dialog.Title>
@@ -219,7 +223,7 @@ export default function QuestionDialog({
                 <Text as="div" size="2" mb="1" weight="bold">
                   Odpovědi
                 </Text>
-                <Dialog.Root>
+                <Dialog.Root onOpenChange={e => {if (!e) setAnswerx("")}}>
                   <Dialog.Trigger>
                     <Button>
                       <PlusIcon />
@@ -294,7 +298,7 @@ export default function QuestionDialog({
                 <Text as="div" size="2" mb="1" weight="bold">
                   Odpovědi
                 </Text>
-                <Dialog.Root>
+                <Dialog.Root onOpenChange={e => {if (!e) setAnswerx("")}}>
                   <Dialog.Trigger>
                     <Button>
                       <PlusIcon />

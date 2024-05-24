@@ -14,15 +14,22 @@ import {
   RadioCards,
   CheckboxCards,
   SegmentedControl,
+  Badge,
 } from "@radix-ui/themes";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import Quiz from "../../../types/Quiz";
+import { useEffect, useState, useMemo } from "react";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import getQuiz from "../../../api/getQuiz";
-import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import isLogedIn from "../../../utils/logedin";
 import {
   answerQuestion,
+  cancel,
+  finishQuiz,
   getQuestion,
   isValid,
   skipQuestion,
@@ -30,6 +37,8 @@ import {
 import Question from "../../../types/Question";
 import QuestionType from "../../../types/QuestionType";
 import { toast } from "react-toastify";
+import ValidatedQuizAnswer from "../../../types/ValidatedQuizAnswer";
+import Quiz from "../../../types/Quiz";
 
 export default function Play() {
   const { id } = useParams();
@@ -37,22 +46,42 @@ export default function Play() {
   const [searchParams] = useSearchParams();
   const key = searchParams.get("key");
   const [data, setData] = useState<Quiz>();
-  const [showDialog, setShowDialog] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [question, setQuestion] = useState<Question>();
   const [finish, setFinish] = useState(false);
   const [answerValue, setAnswerValue] = useState("");
+  const [finishData, setFinishData] = useState<ValidatedQuizAnswer>();
+  const [unfinished, setUnfinished] = useState(false);
+
+  const sortedQuestions = useMemo(() => {
+    if (data && data.questions) {
+      return [...data.questions].sort((a, b) => (a?.id || 0) - (b?.id || 0));
+    }
+    return [];
+  }, [data?.questions]) as any;
+
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === "visible") {
+      } else {
+        setUnfinished(true);
+        await cancel(key || "");
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (!key && isLogedIn()) {
       navigate("/quiz/" + id);
     }
     if (!isLogedIn()) {
-      setShowDialog(true);
-      setTimeout(() => {
-        setShowDialog(false);
-      }, 5000);
+      navigate("/login");
     } else {
       (async () => {
         const valid = await isValid(key || "", id || "");
@@ -71,24 +100,35 @@ export default function Play() {
   }, []);
 
   async function loadQuestion(currentQuestion: number) {
-    const question = await getQuestion(key || "", currentQuestion);
-    setQuestion(question);
-    setFetching(false);
+    try {
+      const question = await getQuestion(key || "", currentQuestion);
+      setQuestion(question);
+      setFetching(false);
 
-    if (question.type == QuestionType.Default) {
-      setAnswerValue("");
-    } else if (question.type == QuestionType.TrueFalse) {
-      setAnswerValue("true");
-    } else if (question.type == QuestionType.Singleselect) {
-      setAnswerValue("");
-    } else if (question.type == QuestionType.Multiselect) {
-      setAnswerValue("[]");
+      if (question.type == QuestionType.Default) {
+        setAnswerValue("");
+      } else if (question.type == QuestionType.TrueFalse) {
+        setAnswerValue("true");
+      } else if (question.type == QuestionType.Singleselect) {
+        setAnswerValue("");
+      } else if (question.type == QuestionType.Multiselect) {
+        setAnswerValue("[]");
+      }
+    } catch (e: any) {
+      if (e.message == "invalidquestion") {
+        setUnfinished(true);
+        setFetching(false);
+      } else {
+        throw e;
+      }
     }
   }
 
   async function finishFun() {
     setFetching(false);
     setFinish(true);
+    const res = await finishQuiz(key || "");
+    setFinishData(res);
   }
 
   async function skip() {
@@ -114,8 +154,20 @@ export default function Play() {
       return toast.error("Odpověď nemůže být prázdná!");
     }
 
+    let finalAnswer: string;
+    if (question?.type == QuestionType.Singleselect) {
+      finalAnswer = JSON.parse(question.options || "[]")[answerValue];
+    } else if (question?.type == QuestionType.Multiselect) {
+      const op = JSON.parse(question.options || "[]");
+      finalAnswer = JSON.stringify(
+        JSON.parse(answerValue).map((e: string) => op[e]),
+      );
+    } else {
+      finalAnswer = answerValue;
+    }
+
     setFetching(true);
-    const finish = await answerQuestion(key || "", answerValue);
+    const finish = await answerQuestion(key || "", finalAnswer);
     if (finish) {
       finishFun();
       return;
@@ -128,18 +180,6 @@ export default function Play() {
   return (
     <Section>
       <Container>
-        {showDialog ? (
-          <Callout.Root>
-            <Callout.Icon>
-              <InfoCircledIcon />
-            </Callout.Icon>
-            <Callout.Text>
-              <Flex align="center" justify="between" as="span">
-                <Text>Nejste přihlášeni! Váš progress nebude uložen.</Text>
-              </Flex>
-            </Callout.Text>
-          </Callout.Root>
-        ) : null}
         <Heading size="9" align="center">
           {data?.title}
         </Heading>
@@ -148,11 +188,73 @@ export default function Play() {
           <Flex justify="center" mt="3">
             <Spinner />
           </Flex>
+        ) : unfinished ? (
+          <>
+            <Heading align="center">Nedokončeno!</Heading>
+            <Text align="center" as="p">
+              Pravděpodobně jste načetl stránku znovu nebo přepl kartu v
+              prohlížeči.
+            </Text>
+            <Text align="center" as="p">
+              Tento kvíz si již nebudete moct zahrát.
+            </Text>
+            <Flex justify="center" mt="2">
+              <Link to={`/quiz/${data?.id}`}>
+                <Button>Zpět</Button>
+              </Link>
+            </Flex>
+          </>
         ) : finish ? (
           <>
             <Heading size="8" align="center">
               Konec!
             </Heading>
+            <Heading size="9" align="center">
+              {finishData?.correctAnswers.length}/
+              {finishData?.allUserAnswers.length}
+            </Heading>
+            <Heading size="7" align="center" mt="3">
+              Vaše odpovědi
+            </Heading>
+            <Flex direction="column" gap="3" mx="3">
+              {finishData?.allUserAnswers.map((e, index) => {
+                return (
+                  <Callout.Root
+                    color={
+                      finishData.correctAnswers.includes(e) ? "green" : "red"
+                    }
+                  >
+                    <Callout.Icon>
+                      {finishData.correctAnswers.includes(e) ? (
+                        <CheckIcon />
+                      ) : (
+                        <Cross1Icon />
+                      )}
+                    </Callout.Icon>
+                    <Callout.Text>
+                      <Box>
+                        <Heading>
+                          Otázka: {data?.questions[index].question}
+                        </Heading>
+                        <Text>
+                          <Flex gap="1" align="center">
+                            <Text>Vaše odpověď:</Text>
+                            {sortedQuestions[index].type == "Multiselect"
+                              ? JSON.parse(
+                                  finishData?.allUserAnswers[index],
+                                ).map((e: string) => <Badge>{e}</Badge>)
+                              : finishData.allUserAnswers[index]}
+                          </Flex>
+                        </Text>
+                      </Box>
+                    </Callout.Text>
+                  </Callout.Root>
+                );
+              })}
+              <Link to={"/quiz/" + data?.id}>
+                <Button>Zpět</Button>
+              </Link>
+            </Flex>
           </>
         ) : (
           <>
