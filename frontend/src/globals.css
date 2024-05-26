@@ -15,5 +15,5 @@ button {
 }
 
 .rt-Container {
-  /* TODO */
+  @apply 2xl:mx-64 xl:mx-32 lg:mx-16 md:mx-8 sm:mx-4 mx-2;
 }

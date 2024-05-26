@@ -15,7 +15,7 @@ import {
   TextArea,
 } from "@radix-ui/themes";
 import User from "../../types/User";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import me from "../../api/me";
 import isLogedIn from "../../utils/logedin";
@@ -125,8 +125,13 @@ export default function Me() {
                 <Badge>
                   {fetching ? (
                     <Skeleton height="20px" width="50px" />
+                  ) : data?.quizzes.length == 1 ? (
+                    data.quizzes.length + " kvíz"
+                  ) : (data?.quizzes.length || 0) >= 2 &&
+                    (data?.quizzes.length || 0) <= 4 ? (
+                    data?.quizzes.length + " kvízy"
                   ) : (
-                    `${data?.quizzes.length} kvízů`
+                    data?.quizzes.length + " kvízů"
                   )}
                 </Badge>
               </Flex>

@@ -73,7 +73,7 @@ export default function UserPage() {
             style={{ width: "100%" }}
           >
             <Avatar
-              fallback="R"
+              fallback={(username || "U")[0]}
               radius="full"
               src={getProfilePictureUrl(username || "")}
               size="9"
@@ -87,7 +87,14 @@ export default function UserPage() {
               <Heading size="9">{data?.displayName}</Heading>
               <Flex gap="2">
                 <Badge>@{data?.username}</Badge>
-                <Badge>{data?.quizzes.length} kvízů</Badge>
+                <Badge>
+                  {data?.quizzes.length == 1
+                    ? data.quizzes.length + " kvíz"
+                    : (data?.quizzes.length || 0) >= 2 &&
+                        (data?.quizzes.length || 0) <= 4
+                      ? data?.quizzes.length + " kvízy"
+                      : data?.quizzes.length + " kvízů"}
+                </Badge>
               </Flex>
               {data?.bio ? (
                 <>
