@@ -9,7 +9,7 @@ import {
   Quote,
   Text,
 } from "@radix-ui/themes";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import User from "../../../types/User";
 import getUser from "../../../api/getUser";
@@ -17,6 +17,7 @@ import { useParams } from "react-router-dom";
 import isLogedIn from "../../../utils/logedin";
 import me from "../../../api/me";
 import getProfilePictureUrl from "../../../api/getProfilePictureUrl";
+import Quiz from "../../../components/quiz/quiz";
 
 export default function UserPage() {
   const [data, setData] = useState<User | undefined>();
@@ -30,7 +31,7 @@ export default function UserPage() {
         const res = await me();
         if (res.username.trim() == username?.trim()) {
           navigate("/me", {
-            replace: true
+            replace: true,
           });
           return;
         }
@@ -75,9 +76,11 @@ export default function UserPage() {
               fallback="R"
               radius="full"
               src={getProfilePictureUrl(username || "")}
+              size="9"
               style={{
                 height: "auto",
                 width: "30%",
+                aspectRatio: "1/1",
               }}
             />
             <Card style={{ width: "50%", marginLeft: "20px" }}>
@@ -86,11 +89,10 @@ export default function UserPage() {
                 <Badge>@{data?.username}</Badge>
                 <Badge>{data?.quizzes.length} kvízů</Badge>
               </Flex>
-              <br />
               {data?.bio ? (
                 <>
-                  <Quote>{data?.bio}</Quote>
                   <br />
+                  <Quote>{data?.bio}</Quote>
                 </>
               ) : null}
             </Card>
@@ -103,25 +105,7 @@ export default function UserPage() {
         </Heading>
         <Container p="8">
           <Flex direction="column" gap="3" align="center">
-            {data?.quizzes.map((el) => (
-              <Link to={`/quiz/${el.id}`}>
-                <Card>
-                  <Heading>{el.title}</Heading>
-                  <Text>{el.description}</Text>
-                  <br />
-                  <Badge color="sky">
-                    {new Date(el.createDate).toLocaleDateString()}
-                  </Badge>{" "}
-                  <Badge color="green">
-                    {el.questions.length == 1
-                      ? el.questions.length + " otázka"
-                      : el.questions.length >= 2 && el.questions.length <= 4
-                        ? el.questions.length + " otázky"
-                        : el.questions.length + " otázek"}
-                  </Badge>
-                </Card>
-              </Link>
-            ))}
+            {data?.quizzes.map((el) => <Quiz quiz={el} />)}
           </Flex>
         </Container>
       </Section>

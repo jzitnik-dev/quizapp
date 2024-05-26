@@ -26,7 +26,7 @@ export default function Header() {
   useEffect(() => {
     const fun = async () => {
       if (!logedIn) return;
-      const response = (await meHeader());
+      const response = await meHeader();
       setName(response.displayName);
       setUsername(response.username);
       setFetching(false);

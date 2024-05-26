@@ -5,6 +5,7 @@ import cz.jzitnik.quizapp.repository.PlayingStateRepository;
 import cz.jzitnik.quizapp.repository.QuizRepository;
 import cz.jzitnik.quizapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,10 @@ public class PlayController {
 
         if (quiz.isEmpty()) {
             return ResponseEntity.notFound().build();
+        }
+
+        if (quiz.get().getAuthor().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         if (!stateOptional.isEmpty()) {

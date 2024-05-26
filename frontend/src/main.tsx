@@ -1,7 +1,6 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./globals.css";
-import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
 import ErrorBoundary from "./components/errorboundary/ErrorBoundary";
 import { BrowserRouter, Routes, Route } from "react-router-dom";

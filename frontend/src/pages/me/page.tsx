@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import updateMe from "../../api/updateProfile";
 import updateProfilePicture from "../../api/updateProfilePicture";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
+import Quiz from "../../components/quiz/quiz";
 
 export default function Me() {
   const navigate = useNavigate();
@@ -92,6 +93,7 @@ export default function Me() {
             justify="center"
             align="center"
             style={{ width: "100%" }}
+            className="flex-col gap-4 md:flex-row "
           >
             <Avatar
               fallback={data?.username[0] || "U"}
@@ -100,11 +102,11 @@ export default function Me() {
               size="9"
               style={{
                 height: "auto",
-                width: "30%",
                 aspectRatio: "1/1",
               }}
+              className="w-3/4 sm:w-1/2 md:w-1/3"
             />
-            <Card style={{ width: "50%", marginLeft: "20px" }}>
+            <Card className="w-5/6 md:w-1/2">
               <Heading size="9">
                 {fetching ? (
                   <Skeleton height="50px" width="250px" />
@@ -129,13 +131,12 @@ export default function Me() {
                 </Badge>
               </Flex>
 
-              <br />
               {fetching ? (
                 <Skeleton height="118px" />
               ) : data?.bio ? (
                 <>
-                  <Quote>{data?.bio}</Quote>
                   <br />
+                  <Quote>{data?.bio}</Quote>
                 </>
               ) : null}
 
@@ -209,25 +210,7 @@ export default function Me() {
         </Heading>
         <Container p="8">
           <Flex direction="column" gap="3" align="center">
-            {data?.quizzes.map((el) => (
-              <Link to={`/quiz/${el.id}`}>
-                <Card>
-                  <Heading>{el.title}</Heading>
-                  <Text>{el.description}</Text>
-                  <br />
-                  <Badge color="sky">
-                    {new Date(el.createDate).toLocaleDateString()}
-                  </Badge>{" "}
-                  <Badge color="green">
-                    {el.questions.length == 1
-                      ? el.questions.length + " otázka"
-                      : el.questions.length >= 2 && el.questions.length <= 4
-                        ? el.questions.length + " otázky"
-                        : el.questions.length + " otázek"}
-                  </Badge>
-                </Card>
-              </Link>
-            ))}
+            {data?.quizzes.map((el) => <Quiz quiz={el} />)}
           </Flex>
         </Container>
       </Section>

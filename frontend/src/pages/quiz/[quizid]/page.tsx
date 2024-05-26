@@ -15,7 +15,7 @@ import {
 } from "@radix-ui/themes";
 import { useEffect, useRef, useState, useMemo } from "react";
 import Quiz from "../../../types/Quiz";
-import getQuiz from "../../../api/getQuiz";
+import getQuiz, { getOwned } from "../../../api/getQuiz";
 import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import User from "../../../types/User";
@@ -27,6 +27,7 @@ import { validatedQuizAnswer } from "../../../api/validatedQuizAnswer";
 import ValidatedQuizAnswer from "../../../types/ValidatedQuizAnswer";
 import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
+import QuestionBadge from "../../../components/quiz/questionBadge";
 
 export default function quiz() {
   const [data, setData] = useState<Quiz>();
@@ -37,6 +38,7 @@ export default function quiz() {
   const [fetching, setFetching] = useState(false);
   const [notfound, setNotFound] = useState(false);
   const [answer, setAnswer] = useState<ValidatedQuizAnswer | undefined>();
+  const [owned, setOwned] = useState<boolean>();
 
   const sortedQuestions = useMemo(() => {
     if (data && data.questions) {
@@ -46,6 +48,9 @@ export default function quiz() {
   }, [data?.questions]) as any;
 
   useEffect(() => {
+    if (!isLogedIn()) {
+      navigate("/login");
+    }
     (async () => {
       try {
         const res = await getQuiz((id || 0) as number);
@@ -54,15 +59,15 @@ export default function quiz() {
         setAuthor(resAuthor);
         const answer = await validatedQuizAnswer(id || "");
         setAnswer(answer);
+        const owned = await getOwned(id || "");
+        setOwned(owned);
+        console.log(owned);
       } catch (e: any) {
         if (e.status == 404) {
           setNotFound(true);
         }
       }
     })();
-    if (!isLogedIn()) {
-      navigate("/login");
-    }
   }, []);
 
   async function playHandle() {
@@ -161,7 +166,7 @@ export default function quiz() {
                   </Link>
                 </HoverCard.Content>
               </HoverCard.Root>
-              <Badge color="green">{data?.questions.length} otázek</Badge>{" "}
+              <QuestionBadge number={data?.questions.length || 0} />
               {answer ? (
                 <Badge color={answer.finished ? "green" : "red"}>
                   {answer.finished ? "Dokončeno" : "Nedokončeno"}
@@ -170,16 +175,22 @@ export default function quiz() {
             </Flex>
             <Text>{data?.description}</Text>
             {!answer ? (
-              <Flex justify="center" mt="2">
-                <Button
-                  size="4"
-                  onClick={() => playHandle()}
-                  disabled={fetching}
-                >
-                  {fetching ? <Spinner /> : "Spustit kvíz"}
-                </Button>
-              </Flex>
-            ) : answer.finished ? (
+              owned ? (
+                <Heading align="center" size="7" mt="5">
+                  Vámi vlastněný kvíz
+                </Heading>
+              ) : (
+                <Flex justify="center" mt="2">
+                  <Button
+                    size="4"
+                    onClick={() => playHandle()}
+                    disabled={fetching}
+                  >
+                    {fetching ? <Spinner /> : "Spustit kvíz"}
+                  </Button>
+                </Flex>
+              )
+            ) : answer?.finished ? (
               <>
                 <Heading align="center" size="7" mt="5">
                   Vaše odpovědi

@@ -1,12 +1,27 @@
-import { Section, Container, Heading, Text } from "@radix-ui/themes";
+import {
+  Section,
+  Container,
+  Heading,
+  Text,
+  Separator,
+  Flex,
+} from "@radix-ui/themes";
 
 export default function Index() {
   return (
     <Section>
       <Container>
-        <Heading size="9" align="center">
-          QuizAPP
-        </Heading>
+        <Section>
+          <Flex align="center" direction="column">
+            <Heading size="9" align="center">
+              QuizAPP
+            </Heading>
+            <Separator size="3" />
+            <Text align="center" as="p" size="5">
+              Vytvářejte a sdílejte kvízy mezi ostatními.
+            </Text>
+          </Flex>
+        </Section>
         <Text size="5">
           Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit
           enim labore culpa sint ad nisi Lorem pariatur mollit ex esse

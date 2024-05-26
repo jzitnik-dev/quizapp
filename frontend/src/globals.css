@@ -1,7 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tw_base, radix_ui, tw_components_utils;
+@import "@radix-ui/themes/styles.css" layer(radix_ui);
+
+@layer tw_base {
+  @tailwind base;
+}
+
+@layer tw_components_utils {
+  @tailwind components;
+  @tailwind utilities;
+}
 
 button {
-  cursor: pointer!important;
+  cursor: pointer !important;
+}
+
+.rt-Container {
+  /* TODO */
 }
