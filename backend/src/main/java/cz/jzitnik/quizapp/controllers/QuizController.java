@@ -9,6 +9,7 @@ import cz.jzitnik.quizapp.repository.ValidatedQuizAnswerRepository;
 import cz.jzitnik.quizapp.services.UserService;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -100,5 +101,39 @@ public class QuizController {
         }
 
         return ResponseEntity.ok("false");
+    }
+
+    @GetMapping("/finished")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> getFinished(@RequestParam("quizId") Long id) {
+        User loggedUser = userService.getCurrentUser();
+        var quiz = quizRepository.findById(id);
+        if (quiz.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var validatedQuizAnswer = validatedQuizAnswerRepository.findByUserAndQuiz(loggedUser, quiz.get());
+
+        if (validatedQuizAnswer.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(validatedQuizAnswer.get().isFinished() ? "true" : "false");
+    }
+
+    @DeleteMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity remove(@RequestParam("quizId") Long id) {
+        User loggedUser = userService.getCurrentUser();
+        var quiz = quizRepository.findById(id);
+        if (quiz.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        if (!quiz.get().getAuthor().equals(loggedUser)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        quizRepository.delete(quiz.get());
+
+        return ResponseEntity.ok().build();
     }
 }

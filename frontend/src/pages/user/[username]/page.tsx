@@ -112,7 +112,13 @@ export default function UserPage() {
         </Heading>
         <Container p="8">
           <Flex direction="column" gap="3" align="center">
-            {data?.quizzes.map((el) => <Quiz quiz={el} />)}
+            {data?.quizzes.length != 0 ? (
+              data?.quizzes.map((el) => <Quiz quiz={el} />)
+            ) : (
+              <Heading align="center">
+                Uživatel {data?.displayName} nemá zatím žádné kvízy.
+              </Heading>
+            )}
           </Flex>
         </Container>
       </Section>

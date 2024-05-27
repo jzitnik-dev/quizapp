@@ -1,4 +1,4 @@
-package cz.jzitnik.quizapp.responses;
+package cz.jzitnik.quizapp.payload.response;
 
 public class MeHeaderResponse {
     private String username;

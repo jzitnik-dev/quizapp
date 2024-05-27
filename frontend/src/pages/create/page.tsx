@@ -11,6 +11,7 @@ import {
   Button,
   Spinner,
   Callout,
+  Box,
 } from "@radix-ui/themes";
 import QuestionDialog from "./questionDialog";
 import isLogedIn from "../../utils/logedin";
@@ -163,9 +164,7 @@ export default function Create() {
             <Callout.Text>
               Kvíz byl publikován!
               <br />
-              <Link
-                to={`/quiz/${quizId}`}
-              >
+              <Link to={`/quiz/${quizId}`}>
                 <Button mt="1" color="indigo">
                   Přejít na kvíz
                 </Button>
@@ -174,17 +173,27 @@ export default function Create() {
           </Callout.Root>
         ) : (
           <>
-            <Heading size="9">Nastavit otázky</Heading>
-            <Separator size="4" />
-            <QuestionDialog
-              questionMessage="Vytvořit otázku"
-              callback={createQuestion}
+            <Flex
+              justify="between"
+              align="end"
+              className="flex-col items-start md:flex-row md:items-end"
             >
-              <Button>
-                <PlusIcon />
-                Vytvořit otázku
-              </Button>
-            </QuestionDialog>
+              <Box>
+                <Heading size="9">Nastavit otázky</Heading>
+                <Text color="gray">
+                  Otázky nemusí být ve stejném pořadí, v jakém je přidáváte.
+                </Text>
+              </Box>
+              <QuestionDialog
+                questionMessage="Vytvořit otázku"
+                callback={createQuestion}
+              >
+                <Button>
+                  <PlusIcon />
+                  Vytvořit otázku
+                </Button>
+              </QuestionDialog>
+            </Flex>
 
             <Flex mt="4" mb="4" direction="column" gap="2">
               {questions.map((e, i) => (

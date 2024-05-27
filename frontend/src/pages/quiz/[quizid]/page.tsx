@@ -25,9 +25,14 @@ import play, { isPlaying } from "../../../api/play";
 import isLogedIn from "../../../utils/logedin";
 import { validatedQuizAnswer } from "../../../api/validatedQuizAnswer";
 import ValidatedQuizAnswer from "../../../types/ValidatedQuizAnswer";
-import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
+import {
+  CheckIcon,
+  Cross1Icon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
 import QuestionBadge from "../../../components/quiz/questionBadge";
+import removeQuiz from "../../../api/removeQuiz";
 
 export default function quiz() {
   const [data, setData] = useState<Quiz>();
@@ -87,6 +92,12 @@ export default function quiz() {
     navigate(`/play/${id}/?key=${key}`);
   }
 
+  async function handleRemoveQuiz() {
+    await removeQuiz(parseInt(id || "0"));
+    navigate("/");
+    toast.success("Kvíz byl odstraněn!");
+  }
+
   return (
     <Section>
       {notfound ? (
@@ -131,46 +142,83 @@ export default function quiz() {
           </AlertDialog.Root>
           <Container>
             <Heading size="9">{data?.title}</Heading>
-            <Flex my="1" gap="1">
-              <Badge color="sky">
-                {new Date(
-                  data?.createDate || new Date().toString(),
-                ).toLocaleDateString()}
-              </Badge>{" "}
-              <HoverCard.Root>
-                <HoverCard.Trigger>
-                  <Badge style={{ cursor: "pointer" }}>
+
+            <Flex justify="between">
+              <Flex my="1" gap="1">
+                <Badge color="sky">
+                  {new Date(
+                    data?.createDate || new Date().toString(),
+                  ).toLocaleDateString()}
+                </Badge>{" "}
+                <HoverCard.Root>
+                  <HoverCard.Trigger>
+                    <Badge style={{ cursor: "pointer" }}>
+                      <Link to={"/user/" + author?.username}>
+                        {author?.displayName}
+                      </Link>
+                    </Badge>
+                  </HoverCard.Trigger>
+                  <HoverCard.Content maxWidth="300px">
                     <Link to={"/user/" + author?.username}>
-                      {author?.displayName}
+                      <Flex gap="4">
+                        <Avatar
+                          size="3"
+                          fallback={author?.displayName[0] || "R"}
+                          radius="full"
+                          src={getProfilePictureUrl(author?.username || "")}
+                        />
+                        <Box>
+                          <Heading size="3" as="h3">
+                            {author?.displayName}
+                          </Heading>
+                          <Text as="div" size="2" color="gray">
+                            @{author?.username}
+                          </Text>
+                        </Box>
+                      </Flex>
                     </Link>
+                  </HoverCard.Content>
+                </HoverCard.Root>
+                <QuestionBadge number={data?.questions.length || 0} />
+                {answer ? (
+                  <Badge color={answer.finished ? "green" : "red"}>
+                    {answer.finished ? "Dokončeno" : "Nedokončeno"}
                   </Badge>
-                </HoverCard.Trigger>
-                <HoverCard.Content maxWidth="300px">
-                  <Link to={"/user/" + author?.username}>
-                    <Flex gap="4">
-                      <Avatar
-                        size="3"
-                        fallback={author?.displayName[0] || "R"}
-                        radius="full"
-                        src={getProfilePictureUrl(author?.username || "")}
-                      />
-                      <Box>
-                        <Heading size="3" as="h3">
-                          {author?.displayName}
-                        </Heading>
-                        <Text as="div" size="2" color="gray">
-                          @{author?.username}
-                        </Text>
-                      </Box>
-                    </Flex>
-                  </Link>
-                </HoverCard.Content>
-              </HoverCard.Root>
-              <QuestionBadge number={data?.questions.length || 0} />
-              {answer ? (
-                <Badge color={answer.finished ? "green" : "red"}>
-                  {answer.finished ? "Dokončeno" : "Nedokončeno"}
-                </Badge>
+                ) : null}
+              </Flex>
+              {owned ? (
+                <Flex gap="1">
+                  <AlertDialog.Root>
+                    <AlertDialog.Trigger>
+                      <Badge color="red" style={{ cursor: "pointer" }}>
+                        <TrashIcon />
+                      </Badge>
+                    </AlertDialog.Trigger>
+                    <AlertDialog.Content maxWidth="450px">
+                      <AlertDialog.Title>Odstranit kvíz</AlertDialog.Title>
+                      <AlertDialog.Description size="2">
+                        Opravdu chcete odstranit tento kvíz?
+                      </AlertDialog.Description>
+
+                      <Flex gap="3" mt="4" justify="end">
+                        <AlertDialog.Cancel>
+                          <Button variant="soft" color="gray">
+                            Ne
+                          </Button>
+                        </AlertDialog.Cancel>
+                        <AlertDialog.Action>
+                          <Button
+                            variant="solid"
+                            color="red"
+                            onClick={handleRemoveQuiz}
+                          >
+                            Ano
+                          </Button>
+                        </AlertDialog.Action>
+                      </Flex>
+                    </AlertDialog.Content>
+                  </AlertDialog.Root>
+                </Flex>
               ) : null}
             </Flex>
             <Text>{data?.description}</Text>

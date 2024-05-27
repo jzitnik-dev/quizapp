@@ -13,6 +13,6 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 spring.jpa.hibernate.ddl-auto=update
 
 # App Properties
-bezkoder.app.jwtSecret= ======================BezKoder=Spring===========================
-bezkoder.app.jwtExpirationMs=86400000
+jzitnik.app.jwtSecret= ======================BezKoder=Spring===========================
+jzitnik.app.jwtExpirationMs=86400000
 spring.servlet.multipart.max-file-size=5MB

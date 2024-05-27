@@ -38,7 +38,7 @@ public class Quiz {
         this.validatedQuizAnswers = validatedQuizAnswers;
     }
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "quiz", cascade = {CascadeType.ALL, CascadeType.REMOVE}, orphanRemoval = true)
     @JsonManagedReference(value = "quiz-validatedQuizAnswers")
     @JsonIgnore
     private Set<ValidatedQuizAnswer> validatedQuizAnswers;

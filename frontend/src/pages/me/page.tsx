@@ -15,7 +15,7 @@ import {
   TextArea,
 } from "@radix-ui/themes";
 import User from "../../types/User";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import me from "../../api/me";
 import isLogedIn from "../../utils/logedin";
@@ -68,7 +68,7 @@ export default function Me() {
   }
 
   useEffect(() => {
-    if (!isLogedIn()) navigate("/");
+    if (!isLogedIn()) navigate("/login");
 
     (async () => {
       const response = (await me()) as User;
@@ -215,7 +215,16 @@ export default function Me() {
         </Heading>
         <Container p="8">
           <Flex direction="column" gap="3" align="center">
-            {data?.quizzes.map((el) => <Quiz quiz={el} />)}
+            {data?.quizzes.length !== 0 ? (
+              data?.quizzes.map((el) => <Quiz quiz={el} />)
+            ) : (
+              <>
+                <Heading>Nemáte zatím vytvořený žádný kvíz</Heading>
+                <Link to="/create">
+                  <Button>Vytvořit svůj první kvíz</Button>
+                </Link>
+              </>
+            )}
           </Flex>
         </Container>
       </Section>

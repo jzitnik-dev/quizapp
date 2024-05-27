@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "quiz_id"})})
 public class ValidatedQuizAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
