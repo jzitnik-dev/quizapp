@@ -23,6 +23,7 @@ export default function Quiz({ quiz }: { quiz: QuizType }) {
         <Badge color="sky">
           {new Date(quiz.createDate).toLocaleDateString()}
         </Badge>{" "}
+        <QuestionBadge number={quiz.questions.length} />{" "}
         {finished !== undefined ? (
           finished === true ? (
             <Badge color="green">Dokončeno</Badge>
@@ -30,7 +31,6 @@ export default function Quiz({ quiz }: { quiz: QuizType }) {
             <Badge color="red">Nedokončeno</Badge>
           )
         ) : null}{" "}
-        <QuestionBadge number={quiz.questions.length} />
       </Card>
     </Link>
   );
