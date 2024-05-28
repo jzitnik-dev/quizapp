@@ -18,7 +18,7 @@ public class AnswerValidationService {
         questionList.sort(Comparator.comparingLong(Question::getId));
 
         List<String> correctAnswers = new ArrayList<>();
-        List<String> wrongAnsers = new ArrayList<>();
+        List<String> wrongAnswers = new ArrayList<>();
 
         for (int i = 0; i < userAnswers.size(); i++) {
             String userAnswer = userAnswers.get(i);
@@ -28,36 +28,36 @@ public class AnswerValidationService {
 
             if (questionType.equals(QuestionType.Default)) {
                 if (convert(userAnswer).equals(convert(quizAnswer))) {
-                    correctAnswers.add(userAnswer);
+                    correctAnswers.add(quizAnswer);
                 } else {
-                    wrongAnsers.add(userAnswer);
+                    wrongAnswers.add(quizAnswer);
                 }
             } else if (questionType.equals(QuestionType.TrueFalse) || questionType.equals(QuestionType.Singleselect)) {
                 if (userAnswer.equals(quizAnswer)) {
-                    correctAnswers.add(userAnswer);
+                    correctAnswers.add(quizAnswer);
                 } else {
-                    wrongAnsers.add(userAnswer);
+                    wrongAnswers.add(quizAnswer);
                 }
             } else if (questionType.equals(QuestionType.Multiselect)) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {
-                    var userAns = objectMapper.readValue(userAnswer, List.class);
+                    var userAns = objectMapper.readValue(quizAnswer, List.class);
                     var quizAns = objectMapper.readValue(quizAnswer, List.class);
                     Set<String> userAnsSet = new HashSet<>(userAns);
                     Set<String> quizAnsSet = new HashSet<>(quizAns);
                     if (userAnsSet.equals(quizAnsSet)) {
-                        correctAnswers.add(userAnswer);
+                        correctAnswers.add(quizAnswer);
                     } else {
-                        wrongAnsers.add(userAnswer);
+                        wrongAnswers.add(quizAnswer);
                     }
                 } catch(JsonProcessingException e) {
-                    wrongAnsers.add("[\"Interní chyba\"]");
+                    wrongAnswers.add("[\"Interní chyba\"]");
                 }
             }
         }
 
 
-        var validatedQuizAnswer = new ValidatedQuizAnswer(user, quiz, correctAnswers, wrongAnsers, userAnswers, true);
+        var validatedQuizAnswer = new ValidatedQuizAnswer(user, quiz, correctAnswers, wrongAnswers, userAnswers, true);
 
         return validatedQuizAnswer;
     }

@@ -101,7 +101,7 @@ public class QuestionController {
 
         if (playingState.getQuestionNumber() == quiz.getQuestions().size()) {
             // Finish
-            // I have no idea what status code should i use for this. Don't blame me.
+            // I have no idea what status code should I use for this. Don't blame me.
             return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
         }
 

@@ -25,14 +25,13 @@ import play, { isPlaying } from "../../../api/play";
 import isLogedIn from "../../../utils/logedin";
 import { validatedQuizAnswer } from "../../../api/validatedQuizAnswer";
 import ValidatedQuizAnswer from "../../../types/ValidatedQuizAnswer";
-import {
-  CheckIcon,
-  Cross1Icon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
+import { CheckIcon, Cross1Icon, TrashIcon } from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
 import QuestionBadge from "../../../components/quiz/questionBadge";
 import removeQuiz from "../../../api/removeQuiz";
+import QuizStats from "../../../types/QuizStats";
+import { getStatistics } from "../../../api/getStatistics";
+import AnswerCorrectPercentageChart from "../../../components/quiz/answerCorrectPercentageChart";
 
 export default function quiz() {
   const [data, setData] = useState<Quiz>();
@@ -44,6 +43,7 @@ export default function quiz() {
   const [notfound, setNotFound] = useState(false);
   const [answer, setAnswer] = useState<ValidatedQuizAnswer | undefined>();
   const [owned, setOwned] = useState<boolean>();
+  const [stats, setStats] = useState<QuizStats | null>();
 
   const sortedQuestions = useMemo(() => {
     if (data && data.questions) {
@@ -66,7 +66,14 @@ export default function quiz() {
         setAnswer(answer);
         const owned = await getOwned(id || "");
         setOwned(owned);
-        console.log(owned);
+        if (owned) {
+          const stats = await getStatistics(id || "");
+          if (stats == null) {
+            setStats(null);
+          } else {
+            setStats(stats);
+          }
+        }
       } catch (e: any) {
         if (e.status == 404) {
           setNotFound(true);
@@ -224,9 +231,28 @@ export default function quiz() {
             <Text>{data?.description}</Text>
             {!answer ? (
               owned ? (
-                <Heading align="center" size="7" mt="5">
-                  Vámi vlastněný kvíz
-                </Heading>
+                <>
+                  <Heading align="center" size="8" mt="5">
+                    Statistiky kvízu
+                  </Heading>
+                  <Text align="center" as="p">
+                    Statistiky Vašeho kvízu.
+                  </Text>
+                  <Heading align="center" mt="4">
+                    Odpovědi
+                  </Heading>
+                  <Flex justify="center">
+                    {stats !== undefined ? (
+                      stats !== null ? (
+                        <AnswerCorrectPercentageChart quizData={stats} />
+                      ) : (
+                        <Text align="center" as="p">Tento kvíz si zatím nikdo nezahrál.</Text>
+                      )
+                    ) : (
+                      <Spinner />
+                    )}
+                  </Flex>
+                </>
               ) : (
                 <Flex justify="center" mt="2">
                   <Button
