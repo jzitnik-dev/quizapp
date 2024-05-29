@@ -1,8 +1,7 @@
+import Answer from "./Answer";
 
 export default interface ValidatedQuizAnswer {
   id: number;
-  correctAnswers: string[];
-  wrongAnswers: string[];
-  allUserAnswers: string[];
+  answers: Answer[];
   finished: boolean;
 }

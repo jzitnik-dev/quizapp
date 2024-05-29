@@ -67,7 +67,7 @@ public class QuestionController {
 
         if (playingState.getQuestionNumber() != question || playingState.getShowed()) {
             // Question loaded again. User refreshed webpage.
-            var validated = new ValidatedQuizAnswer(loggedInUser, quiz, List.of(), List.of(), List.of(), false);
+            var validated = new ValidatedQuizAnswer(loggedInUser, quiz, new ArrayList<Answer>(), false);
             validatedQuizAnswerRepository.save(validated);
             playingStateRepository.delete(playingState);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -171,7 +171,7 @@ public class QuestionController {
         }
         var playingState = playingStateOptional.get();
         var quiz = playingState.getQuiz();
-        var validated = new ValidatedQuizAnswer(loggedInUser, quiz, List.of(), List.of(), List.of(), false);
+        var validated = new ValidatedQuizAnswer(loggedInUser, quiz, new ArrayList<Answer>(), false);
         validatedQuizAnswerRepository.save(validated);
         playingStateRepository.delete(playingState);
         return ResponseEntity.ok().build();

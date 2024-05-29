@@ -210,40 +210,30 @@ export default function Play() {
               Konec!
             </Heading>
             <Heading size="9" align="center">
-              {finishData?.correctAnswers.length}/
-              {finishData?.allUserAnswers.length}
+              {finishData?.answers.filter((item) => item.correct).length}/
+              {finishData?.answers.length}
             </Heading>
             <Heading size="7" align="center" mt="3">
               Vaše odpovědi
             </Heading>
             <Flex direction="column" gap="3" mx="3">
-              {finishData?.allUserAnswers.map((e, index) => {
+              {finishData?.answers.map((answer, index) => {
                 return (
-                  <Callout.Root
-                    color={
-                      finishData.correctAnswers.includes(e) ? "green" : "red"
-                    }
-                  >
+                  <Callout.Root color={answer.correct ? "green" : "red"}>
                     <Callout.Icon>
-                      {finishData.correctAnswers.includes(e) ? (
-                        <CheckIcon />
-                      ) : (
-                        <Cross1Icon />
-                      )}
+                      {answer.correct ? <CheckIcon /> : <Cross1Icon />}
                     </Callout.Icon>
                     <Callout.Text>
                       <Box>
-                        <Heading>
-                          Otázka: {data?.questions[index].question}
-                        </Heading>
+                        <Heading>Otázka: {answer.question.question}</Heading>
                         <Text>
                           <Flex gap="1" align="center">
                             <Text>Vaše odpověď:</Text>
                             {sortedQuestions[index].type == "Multiselect"
-                              ? JSON.parse(
-                                  finishData?.allUserAnswers[index],
-                                ).map((e: string) => <Badge>{e}</Badge>)
-                              : finishData.allUserAnswers[index]}
+                              ? JSON.parse(answer.answer).map((e: string) => (
+                                  <Badge>{e}</Badge>
+                                ))
+                              : answer.answer}
                           </Flex>
                         </Text>
                       </Box>

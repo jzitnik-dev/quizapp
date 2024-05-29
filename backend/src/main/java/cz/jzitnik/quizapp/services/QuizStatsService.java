@@ -1,5 +1,6 @@
 package cz.jzitnik.quizapp.services;
 
+import cz.jzitnik.quizapp.controllers.Answer;
 import cz.jzitnik.quizapp.entities.Question;
 import cz.jzitnik.quizapp.entities.Quiz;
 import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
@@ -26,7 +27,7 @@ public class QuizStatsService {
 
     public Optional<QuizStatsResponse> getStats(Quiz quiz) {
         // I know this code is shit as hell. But you know if it works don't touch it.
-        var validatedQuizAnswers = validatedQuizAnswerRepository.findByQuiz(quiz);
+        var validatedQuizAnswers = validatedQuizAnswerRepository.findByQuizAndFinishedIsTrue(quiz);
 
         if (validatedQuizAnswers.isEmpty()) {
             return Optional.empty();
@@ -39,7 +40,7 @@ public class QuizStatsService {
         List<Question> questionList = new ArrayList<>(questions);
         questionList.sort(Comparator.comparingLong(Question::getId));
 
-        for (Question question : questions) {
+        for (Question question : questionList) {
             Map<String, Integer> innerMap = new HashMap<>();
             innerMap.put("correct", 0);
             innerMap.put("wrong", 0);
@@ -47,17 +48,15 @@ public class QuizStatsService {
         }
 
         for (ValidatedQuizAnswer validatedQuizAnswer : validatedQuizAnswers) {
-            var correctAnswers = validatedQuizAnswer.getCorrectAnswers();
-
-            for (Question question : questionList) {
-                if (correctAnswers.contains(question.getAnswer())) {
-                    var now = data.get(question.getQuestion()).get("correct");
+            for (Answer answer : validatedQuizAnswer.getAnswers()) {
+                if (answer.isCorrect()) {
+                    var now = data.get(answer.getQuestion()).get("correct");
                     now++;
-                    data.get(question.getQuestion()).put("correct", now);
+                    data.get(answer.getQuestion()).put("correct", now);
                 } else {
-                    var now = data.get(question.getQuestion()).get("wrong");
+                    var now = data.get(answer.getQuestion()).get("wrong");
                     now++;
-                    data.get(question.getQuestion()).put("wrong", now);
+                    data.get(answer.getQuestion()).put("wrong", now);
                 }
             }
 
@@ -70,7 +69,7 @@ public class QuizStatsService {
             var questionTemp = data.get(question);
             var correct = questionTemp.get("correct");
             var wrong = questionTemp.get("wrong");
-            int successPercentage = (int) (((double) correct / correct + wrong) * 100);
+            int successPercentage = (int) (((double) correct / (correct + wrong)) * 100);
             percentages.add(successPercentage);
         }
 

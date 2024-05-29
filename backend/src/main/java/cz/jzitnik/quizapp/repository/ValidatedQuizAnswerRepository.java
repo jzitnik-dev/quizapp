@@ -12,5 +12,5 @@ import java.util.Optional;
 @Repository
 public interface ValidatedQuizAnswerRepository extends JpaRepository<ValidatedQuizAnswer, Long> {
     Optional<ValidatedQuizAnswer> findByUserAndQuiz(User user, Quiz quiz);
-    List<ValidatedQuizAnswer> findByQuiz(Quiz quiz);
+    List<ValidatedQuizAnswer> findByQuizAndFinishedIsTrue(Quiz quiz);
 }

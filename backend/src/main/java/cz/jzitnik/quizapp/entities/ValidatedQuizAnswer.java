@@ -1,10 +1,12 @@
 package cz.jzitnik.quizapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import cz.jzitnik.quizapp.utils.JsonConverter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import cz.jzitnik.quizapp.controllers.Answer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,19 +27,9 @@ public class ValidatedQuizAnswer {
     private Quiz quiz;
 
     @NotNull
-    @Convert(converter = JsonConverter.class)
-    @Column(columnDefinition = "json")
-    private List<String> correctAnswers;
-
-    @NotNull
-    @Convert(converter = JsonConverter.class)
-    @Column(columnDefinition = "json")
-    private List<String> wrongAnswers;
-
-    @NotNull
-    @Convert(converter = JsonConverter.class)
-    @Column(columnDefinition = "json")
-    private List<String> allUserAnswers;
+    @OneToMany(mappedBy = "validatedQuizAnswer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Answer> answers;
 
     public boolean isFinished() {
         return finished;
@@ -49,40 +41,22 @@ public class ValidatedQuizAnswer {
 
     private boolean finished;
 
-    public ValidatedQuizAnswer(User user, Quiz quiz, List<String> correctAnswers, List<String> wrongAnswers, List<String> allUserAnswers, boolean finished) {
+    public ValidatedQuizAnswer(User user, Quiz quiz, ArrayList<Answer> answers, boolean finished) {
         this.user = user;
         this.quiz = quiz;
-        this.correctAnswers = correctAnswers;
-        this.wrongAnswers = wrongAnswers;
-        this.allUserAnswers = allUserAnswers;
         this.finished = finished;
+        this.answers = answers;
     }
 
     public ValidatedQuizAnswer() {
     }
 
-    public @NotNull List<String> getAllUserAnswers() {
-        return allUserAnswers;
+    public @NotNull List<Answer> getAnswers() {
+        return answers;
     }
 
-    public void setAllUserAnswers(@NotNull List<String> allUserAnswers) {
-        this.allUserAnswers = allUserAnswers;
-    }
-
-    public @NotNull List<String> getWrongAnswers() {
-        return wrongAnswers;
-    }
-
-    public void setWrongAnswers(@NotNull List<String> wrongAnswers) {
-        this.wrongAnswers = wrongAnswers;
-    }
-
-    public @NotNull List<String> getCorrectAnswers() {
-        return correctAnswers;
-    }
-
-    public void setCorrectAnswers(@NotNull List<String> correctAnswers) {
-        this.correctAnswers = correctAnswers;
+    public void setAnswers(@NotNull List<Answer> answers) {
+        this.answers = answers;
     }
 
     public Quiz getQuiz() {

@@ -246,7 +246,9 @@ export default function quiz() {
                       stats !== null ? (
                         <AnswerCorrectPercentageChart quizData={stats} />
                       ) : (
-                        <Text align="center" as="p">Tento kvíz si zatím nikdo nezahrál.</Text>
+                        <Text align="center" as="p">
+                          Tento kvíz si zatím nikdo nezahrál.
+                        </Text>
                       )
                     ) : (
                       <Spinner />
@@ -270,33 +272,25 @@ export default function quiz() {
                   Vaše odpovědi
                 </Heading>
                 <Flex direction="column" gap="3" mx="3">
-                  {answer?.allUserAnswers.map((e, index) => {
+                  {answer?.answers.map((answer, index) => {
                     return (
-                      <Callout.Root
-                        color={
-                          answer?.correctAnswers.includes(e) ? "green" : "red"
-                        }
-                      >
+                      <Callout.Root color={answer.correct ? "green" : "red"}>
                         <Callout.Icon>
-                          {answer.correctAnswers.includes(e) ? (
-                            <CheckIcon />
-                          ) : (
-                            <Cross1Icon />
-                          )}
+                          {answer.correct ? <CheckIcon /> : <Cross1Icon />}
                         </Callout.Icon>
                         <Callout.Text>
                           <Box>
                             <Heading>
-                              Otázka: {data?.questions[index].question}
+                              Otázka: {answer.question.question}
                             </Heading>
                             <Text>
                               <Flex gap="1" align="center">
                                 <Text>Vaše odpověď:</Text>
                                 {sortedQuestions[index].type == "Multiselect"
-                                  ? JSON.parse(
-                                      answer?.allUserAnswers[index],
-                                    ).map((e: string) => <Badge>{e}</Badge>)
-                                  : answer.allUserAnswers[index]}
+                                  ? JSON.parse(answer.answer).map(
+                                      (e: string) => <Badge>{e}</Badge>,
+                                    )
+                                  : answer.answer}
                               </Flex>
                             </Text>
                           </Box>
