@@ -41,7 +41,7 @@ public class User {
   private String bio;
 
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JsonManagedReference // Prevents infinite recursion when serializing to JSON
+  @JsonManagedReference
   private Set<Quiz> quizzes = new HashSet<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

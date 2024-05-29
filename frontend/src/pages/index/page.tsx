@@ -5,6 +5,10 @@ import {
   Text,
   Separator,
   Flex,
+  Card,
+  Link,
+  Badge,
+  Strong,
 } from "@radix-ui/themes";
 
 export default function Index() {
@@ -26,19 +30,84 @@ export default function Index() {
             </Text>
           </Flex>
         </Section>
-        <Text size="5">
-          Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit
-          enim labore culpa sint ad nisi Lorem pariatur mollit ex esse
-          exercitation amet. Nisi anim cupidatat excepteur officia.
-          Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate
-          voluptate dolor minim nulla est proident. Nostrud officia pariatur ut
-          officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit
-          commodo officia dolor Lorem duis laboris cupidatat officia voluptate.
-          Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis
-          officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis
-          sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea
-          consectetur et est culpa et culpa duis.
-        </Text>
+        <Section>
+          <Heading size="8" align="center">
+            Proč zrovna QuizAPP?
+          </Heading>
+          <Flex gap="3" mt="2" className="flex-col md:flex-row">
+            <Card className="basis-full">
+              <Heading>Jednoduché vytváření</Heading>
+              <Text mt="1" as="p">
+                Jednudhé vytváření a publikování kvízu. Vytvoření kvízu Vám
+                zabere jen pár minut.
+              </Text>
+            </Card>
+            <Card className="basis-full">
+              <Heading>Ukládání odpovědí</Heading>
+              <Text mt="1" as="p">
+                Pokud si zahrajete kvíz, QuizAPP uloží vaše odpovědi, proto
+                nikdy nepříjdete o Vaše odpovědi.
+              </Text>
+            </Card>
+            <Card className="basis-full">
+              <Heading>Jednoduché vyhodnocení kvízu</Heading>
+              <Text mt="1" as="p">
+                QuizAPP vyhodnotí Vaše odpovědi a dá Vám detailní analýzu vašich
+                odpovědí.
+              </Text>
+            </Card>
+          </Flex>
+        </Section>
+        <Section>
+          <Heading size="8" align="center">
+            FAQ
+          </Heading>
+          <Heading size="7" mt="5">
+            Jak si vytvořit svůj vlastní kvíz?
+          </Heading>
+          <Heading mt="2">1. Založte si účet na QuizAPP</Heading>
+          <Text>
+            Vytvořte si účet na QuizAPP pomoci registračního formuláře.
+          </Text>{" "}
+          <Link href="/signup" target="_blank">
+            Otevřít registraci
+          </Link>
+          <Heading mt="2">2. Vytvořit si kvíz</Heading>
+          <Text>
+            Pomocí tlačítka vytvořit kvíz si vytvořte kvíz. Vymyslete si jméno a
+            popis kvízu. Následně vložíte otázky.
+            <br />
+            Na výběr máte následující typy otázek:
+            <Flex gap="1">
+              <Badge color="gray">Výchozí</Badge>
+              <Badge color="gray">Pravda / Nepravda</Badge>
+              <Badge color="gray">Otázka s jednou odpovědí</Badge>
+              <Badge color="gray">Otázka s několika odpověďmi</Badge>
+            </Flex>
+            <Heading mt="2">3. Hotovo</Heading>
+            <Text>
+              Nyní jste si vytvořili kvíz na QuizAPP. Nyní si kdokoliv může
+              zahrát Váš kvíz.
+            </Text>
+            <Separator size="4" mt="3" />
+            <Heading size="7" mt="3">
+              Ukládá QuizAPP soukromé informace?
+            </Heading>
+            <Text>
+              <Strong>Ne</Strong>, QuizAPP neukládá žádné soukromé informace a
+              sledovací data. QuizAPP ukládá pouze list uživatelů, vytvořené
+              kvízy a odpovědi uživatelů.
+            </Text>
+            <Separator size="4" mt="3" />
+            <Heading size="7" mt="3">
+              Můžu si zahrát kvíz aniž bych byl přihlášen?
+            </Heading>
+            <Text>
+              Bohužel ne, QuizAPP potřebuje aby byl uživatel přihlášen pro
+              následné uložení odpovědi do databáze.
+            </Text>
+          </Text>
+        </Section>
       </Container>
     </Section>
   );
