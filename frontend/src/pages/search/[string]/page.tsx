@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/themes";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { FormEvent, useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import search from "../../../api/search";
 import Page from "../../../types/Page";
 import Quiz from "../../../components/quiz/quiz";
@@ -29,7 +29,7 @@ export default function Search() {
         setSearchData(res);
       })();
     }
-  }, [string]);
+  }, [string, page]);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -69,18 +69,18 @@ export default function Search() {
               {searchData?.first ? (
                 <Button disabled={true}>Předchozí</Button>
               ) : (
-                <Link to={`/discover/page/${searchData?.number}`}>
-                  <Button>Předchozí</Button>
-                </Link>
+                <Button onClick={() => setPage(searchData.number)}>
+                  Předchozí
+                </Button>
               )}
 
-              <Text>{`Stránka ${(searchData?.number || 0) + 1} z ${searchData?.totalPages}`}</Text>
+              <Text>{`Stránka ${searchData.number + 1} z ${searchData.totalPages}`}</Text>
               {searchData?.first ? (
                 <Button disabled={true}>Další</Button>
               ) : (
-                <Link to={`/discover/page/${(searchData?.number || 0) + 2}`}>
-                  <Button>Další</Button>
-                </Link>
+                <Button onClick={() => setPage(searchData.number + 2)}>
+                  Další
+                </Button>
               )}
             </>
           ) : null}
