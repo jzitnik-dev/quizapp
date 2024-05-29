@@ -13,9 +13,13 @@ export default function Index() {
       <Container>
         <Section>
           <Flex align="center" direction="column">
-            <Heading size="9" align="center">
-              QuizAPP
-            </Heading>
+            <Flex align="center" gap="2">
+              <img src="/logo.png" className="h-10" />
+              <Heading size="9" align="center">
+                QuizAPP
+              </Heading>{" "}
+            </Flex>
+
             <Separator size="3" />
             <Text align="center" as="p" size="5">
               Vytvářejte a sdílejte kvízy mezi ostatními.

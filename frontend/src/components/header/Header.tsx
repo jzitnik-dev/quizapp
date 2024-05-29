@@ -57,7 +57,12 @@ export default function Header() {
       justify="between"
     >
       <Link to="/">
-        <Heading>QuizAPP</Heading>
+        <Heading>
+          <Flex gap="3" align="center">
+            <img src="/logo.png" className="h-8" />
+            QuizAPP
+          </Flex>
+        </Heading>
       </Link>
       <Flex align="center" gap="3">
         <TabNav.Root>
