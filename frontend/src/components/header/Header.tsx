@@ -7,11 +7,16 @@ import {
   DropdownMenu,
   Text,
   Skeleton,
+  IconButton,
 } from "@radix-ui/themes";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import isLogedIn from "../../utils/logedin";
-import { CaretDownIcon, PlusIcon } from "@radix-ui/react-icons";
+import {
+  CaretDownIcon,
+  MagnifyingGlassIcon,
+  PlusIcon,
+} from "@radix-ui/react-icons";
 import { meHeader } from "../../api/me";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 
@@ -79,6 +84,11 @@ export default function Header() {
             Procházet kvízy
           </TabNav.Link>
         </TabNav.Root>
+        <Link to="/search">
+          <IconButton>
+            <MagnifyingGlassIcon />
+          </IconButton>
+        </Link>
         {logedIn ? (
           <Link to="/create">
             <Button>

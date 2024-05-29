@@ -19,6 +19,7 @@ const Me = lazy(() => import("./pages/me/page"));
 const Create = lazy(() => import("./pages/create/page"));
 const Quiz = lazy(() => import("./pages/quiz/[quizid]/page"));
 const Play = lazy(() => import("./pages/play/[id]/page"));
+const Search = lazy(() => import("./pages/search/[string]/page"));
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Theme appearance="dark">
@@ -116,6 +117,22 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               element={
                 <Page title="QuizAPP - Hra">
                   <Play />
+                </Page>
+              }
+            ></Route>
+            <Route
+              path="/search"
+              element={
+                <Page title="QuizAPP - Vyhledávání">
+                  <Search />
+                </Page>
+              }
+            ></Route>
+            <Route
+              path="/search/:string"
+              element={
+                <Page title="QuizAPP - Vyhledávání">
+                  <Search />
                 </Page>
               }
             ></Route>
