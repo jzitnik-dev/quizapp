@@ -16,9 +16,9 @@ public class DiscoverController {
     private QuizService quizService;
 
     @GetMapping("/page/{pageNumber}")
-    public ResponseEntity<Page<Quiz>> getAllQuizzes(@PathVariable int pageNumber) {
+    public ResponseEntity<Page<Quiz>> getAllQuizzes(@PathVariable int pageNumber,   @RequestParam(value = "questionCount", required = false) Integer questionCount) {
         try {
-            return ResponseEntity.ok(quizService.getAllQuizzes(pageNumber - 1, 15));
+            return ResponseEntity.ok(quizService.getAllQuizzes(pageNumber - 1, 15, questionCount));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }

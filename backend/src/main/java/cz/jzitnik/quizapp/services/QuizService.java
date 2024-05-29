@@ -15,8 +15,12 @@ public class QuizService {
     @Autowired
     private QuizRepository quizRepository;
 
-    public Page<Quiz> getAllQuizzes(int page, int size) {
+    public Page<Quiz> getAllQuizzes(int page, int size, Integer questionCount) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        return quizRepository.findAll(pageable);
+        if (questionCount != null) {
+            return quizRepository.findByNumberOfQuestions(questionCount, pageable);
+        } else {
+            return quizRepository.findAll(pageable);
+        }
     }
 }
