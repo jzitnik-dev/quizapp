@@ -72,6 +72,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               }
             ></Route>
             <Route
+              path="/discover/page/:pagenumber"
+              element={
+                <Page title="QuizAPP - Procházet kvízy">
+                  <Discover />
+                </Page>
+              }
+            ></Route>
+            <Route
               path="/quiz/:id"
               element={
                 <Page title="QuizAPP - Kvíz">
