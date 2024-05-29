@@ -50,13 +50,13 @@ public class QuizStatsService {
         for (ValidatedQuizAnswer validatedQuizAnswer : validatedQuizAnswers) {
             for (Answer answer : validatedQuizAnswer.getAnswers()) {
                 if (answer.isCorrect()) {
-                    var now = data.get(answer.getQuestion()).get("correct");
+                    var now = data.get(answer.getQuestion().getQuestion()).get("correct");
                     now++;
-                    data.get(answer.getQuestion()).put("correct", now);
+                    data.get(answer.getQuestion().getQuestion()).put("correct", now);
                 } else {
-                    var now = data.get(answer.getQuestion()).get("wrong");
+                    var now = data.get(answer.getQuestion().getQuestion()).get("wrong");
                     now++;
-                    data.get(answer.getQuestion()).put("wrong", now);
+                    data.get(answer.getQuestion().getQuestion()).put("wrong", now);
                 }
             }
 
