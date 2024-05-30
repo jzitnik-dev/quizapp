@@ -15,6 +15,7 @@ import ErrorBoundary from "./components/errorboundary/ErrorBoundary";
 import Error from "./components/error/Error";
 import Loading from "./components/loading/Loading";
 import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer";
 import Page from "./components/page/Page";
 
 // Pages
@@ -145,6 +146,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               }
             ></Route>
           </Routes>
+          <Footer />
         </BrowserRouter>
       </Suspense>
     </ErrorBoundary>
