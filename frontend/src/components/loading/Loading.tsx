@@ -3,7 +3,7 @@ import { Flex } from "@radix-ui/themes";
 export default function Loading() {
   return (
     <Flex height="100vh" width="100vw" align="center" justify="center">
-      <div className="loader loader--style8" title={7}>
+      <div className="loader loader--style8">
         <svg
           version="1.1"
           id="Layer_1"
@@ -14,7 +14,6 @@ export default function Loading() {
           width="24px"
           height="30px"
           viewBox="0 0 24 30"
-          style={{ enableBackground: "new 0 0 50 50" }}
           xmlSpace="preserve"
         >
           <rect x={0} y={10} width={4} height={10} fill="#333" opacity="0.2">

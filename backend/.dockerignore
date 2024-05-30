@@ -1,0 +1,19 @@
+# Logs
+logs
+*.log
+
+# Maven target directory
+target
+
+# Local environment files
+*.local
+
+# Editor directories and files
+.vscode
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
