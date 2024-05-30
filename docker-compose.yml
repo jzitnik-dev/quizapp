@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   frontend:
@@ -20,10 +20,13 @@ services:
       JWT_SECRET: ======================jzitnik==Spring===========================
       DB_USERNAME: root
       DB_PASSWORD: quizapp
+      DATASOURCE_URL: jdbc:mysql://database:3306/QuizAPP
     depends_on:
       - database
     networks:
       - app-network
+    volumes:
+      - user_profile_pictures:/app/ProfilePictures
 
   database:
     image: mysql:8.0
@@ -40,3 +43,4 @@ networks:
 
 volumes:
   db_data:
+  user_profile_pictures:
