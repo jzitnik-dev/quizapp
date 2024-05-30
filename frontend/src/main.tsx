@@ -1,15 +1,23 @@
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
-import "./globals.css";
-import { Theme } from "@radix-ui/themes";
-import ErrorBoundary from "./components/errorboundary/ErrorBoundary";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Page from "./components/page/Page";
-import { lazy } from "react";
-import Header from "./components/header/Header";
+
+// Libraries
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { Theme } from "@radix-ui/themes";
 
+// Styles
+import "./globals.css";
+
+// Components
+import ErrorBoundary from "./components/errorboundary/ErrorBoundary";
+import Error from "./components/error/Error";
+import Loading from "./components/loading/Loading";
+import Header from "./components/header/Header";
+import Page from "./components/page/Page";
+
+// Pages
 const Index = lazy(() => import("./pages/index/page"));
 const Login = lazy(() => import("./pages/login/page"));
 const Register = lazy(() => import("./pages/register/page"));
@@ -23,8 +31,8 @@ const Search = lazy(() => import("./pages/search/[string]/page"));
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Theme appearance="dark">
-    <ErrorBoundary fallback={<></>}>
-      <Suspense fallback={<></>}>
+    <ErrorBoundary fallback={<Error />}>
+      <Suspense fallback={<Loading />}>
         <BrowserRouter>
           <Header />
           <ToastContainer

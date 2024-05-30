@@ -8,6 +8,7 @@ import {
   Badge,
   Quote,
   Text,
+  Skeleton,
 } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -22,6 +23,7 @@ import Quiz from "../../../components/quiz/quiz";
 export default function UserPage() {
   const [data, setData] = useState<User | undefined>();
   const [notfound, setNotFound] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const { username } = useParams();
   const navigate = useNavigate();
 
@@ -44,6 +46,7 @@ export default function UserPage() {
           setNotFound(true);
         }
       }
+      setFetching(false);
     })();
   }, []);
 
@@ -84,19 +87,38 @@ export default function UserPage() {
               }}
             />
             <Card style={{ width: "50%", marginLeft: "20px" }}>
-              <Heading size="9">{data?.displayName}</Heading>
+              <Heading size="9">
+                {fetching ? (
+                  <Skeleton height="50px" width="250px" />
+                ) : (
+                  data?.displayName
+                )}
+              </Heading>
               <Flex gap="2">
-                <Badge>@{data?.username}</Badge>
                 <Badge>
-                  {data?.quizzes.length == 1
-                    ? data.quizzes.length + " kvíz"
-                    : (data?.quizzes.length || 0) >= 2 &&
-                        (data?.quizzes.length || 0) <= 4
-                      ? data?.quizzes.length + " kvízy"
-                      : data?.quizzes.length + " kvízů"}
+                  {fetching ? (
+                    <Skeleton height="20px" width="60px" />
+                  ) : (
+                    `@${data?.username}`
+                  )}
+                </Badge>
+                <Badge>
+                  {fetching ? (
+                    <Skeleton height="20px" width="50px" />
+                  ) : data?.quizzes.length == 1 ? (
+                    data.quizzes.length + " kvíz"
+                  ) : (data?.quizzes.length || 0) >= 2 &&
+                    (data?.quizzes.length || 0) <= 4 ? (
+                    data?.quizzes.length + " kvízy"
+                  ) : (
+                    data?.quizzes.length + " kvízů"
+                  )}
                 </Badge>
               </Flex>
-              {data?.bio ? (
+
+              {fetching ? (
+                <Skeleton height="118px" />
+              ) : data?.bio ? (
                 <>
                   <br />
                   <Quote>{data?.bio}</Quote>

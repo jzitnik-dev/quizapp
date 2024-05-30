@@ -17,3 +17,18 @@ button {
 .rt-Container {
   @apply 2xl:mx-64 xl:mx-32 lg:mx-16 md:mx-8 sm:mx-4 mx-2;
 }
+
+.loader{
+  margin: 0 0 2em;
+  text-align: center;
+  padding: 1em;
+  margin: 0 auto 1em;
+  display: inline-block;
+  vertical-align: top;
+  scale: 1.8;
+}
+
+.loader svg path,
+.loader svg rect{
+  fill: var(--accent-9);
+}
