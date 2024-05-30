@@ -1,5 +1,6 @@
 package cz.jzitnik.quizapp.controllers;
 
+import cz.jzitnik.quizapp.entities.Answer;
 import cz.jzitnik.quizapp.entities.Question;
 import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
 import cz.jzitnik.quizapp.repository.PlayingStateRepository;

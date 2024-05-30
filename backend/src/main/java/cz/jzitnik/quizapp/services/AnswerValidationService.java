@@ -2,7 +2,7 @@ package cz.jzitnik.quizapp.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.jzitnik.quizapp.controllers.Answer;
+import cz.jzitnik.quizapp.entities.Answer;
 import cz.jzitnik.quizapp.entities.*;
 import org.springframework.stereotype.Service;
 

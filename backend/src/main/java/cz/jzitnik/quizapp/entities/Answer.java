@@ -1,8 +1,6 @@
-package cz.jzitnik.quizapp.controllers;
+package cz.jzitnik.quizapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import cz.jzitnik.quizapp.entities.Question;
-import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
 import jakarta.persistence.*;
 
 @Entity

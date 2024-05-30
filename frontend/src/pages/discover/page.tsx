@@ -32,7 +32,7 @@ export default function Discover() {
     })();
   }, []);
 
-  function setSort(sort: string) {
+  function setSort(_: string) {
     // If there will be more sorting options, implement here.
   }
 

@@ -1,6 +1,6 @@
 package cz.jzitnik.quizapp.services;
 
-import cz.jzitnik.quizapp.controllers.Answer;
+import cz.jzitnik.quizapp.entities.Answer;
 import cz.jzitnik.quizapp.entities.Question;
 import cz.jzitnik.quizapp.entities.Quiz;
 import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;

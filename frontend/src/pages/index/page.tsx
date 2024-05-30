@@ -26,7 +26,7 @@ export default function Index() {
 
             <Separator size="3" />
             <Text align="center" as="p" size="5">
-              Vytvářejte a sdílejte kvízy mezi ostatními.
+              Vytvářejte a sdílejte kvízy s ostatními.
             </Text>
           </Flex>
         </Section>
