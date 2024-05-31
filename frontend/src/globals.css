@@ -18,7 +18,7 @@ button {
   @apply 2xl:mx-64 xl:mx-32 lg:mx-16 md:mx-8 sm:mx-4 mx-2;
 }
 
-.loader{
+.loader {
   margin: 0 0 2em;
   text-align: center;
   padding: 1em;
@@ -29,7 +29,7 @@ button {
 }
 
 .loader svg path,
-.loader svg rect{
+.loader svg rect {
   fill: var(--accent-9);
 }
 

@@ -30,7 +30,7 @@ export default function Register() {
 
   useEffect(() => {
     if (isLogedIn()) {
-      navigate("/");
+      navigate("/me");
     }
   }, []);
 
@@ -54,11 +54,6 @@ export default function Register() {
       setLoading(false);
     }
   }
-
-  if (isLogedIn()) {
-    navigate("/");
-  }
-
   return (
     <Section position="relative">
       <Flex align="center" justify="center" direction="column" gap="2">

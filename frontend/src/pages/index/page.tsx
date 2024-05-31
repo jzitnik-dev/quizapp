@@ -10,8 +10,41 @@ import {
   Badge,
   Strong,
 } from "@radix-ui/themes";
+import { useEffect, useRef } from "react";
+import "../../styles/index.css";
 
 export default function Index() {
+  const cardsFlex = useRef<HTMLDivElement>(null);
+  const card1 = useRef<HTMLDivElement>(null);
+  const card2 = useRef<HTMLDivElement>(null);
+  const card3 = useRef<HTMLDivElement>(null);
+
+  function mouseMove(e: any) {
+    if (cardsFlex.current && card1.current && card2.current && card3.current) {
+      const rect = cardsFlex.current.getBoundingClientRect(),
+        x = e.clientX - rect.left;
+      const style = window.getComputedStyle(cardsFlex.current);
+      const widthpx = parseInt(style.width, 10);
+
+      const cardStyle = window.getComputedStyle(card1.current);
+      const widthCard = parseInt(cardStyle.width, 10);
+
+      card1.current.style.backgroundPositionX = `${x - widthpx / 2 + widthCard}px`;
+      card2.current.style.backgroundPositionX = `${x - widthpx / 2}px`;
+      card3.current.style.backgroundPositionX = `${x - widthpx / 2 - widthCard}px`;
+    }
+  }
+
+  useEffect(() => {
+    if (card1.current && card2.current && card3.current) {
+      const cardStyle = window.getComputedStyle(card1.current);
+      const widthCard = parseInt(cardStyle.width, 10);
+      card1.current.style.backgroundPositionX = `${widthCard}px`;
+      card2.current.style.backgroundPositionX = `0px`;
+      card3.current.style.backgroundPositionX = `-${widthCard}px`;
+    }
+  }, [card1, card2, card3]);
+
   return (
     <Section>
       <Container>
@@ -21,7 +54,7 @@ export default function Index() {
               <img src="/logo.png" className="h-10" />
               <Heading size="9" align="center">
                 QuizAPP
-              </Heading>{" "}
+              </Heading>
             </Flex>
 
             <Separator size="3" />
@@ -34,22 +67,28 @@ export default function Index() {
           <Heading size="8" align="center">
             Proč zrovna QuizAPP?
           </Heading>
-          <Flex gap="3" mt="2" className="flex-col md:flex-row">
-            <Card className="basis-full">
+          <Flex
+            gap="3"
+            mt="2"
+            className="flex-col md:flex-row"
+            onMouseMove={mouseMove}
+            ref={cardsFlex}
+          >
+            <Card className="basis-full gradient" ref={card1}>
               <Heading>Jednoduché vytváření</Heading>
               <Text mt="1" as="p">
                 Jednudhé vytváření a publikování kvízu. Vytvoření kvízu Vám
                 zabere jen pár minut.
               </Text>
             </Card>
-            <Card className="basis-full">
+            <Card className="basis-full gradient" ref={card2}>
               <Heading>Ukládání odpovědí</Heading>
               <Text mt="1" as="p">
                 Pokud si zahrajete kvíz, QuizAPP uloží vaše odpovědi, proto
                 nikdy nepříjdete o Vaše odpovědi.
               </Text>
             </Card>
-            <Card className="basis-full">
+            <Card className="basis-full gradient" ref={card3}>
               <Heading>Jednoduché vyhodnocení kvízu</Heading>
               <Text mt="1" as="p">
                 QuizAPP vyhodnotí Vaše odpovědi a dá Vám detailní analýzu vašich

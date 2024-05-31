@@ -1,0 +1,12 @@
+@media only screen and (min-width: 768px) {
+  .gradient {
+    background: radial-gradient(
+      circle,
+      rgba(9, 9, 121, 0.6) 0%,
+      rgba(17, 17, 19, 1) 99%
+    );
+    background-position-x: 0px;
+    background-repeat: no-repeat;
+    transition: linear 0.4s background-position-x;
+  }
+}
