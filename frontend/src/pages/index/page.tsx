@@ -50,21 +50,21 @@ export default function Index() {
             onMouseMove={(e: MouseEvent) => MouseMove(e, cardsFlex.current)}
             ref={cardsFlex}
           >
-            <Card className="basis-full gradient">
+            <Card className="basis-full indexgradient">
               <Heading>Jednoduché vytváření</Heading>
               <Text mt="1" as="p">
                 Jednudhé vytváření a publikování kvízu. Vytvoření kvízu Vám
                 zabere jen pár minut.
               </Text>
             </Card>
-            <Card className="basis-full gradient">
+            <Card className="basis-full indexgradient">
               <Heading>Ukládání odpovědí</Heading>
               <Text mt="1" as="p">
                 Pokud si zahrajete kvíz, QuizAPP uloží vaše odpovědi, proto
                 nikdy nepříjdete o Vaše odpovědi.
               </Text>
             </Card>
-            <Card className="basis-full gradient">
+            <Card className="basis-full indexgradient">
               <Heading>Jednoduché vyhodnocení kvízu</Heading>
               <Text mt="1" as="p">
                 QuizAPP vyhodnotí Vaše odpovědi a dá Vám detailní analýzu vašich

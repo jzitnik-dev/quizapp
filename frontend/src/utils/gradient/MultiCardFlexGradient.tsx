@@ -28,5 +28,8 @@ export function Init(cardsFlex: HTMLDivElement | null) {
     const el = cardsFlex.children[i] as HTMLDivElement;
     const final = -widthCard * (i - 1);
     el.style.backgroundPositionX = `${final}px`;
+    setTimeout(() => {
+      el.style.transition = "linear 0.4s background-position-x";
+    });
   }
 }

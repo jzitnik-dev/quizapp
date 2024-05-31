@@ -13,6 +13,7 @@ import { FormEvent, useState, useEffect } from "react";
 import login from "../../api/login";
 import { useNavigate } from "react-router-dom";
 import isLogedIn from "../../utils/logedin";
+import "../../styles/login.css"
 
 export default function Login() {
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ export default function Login() {
             maxHeight: "300px",
             aspectRatio: "1/1",
           }}
+          className="logingradient"
         >
           <form onSubmit={formSubmit} style={{ height: "100%" }}>
             <Heading size="8" align="center">

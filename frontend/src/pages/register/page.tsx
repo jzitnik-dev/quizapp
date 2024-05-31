@@ -14,6 +14,7 @@ import register from "../../api/register";
 import { CheckIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { Link, useNavigate } from "react-router-dom";
 import isLogedIn from "../../utils/logedin";
+import "../../styles/register.css"
 
 export default function Register() {
   const [done, setDone] = useState(false);
@@ -80,6 +81,7 @@ export default function Register() {
               maxHeight: "400px",
               aspectRatio: "1/1",
             }}
+            className="registergradient"
           >
             <form onSubmit={submitForm} style={{ height: "100%" }}>
               <Heading size="8" align="center">
