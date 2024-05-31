@@ -21,7 +21,7 @@ Full-Stack Webová aplikace pro vytváření a sdílení kvízů. Backend napsá
 
 [docs.docker.com/engine/install](https://docs.docker.com/engine/install/)
 
-### Spusťe
+### Spustit
 
 ```bash
 git clone https://github.com/JZITNIK-github/quizapp
