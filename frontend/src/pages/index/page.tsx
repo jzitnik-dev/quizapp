@@ -78,7 +78,7 @@ export default function Index() {
             popis kvízu. Následně vložíte otázky.
             <br />
             Na výběr máte následující typy otázek:
-            <Flex gap="1">
+            <Flex gap="1" wrap="wrap">
               <Badge color="gray">Výchozí</Badge>
               <Badge color="gray">Pravda / Nepravda</Badge>
               <Badge color="gray">Otázka s jednou odpovědí</Badge>

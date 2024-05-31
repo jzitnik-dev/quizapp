@@ -32,3 +32,23 @@ button {
 .loader svg rect{
   fill: var(--accent-9);
 }
+
+.mobile-menu {
+  width: min(75vw, 400px);
+  transform: translateX(100vw);
+  transition: ease 0.2s transform;
+  height: calc(100dvh - 56px);
+  top: 56px;
+  z-index: 50;
+}
+
+.mobile-menu.active {
+  transform: translateX(0vw);
+}
+
+.mobile-menu a {
+  height: 50px;
+  font-size: 30px;
+  width: 100%;
+  text-align: center;
+}
