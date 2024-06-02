@@ -55,7 +55,7 @@ export default function Header() {
   }
 
   return (
-    <Box className="mb-12">
+    <Box>
       <Box
         position="fixed"
         className={
