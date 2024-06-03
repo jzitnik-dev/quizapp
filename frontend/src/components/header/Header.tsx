@@ -167,6 +167,11 @@ export default function Header() {
                       Profil
                     </DropdownMenu.Item>
                   </Link>
+                  <Link to="/me/changePassword">
+                    <DropdownMenu.Item style={{ cursor: "pointer" }}>
+                      Změnit heslo
+                    </DropdownMenu.Item>
+                  </Link>
 
                   <DropdownMenu.Separator />
 

@@ -2,14 +2,21 @@ package cz.jzitnik.quizapp.controllers;
 
 import java.util.Optional;
 
+import cz.jzitnik.quizapp.payload.request.PasswordChangeRequest;
 import cz.jzitnik.quizapp.repository.PlayingStateRepository;
 import cz.jzitnik.quizapp.repository.UserRepository;
 import cz.jzitnik.quizapp.payload.response.MeHeaderResponse;
 import cz.jzitnik.quizapp.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import cz.jzitnik.quizapp.entities.User;
@@ -26,6 +33,12 @@ public class UserController {
 
     @Autowired
     PlayingStateRepository playingStateRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
@@ -74,5 +87,23 @@ public class UserController {
 
         userRepository.save(loggedUser);
         return ResponseEntity.ok("Uživatelský profil byl upraven!");
+    }
+
+    @PatchMapping("/me/password")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> changePassword(@RequestBody PasswordChangeRequest passwordChangeRequest) {
+        var loggedUser = userService.getCurrentUser();
+        var password = passwordChangeRequest.getPassword();
+        var currentPassword = passwordChangeRequest.getCurrentPassword();
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loggedUser.getUsername(), currentPassword));
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Heslo je nesprávné!");
+        }
+
+        loggedUser.setPassword(encoder.encode(password));
+        userRepository.save(loggedUser);
+        return ResponseEntity.ok("Heslo bylo úspěšně změněno.");
     }
 }
