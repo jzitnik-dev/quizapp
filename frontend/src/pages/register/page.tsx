@@ -14,7 +14,7 @@ import register from "../../api/register";
 import { CheckIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { Link, useNavigate } from "react-router-dom";
 import isLogedIn from "../../utils/logedin";
-import "../../styles/register.css"
+import "../../styles/register.css";
 
 export default function Register() {
   const [done, setDone] = useState(false);
@@ -41,6 +41,13 @@ export default function Register() {
     setError(false);
     if (password !== passwordAgain) {
       setErrorMessage("Hesla se neshodují!");
+      setError(true);
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6 || password.length > 50) {
+      setErrorMessage("Heslo musí mít minimálně 6 znaků a maximálně 50 znaků.");
       setError(true);
       setLoading(false);
       return;

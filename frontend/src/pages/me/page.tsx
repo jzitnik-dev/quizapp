@@ -25,6 +25,7 @@ import updateMe from "../../api/updateProfile";
 import updateProfilePicture from "../../api/updateProfilePicture";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import Quiz from "../../components/quiz/quiz";
+import RolesBadge from "../../components/user/RolesBadge";
 
 export default function Me() {
   const navigate = useNavigate();
@@ -115,6 +116,9 @@ export default function Me() {
                 )}
               </Heading>
               <Flex gap="2">
+                {fetching || !data?.roles ? null : (
+                  <RolesBadge roles={data?.roles} />
+                )}
                 <Badge>
                   {fetching ? (
                     <Skeleton height="20px" width="60px" />

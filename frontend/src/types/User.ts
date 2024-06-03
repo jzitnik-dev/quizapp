@@ -1,4 +1,5 @@
 import Quiz from "./Quiz";
+import Role from "./Role";
 
 export default interface User {
   id: number;
@@ -6,4 +7,5 @@ export default interface User {
   username: string;
   bio?: string;
   quizzes: Quiz[];
+  roles: Role[];
 }
