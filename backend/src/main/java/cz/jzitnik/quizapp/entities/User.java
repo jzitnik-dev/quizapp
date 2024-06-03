@@ -1,6 +1,8 @@
 package cz.jzitnik.quizapp.entities;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -42,7 +44,7 @@ public class User {
 
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonManagedReference
-  private Set<Quiz> quizzes = new HashSet<>();
+  private List<Quiz> quizzes = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
@@ -122,11 +124,11 @@ public class User {
     this.roles = roles;
   }
 
-  public Set<Quiz> getQuizzes() {
+  public List<Quiz> getQuizzes() {
     return quizzes;
   }
 
-  public void setQuizzes(Set<Quiz> quizzes) {
+  public void setQuizzes(List<Quiz> quizzes) {
     this.quizzes = quizzes;
   }
 }

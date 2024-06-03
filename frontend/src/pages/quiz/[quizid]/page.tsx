@@ -274,27 +274,28 @@ export default function quiz() {
                 <Flex direction="column" gap="3" mx="3">
                   {answer?.answers.map((answer, index) => {
                     return (
-                      <Callout.Root color={answer.correct ? "green" : "red"} key={index}>
+                      <Callout.Root
+                        color={answer.correct ? "green" : "red"}
+                        key={index}
+                      >
                         <Callout.Icon>
                           {answer.correct ? <CheckIcon /> : <Cross1Icon />}
                         </Callout.Icon>
-                        <Callout.Text>
-                          <Box>
-                            <Heading>
-                              Otázka: {answer.question.question}
-                            </Heading>
-                            <Text>
-                              <Flex gap="1" align="center">
-                                <Text>Vaše odpověď:</Text>
-                                {sortedQuestions[index].type == "Multiselect"
-                                  ? JSON.parse(answer.answer).map(
-                                      (e: string, index: number) => <Badge key={index}>{e}</Badge>,
-                                    )
-                                  : answer.answer}
-                              </Flex>
-                            </Text>
-                          </Box>
-                        </Callout.Text>
+                        <Box>
+                          <Heading>Otázka: {answer.question.question}</Heading>
+                          <Text>
+                            <Flex gap="1" align="center">
+                              <Text>Vaše odpověď:</Text>
+                              {sortedQuestions[index].type == "Multiselect"
+                                ? JSON.parse(answer.answer).map(
+                                    (e: string, index: number) => (
+                                      <Badge key={index}>{e}</Badge>
+                                    ),
+                                  )
+                                : answer.answer}
+                            </Flex>
+                          </Text>
+                        </Box>
                       </Callout.Root>
                     );
                   })}
