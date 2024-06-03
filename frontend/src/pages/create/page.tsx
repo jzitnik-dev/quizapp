@@ -202,6 +202,7 @@ export default function Create() {
                   index={i}
                   removeCallback={removeQuestion}
                   editCallback={editQuestion}
+                  key={i}
                 />
               ))}
             </Flex>

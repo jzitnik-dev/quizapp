@@ -216,7 +216,7 @@ export default function Me() {
         <Container p="8">
           <Flex direction="column" gap="3" align="center">
             {data?.quizzes.length !== 0 ? (
-              data?.quizzes.map((el) => <Quiz quiz={el} />)
+              data?.quizzes.map((el, index) => <Quiz quiz={el} key={index} />)
             ) : (
               <>
                 <Heading>Nemáte zatím vytvořený žádný kvíz</Heading>

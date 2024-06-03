@@ -131,7 +131,7 @@ export default function Discover() {
             ) : (
               <>
                 <Flex direction="column" mt="3" gap="2">
-                  {quizzes?.content.map((el) => <QuizEl quiz={el} />)}
+                  {quizzes?.content.map((el, index) => <QuizEl key={index} quiz={el} />)}
                 </Flex>
                 <Flex align="center" justify="center" mt="5" gap="3">
                   {quizzes.first ? (

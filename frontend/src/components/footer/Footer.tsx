@@ -21,7 +21,7 @@ export default function Footer() {
   return (
     <Section pt="8" pb="8" className="border-t border-gray-800">
       <Container>
-        <Flex justify="between">
+        <Flex justify="between" align="center">
           <Box>
             <Flex align="center" gap="2">
               <img
@@ -44,7 +44,7 @@ export default function Footer() {
           </Box>
           <Flex align="end" direction="column">
             <Heading>Stránky</Heading>
-            {pages.map((page) => (
+            {pages.map((page, index) => (
               <Link
                 href={page[1]}
                 onClick={(e) => {
@@ -52,6 +52,7 @@ export default function Footer() {
                   navigate(page[1]);
                 }}
                 style={{textAlign: "end"}}
+                key={index}
               >
                 {page[0]}
               </Link>

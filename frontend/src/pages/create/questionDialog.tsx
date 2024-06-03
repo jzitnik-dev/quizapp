@@ -257,9 +257,9 @@ export default function QuestionDialog({
                   </Dialog.Content>
                 </Dialog.Root>
               </label>
-              {multiQuestions.map((e) => {
+              {multiQuestions.map((e, index) => {
                 return (
-                  <Flex align="center" justify="between" py="2">
+                  <Flex align="center" justify="between" py="2" key={index}>
                     <Text>{e}</Text>
                     <IconButton
                       color="red"
@@ -279,11 +279,12 @@ export default function QuestionDialog({
                 </Text>
               </label>
               <RadioCards.Root columns={{}} gap="1" value={answer}>
-                {multiQuestions.map((e) => (
+                {multiQuestions.map((e, index) => (
                   <RadioCards.Item
                     value={e}
                     style={{ width: "100%" }}
                     onClick={() => setAnswer(e)}
+                    key={index}
                   >
                     <Flex direction="column" width="100%">
                       <Text weight="bold">{e}</Text>
@@ -332,9 +333,9 @@ export default function QuestionDialog({
                   </Dialog.Content>
                 </Dialog.Root>
               </label>
-              {multiQuestions.map((e) => {
+              {multiQuestions.map((e, index) => {
                 return (
-                  <Flex align="center" justify="between" py="2">
+                  <Flex align="center" justify="between" py="2" key={index}>
                     <Text>{e}</Text>
                     <IconButton
                       color="red"
@@ -354,11 +355,12 @@ export default function QuestionDialog({
                 </Text>
               </label>
               <CheckboxCards.Root columns={{}} gap="1">
-                {multiQuestions.map((e) => (
+                {multiQuestions.map((e, index) => (
                   <CheckboxCards.Item
                     value={e}
                     style={{ width: "100%" }}
                     onClick={() => toggleAnswer(e)}
+                    key={index}
                   >
                     <Flex direction="column" width="100%">
                       <Text weight="bold">{e}</Text>

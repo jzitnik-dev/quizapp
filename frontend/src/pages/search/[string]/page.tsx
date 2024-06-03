@@ -55,11 +55,11 @@ export default function Search() {
           </TextField.Root>
         </form>
         <Flex direction="column" mt="4" gap="2">
-          {searchData?.content.map((data) =>
+          {searchData?.content.map((data, index) =>
             data.username !== undefined ? (
-              <User user={data} />
+              <User user={data} key={index} />
             ) : (
-              <Quiz quiz={data} />
+              <Quiz quiz={data} key={index} />
             ),
           )}
         </Flex>

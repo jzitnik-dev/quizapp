@@ -219,7 +219,7 @@ export default function Play() {
             <Flex direction="column" gap="3" mx="3">
               {finishData?.answers.map((answer, index) => {
                 return (
-                  <Callout.Root color={answer.correct ? "green" : "red"}>
+                  <Callout.Root color={answer.correct ? "green" : "red"} key={index}>
                     <Callout.Icon>
                       {answer.correct ? <CheckIcon /> : <Cross1Icon />}
                     </Callout.Icon>
@@ -230,8 +230,8 @@ export default function Play() {
                           <Flex gap="1" align="center">
                             <Text>Vaše odpověď:</Text>
                             {sortedQuestions[index].type == "Multiselect"
-                              ? JSON.parse(answer.answer).map((e: string) => (
-                                  <Badge>{e}</Badge>
+                              ? JSON.parse(answer.answer).map((e: string, index: number) => (
+                                  <Badge key={index}>{e}</Badge>
                                 ))
                               : answer.answer}
                           </Flex>
@@ -280,7 +280,7 @@ export default function Play() {
                     >
                       {JSON.parse(question?.options || "[]").map(
                         (option: string, index: number) => (
-                          <RadioCards.Item value={index.toString()}>
+                          <RadioCards.Item value={index.toString()} key={index}>
                             <Flex direction="column" width="100%">
                               <Text>{option}</Text>
                             </Flex>
@@ -303,6 +303,7 @@ export default function Play() {
                           <CheckboxCards.Item
                             value={index.toString()}
                             style={{ cursor: "pointer" }}
+                            key={index}
                           >
                             <Flex direction="column" width="100%">
                               <Text>{option}</Text>

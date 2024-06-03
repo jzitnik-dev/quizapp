@@ -274,7 +274,7 @@ export default function quiz() {
                 <Flex direction="column" gap="3" mx="3">
                   {answer?.answers.map((answer, index) => {
                     return (
-                      <Callout.Root color={answer.correct ? "green" : "red"}>
+                      <Callout.Root color={answer.correct ? "green" : "red"} key={index}>
                         <Callout.Icon>
                           {answer.correct ? <CheckIcon /> : <Cross1Icon />}
                         </Callout.Icon>
@@ -288,7 +288,7 @@ export default function quiz() {
                                 <Text>Vaše odpověď:</Text>
                                 {sortedQuestions[index].type == "Multiselect"
                                   ? JSON.parse(answer.answer).map(
-                                      (e: string) => <Badge>{e}</Badge>,
+                                      (e: string, index: number) => <Badge key={index}>{e}</Badge>,
                                     )
                                   : answer.answer}
                               </Flex>
