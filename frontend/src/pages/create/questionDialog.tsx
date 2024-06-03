@@ -203,7 +203,7 @@ export default function QuestionDialog({
           ) : type == "truefalse" ? (
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Odpověď
+                Správná odpověď
               </Text>
               <SegmentedControl.Root
                 value={answer}

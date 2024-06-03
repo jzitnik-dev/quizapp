@@ -1,8 +1,11 @@
 package cz.jzitnik.quizapp.controllers;
 
+import cz.jzitnik.quizapp.entities.User;
 import cz.jzitnik.quizapp.repository.UserRepository;
 import cz.jzitnik.quizapp.services.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/profilepicture")
@@ -39,17 +44,23 @@ public class ProfilePictureController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<byte[]> getImageByUsername(@PathVariable String username) throws IOException {
-        var user = userRepository.findByUsername(username);
+    public void getImageByUsername(@PathVariable String username, HttpServletResponse response) throws IOException {
+        Optional<User> userOptional = userRepository.findByUsername(username);
 
-        String rootPath = System.getProperty("user.dir");
-        String fullPath = rootPath + File.separator + "ProfilePictures" + File.separator + user.get().getId();
-
-        try {
-            byte[] imageData = Files.readAllBytes(Paths.get(fullPath));
-            return ResponseEntity.ok().body(imageData);
-        } catch (NoSuchFileException e) {
-            return ResponseEntity.notFound().build();
+        if (userOptional.isEmpty()) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return;
         }
+
+        User user = userOptional.get();
+        String rootPath = System.getProperty("user.dir");
+        Path imagePath = Paths.get(rootPath, "ProfilePictures", String.valueOf(user.getId()));
+
+            if (Files.exists(imagePath)) {
+                Files.copy(imagePath, response.getOutputStream());
+                response.getOutputStream().flush();
+            } else {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+            }
     }
 }
