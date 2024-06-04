@@ -28,7 +28,10 @@ export default function Search() {
         const res = await search(string, page);
         setSearchData(res);
       })();
+    } else {
+      setSearchData(undefined);
     }
+    setSearchString(string || "")
   }, [string, page]);
 
   async function submit(e: FormEvent) {

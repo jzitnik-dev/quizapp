@@ -18,7 +18,6 @@ public class AnswerValidationService {
         List<Question> questionList = new ArrayList<>(questionsSet);
         questionList.sort(Comparator.comparingLong(Question::getId));
 
-
         var validatedQuizAnswer = new ValidatedQuizAnswer(user, quiz, new ArrayList<Answer>(), true);
 
         for (int i = 0; i < userAnswers.size(); i++) {
@@ -52,9 +51,6 @@ public class AnswerValidationService {
                 }
             }
         }
-
-
-
 
         return validatedQuizAnswer;
     }
