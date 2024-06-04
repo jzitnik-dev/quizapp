@@ -22,12 +22,13 @@ import {
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import MobileMenu from "./MobileMenu";
 import { useUserProfile } from "./UserProfileProvider";
+import { toast } from "react-toastify";
 
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const logedIn = isLogedIn();
-  const { userProfile, loading: fetching } = useUserProfile();
+  const { userProfile, loading: fetching, error } = useUserProfile();
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false);
 
   const name = userProfile?.displayName || "";
@@ -36,6 +37,10 @@ export default function Header() {
   function logout() {
     localStorage.removeItem("accessToken");
     navigate("/");
+  }
+
+  if (error) {
+    toast.error("Chyba: " + error.message);
   }
 
   return (
