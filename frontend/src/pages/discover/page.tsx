@@ -62,8 +62,8 @@ export default function Discover() {
           <Flex align="center" gap="2">
             <Slider
               defaultValue={[questionAmount || 10]}
-              max={20}
-              min={1}
+              max={30}
+              min={5}
               onValueChange={(value) => setQuestionAmount(value[0])}
             />
             <Text style={{ width: "20px" }} align="right">

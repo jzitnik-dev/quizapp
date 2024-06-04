@@ -4,9 +4,19 @@ export default async function getQuiz(id: number) {
   const url = new URL(import.meta.env.VITE_BACKEND);
   url.pathname = "/api/quiz/get/" + id;
 
-  const response = await fetch(url.toString(), {
-    method: "GET",
-  });
+  if (isLogedIn()) {
+    var response = await fetch(url.toString(), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+      },
+    });
+  } else {
+    var response = await fetch(url.toString(), {
+      method: "GET",
+    });
+  }
 
   if (!response.ok) {
     throw response;

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,11 +41,14 @@ public class ValidatedQuizAnswer {
 
     private boolean finished;
 
+    private LocalDate createDate;
+
     public ValidatedQuizAnswer(User user, Quiz quiz, ArrayList<Answer> answers, boolean finished) {
         this.user = user;
         this.quiz = quiz;
         this.finished = finished;
         this.answers = answers;
+        this.createDate = LocalDate.now();
     }
 
     public ValidatedQuizAnswer() {
@@ -80,5 +84,13 @@ public class ValidatedQuizAnswer {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public LocalDate getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
     }
 }

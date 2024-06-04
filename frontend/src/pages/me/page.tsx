@@ -16,7 +16,7 @@ import {
 } from "@radix-ui/themes";
 import User from "../../types/User";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import me from "../../api/me";
 import isLogedIn from "../../utils/logedin";
 import { UploadIcon } from "@radix-ui/react-icons";
@@ -27,6 +27,7 @@ import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import Quiz from "../../components/quiz/quiz";
 import RolesBadge from "../../components/user/RolesBadge";
 import { useUserProfile } from "../../components/header/UserProfileProvider";
+import { getFinished } from "../../api/getUser";
 
 export default function Me() {
   const navigate = useNavigate();
@@ -35,10 +36,18 @@ export default function Me() {
   const input = useRef<HTMLInputElement | null>(null);
   const [fileUploaded, setFileUploaded] = useState(false);
   const { setUserProfile } = useUserProfile();
+  const [finished, setFinished] = useState();
 
   // Form data
   const [displayName, setDisplayName] = useState<string | undefined>();
   const [bio, setBio] = useState<string | undefined>();
+
+  const quizzesReverse = useMemo(() => {
+    if (data && data.quizzes) {
+      return [...data.quizzes].reverse();
+    }
+    return [];
+  }, [data?.quizzes]);
 
   async function submitChanges() {
     let xbio = bio;
@@ -79,8 +88,10 @@ export default function Me() {
 
     (async () => {
       const response = (await me()) as User;
-      setFetching(false);
+      const finished = await getFinished(response.username);
       setData(response);
+      setFinished(finished);
+      setFetching(false);
     })();
   }, []);
 
@@ -100,7 +111,7 @@ export default function Me() {
             justify="center"
             align="center"
             style={{ width: "100%" }}
-            className="flex-col gap-4 md:flex-row "
+            className="flex-col gap-4 md:flex-row"
           >
             <Avatar
               fallback={data?.username[0] || "U"}
@@ -142,6 +153,18 @@ export default function Me() {
                     data?.quizzes.length + " kvízy"
                   ) : (
                     data?.quizzes.length + " kvízů"
+                  )}
+                </Badge>
+                <Badge color="green">
+                  Dokončil{" "}
+                  {fetching ? (
+                    <Skeleton height="20px" width="50px" />
+                  ) : finished == 1 ? (
+                    finished + " kvíz"
+                  ) : (finished || 0) >= 2 && (finished || 0) <= 4 ? (
+                    finished + " kvízy"
+                  ) : (
+                    finished + " kvízů"
                   )}
                 </Badge>
               </Flex>
@@ -226,7 +249,7 @@ export default function Me() {
         <Container p="8">
           <Flex direction="column" gap="3" align="center">
             {data?.quizzes.length !== 0 ? (
-              data?.quizzes.map((el, index) => <Quiz quiz={el} key={index} />)
+              quizzesReverse.map((el, index) => <Quiz quiz={el} key={index} />)
             ) : (
               <>
                 <Heading>Nemáte zatím vytvořený žádný kvíz</Heading>

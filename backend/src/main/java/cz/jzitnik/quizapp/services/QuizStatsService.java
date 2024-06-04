@@ -5,16 +5,21 @@ import cz.jzitnik.quizapp.entities.Question;
 import cz.jzitnik.quizapp.entities.Quiz;
 import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
 import cz.jzitnik.quizapp.payload.response.QuizStatsResponse;
+import cz.jzitnik.quizapp.repository.QuizViewRepository;
 import cz.jzitnik.quizapp.repository.ValidatedQuizAnswerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
 public class QuizStatsService {
     @Autowired
     private ValidatedQuizAnswerRepository validatedQuizAnswerRepository;
+
+    @Autowired
+    private QuizViewRepository quizViewRepository;
 
     private String findQuestionByAnswer(Set<Question> questions, String answer) {
         for (Question question : questions) {
@@ -73,7 +78,33 @@ public class QuizStatsService {
             percentages.add(successPercentage);
         }
 
-        var finalResponse = new QuizStatsResponse(finalQuestions, percentages);
+        // Play dates
+        // Loop over last 50 days
+        var today = LocalDate.now();
+        var plays = new ArrayList<Integer>();
+        for (int i = 50; i > 0; i--) {
+            var date = today.minusDays(i - 1);
+            var playsList = validatedQuizAnswerRepository.findByQuizAndCreateDate(quiz, date);
+            plays.add(playsList.size());
+        }
+
+        var finalResponse = new QuizStatsResponse(finalQuestions, percentages, plays);
         return Optional.of(finalResponse);
+    }
+
+    public List<Integer> getViews(Quiz quiz) {
+        var today = LocalDate.now();
+        var views = new ArrayList<Integer>();
+        for (int i = 50; i > 0; i--) {
+            var date = today.minusDays(i - 1);
+            var playsList = quizViewRepository.findByQuizAndDate(quiz, date);
+            if (playsList.isEmpty()) {
+                views.add(0);
+            } else {
+                views.add(playsList.get().getViews());
+            }
+        }
+
+        return views;
     }
 }

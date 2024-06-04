@@ -30,8 +30,10 @@ import { toast } from "react-toastify";
 import QuestionBadge from "../../../components/quiz/questionBadge";
 import removeQuiz from "../../../api/removeQuiz";
 import QuizStats from "../../../types/QuizStats";
-import { getStatistics } from "../../../api/getStatistics";
+import { getStatistics, getViews } from "../../../api/getStatistics";
 import AnswerCorrectPercentageChart from "../../../components/quiz/answerCorrectPercentageChart";
+import QuizPlayChart from "../../../components/quiz/quizPlayChart";
+import QuizViewChart from "../../../components/quiz/quizViewChart";
 
 export default function quiz() {
   const [data, setData] = useState<Quiz>();
@@ -44,6 +46,7 @@ export default function quiz() {
   const [answer, setAnswer] = useState<ValidatedQuizAnswer | undefined>();
   const [owned, setOwned] = useState<boolean>();
   const [stats, setStats] = useState<QuizStats | null>();
+  const [views, setViews] = useState<number[]>();
 
   const sortedQuestions = useMemo(() => {
     if (data && data.questions) {
@@ -73,6 +76,9 @@ export default function quiz() {
           } else {
             setStats(stats);
           }
+          const views = await getViews(id || "");
+          setViews(views);
+          console.log(views);
         }
       } catch (e: any) {
         if (e.status == 404) {
@@ -250,6 +256,32 @@ export default function quiz() {
                           Tento kvíz si zatím nikdo nezahrál.
                         </Text>
                       )
+                    ) : (
+                      <Spinner />
+                    )}
+                  </Flex>
+                  <Heading align="center" mt="4">
+                    Počet zahrání
+                  </Heading>
+                  <Flex justify="center">
+                    {stats !== undefined ? (
+                      stats !== null ? (
+                        <QuizPlayChart quizData={stats} />
+                      ) : (
+                        <Text align="center" as="p">
+                          Tento kvíz si zatím nikdo nezahrál.
+                        </Text>
+                      )
+                    ) : (
+                      <Spinner />
+                    )}
+                  </Flex>
+                  <Heading align="center" mt="4">
+                    Počet zhlédnutí
+                  </Heading>
+                  <Flex justify="center">
+                    {views !== undefined ? (
+                      <QuizViewChart views={views} />
                     ) : (
                       <Spinner />
                     )}

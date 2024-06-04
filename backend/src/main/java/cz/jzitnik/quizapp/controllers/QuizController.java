@@ -1,11 +1,9 @@
 package cz.jzitnik.quizapp.controllers;
 
 
-import cz.jzitnik.quizapp.entities.Question;
-import cz.jzitnik.quizapp.entities.Quiz;
-import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
-import cz.jzitnik.quizapp.payload.response.QuizStatsResponse;
+import cz.jzitnik.quizapp.entities.*;
 import cz.jzitnik.quizapp.repository.QuizRepository;
+import cz.jzitnik.quizapp.repository.QuizViewRepository;
 import cz.jzitnik.quizapp.repository.ValidatedQuizAnswerRepository;
 import cz.jzitnik.quizapp.services.QuizStatsService;
 import cz.jzitnik.quizapp.services.UserService;
@@ -14,12 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import cz.jzitnik.quizapp.entities.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -36,6 +34,9 @@ public class QuizController {
 
     @Autowired
     QuizStatsService quizStatsService;
+
+    @Autowired
+    QuizViewRepository quizViewRepository;
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
@@ -60,6 +61,24 @@ public class QuizController {
         var quiz = quizRepository.findById(id);
         if (quiz.isEmpty()) {
             return ResponseEntity.notFound().build();
+        }
+
+        try {
+            var loggedInUser = userService.getCurrentUser();
+            if (quiz.get().getAuthor().getUsername().equals(loggedInUser.getUsername())) {
+                return ResponseEntity.ok(quiz.get());
+            }
+        } catch (UsernameNotFoundException e) {}
+
+        var quizViewOptional = quizViewRepository.findByQuizAndDate(quiz.get(), LocalDate.now());
+
+        if (quizViewOptional.isEmpty()) {
+            var quizView = new QuizView(quiz.get());
+            quizViewRepository.save(quizView);
+        } else {
+            var quizView = quizViewOptional.get();
+            quizView.setViews(quizView.getViews() + 1);
+            quizViewRepository.save(quizView);
         }
 
         return ResponseEntity.ok(quiz.get());
@@ -166,5 +185,23 @@ public class QuizController {
         }
 
         return ResponseEntity.ok(stats.get());
+    }
+
+    @GetMapping("/statistics/views")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Integer>> getViews(@RequestParam("quizId") Long id) {
+        User loggedUser = userService.getCurrentUser();
+        var quizOptional = quizRepository.findById(id);
+        if (quizOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var quiz = quizOptional.get();
+        if (!quiz.getAuthor().equals(loggedUser)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        var stats = quizStatsService.getViews(quiz);
+
+        return ResponseEntity.ok(stats);
     }
 }
