@@ -49,7 +49,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               pauseOnFocusLoss
               draggable
               pauseOnHover
-              theme="dark}"
+              theme="dark"
             />
             <Box style={{ paddingTop: "55px" }}>
               <Routes>
