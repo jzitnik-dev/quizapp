@@ -11,7 +11,7 @@ import {
   Box,
 } from "@radix-ui/themes";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import isLogedIn from "../../utils/logedin";
 import {
   CaretDownIcon,
@@ -19,35 +19,19 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
 } from "@radix-ui/react-icons";
-import { meHeader } from "../../api/me";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import MobileMenu from "./MobileMenu";
+import { useUserProfile } from "./UserProfileProvider";
 
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [fetching, setFetching] = useState(true);
   const logedIn = isLogedIn();
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const { userProfile, loading: fetching } = useUserProfile();
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false);
 
-  useEffect(() => {
-    const fun = async () => {
-      if (!logedIn) return;
-      const response = await meHeader();
-      setName(response.displayName);
-      setUsername(response.username);
-      setFetching(false);
-    };
-    fun();
-
-    const id = setInterval(fun, 1000);
-
-    return () => {
-      clearInterval(id);
-    };
-  }, [logedIn]);
+  const name = userProfile?.displayName || "";
+  const username = userProfile?.username || "";
 
   function logout() {
     localStorage.removeItem("accessToken");
