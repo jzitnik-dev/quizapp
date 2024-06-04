@@ -1,6 +1,7 @@
 package cz.jzitnik.quizapp.controllers;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import cz.jzitnik.quizapp.payload.request.PasswordChangeRequest;
 import cz.jzitnik.quizapp.repository.PlayingStateRepository;
@@ -53,6 +54,17 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(user.get());
+    }
+
+    @GetMapping("/finished")
+    public ResponseEntity<Integer> getFinished(@RequestParam("username") String username) {
+        Optional<User> user =  userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var validatedQuizAnswers = user.get().getValidatedQuizAnswers().stream().filter(e -> e.isFinished()).collect(Collectors.toSet());
+
+        return ResponseEntity.ok(validatedQuizAnswers.size());
     }
 
     @GetMapping("/me/header")

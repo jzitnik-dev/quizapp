@@ -26,6 +26,7 @@ import updateProfilePicture from "../../api/updateProfilePicture";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import Quiz from "../../components/quiz/quiz";
 import RolesBadge from "../../components/user/RolesBadge";
+import { getFinished } from "../../api/getUser";
 
 export default function Me() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ export default function Me() {
   const [data, setData] = useState<User | undefined>();
   const input = useRef<HTMLInputElement | null>(null);
   const [fileUploaded, setFileUploaded] = useState(false);
+  const [finished, setFinished] = useState();
 
   // Form data
   const [displayName, setDisplayName] = useState<string | undefined>();
@@ -80,8 +82,10 @@ export default function Me() {
 
     (async () => {
       const response = (await me()) as User;
-      setFetching(false);
+      const finished = await getFinished(response.username);
       setData(response);
+      setFinished(finished);
+      setFetching(false);
     })();
   }, []);
 
@@ -143,6 +147,18 @@ export default function Me() {
                     data?.quizzes.length + " kvízy"
                   ) : (
                     data?.quizzes.length + " kvízů"
+                  )}
+                </Badge>
+                <Badge color="green">
+                  Dokončil{" "}
+                  {fetching ? (
+                    <Skeleton height="20px" width="50px" />
+                  ) : finished == 1 ? (
+                    finished + " kvíz"
+                  ) : (finished || 0) >= 2 && (finished || 0) <= 4 ? (
+                    finished + " kvízy"
+                  ) : (
+                    finished + " kvízů"
                   )}
                 </Badge>
               </Flex>
