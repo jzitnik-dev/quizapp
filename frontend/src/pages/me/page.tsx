@@ -26,6 +26,7 @@ import updateProfilePicture from "../../api/updateProfilePicture";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import Quiz from "../../components/quiz/quiz";
 import RolesBadge from "../../components/user/RolesBadge";
+import { useUserProfile } from "../../components/header/UserProfileProvider";
 import { getFinished } from "../../api/getUser";
 
 export default function Me() {
@@ -34,6 +35,7 @@ export default function Me() {
   const [data, setData] = useState<User | undefined>();
   const input = useRef<HTMLInputElement | null>(null);
   const [fileUploaded, setFileUploaded] = useState(false);
+  const { setUserProfile } = useUserProfile();
   const [finished, setFinished] = useState();
 
   // Form data
@@ -72,6 +74,10 @@ export default function Me() {
 
       navigate("/");
       toast.success(response);
+      setUserProfile({
+        username: data?.username || "",
+        displayName: xdisplayName || "",
+      });
     } catch (e: any) {
       toast.error(e.message);
     }
