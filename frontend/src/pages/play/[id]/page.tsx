@@ -63,8 +63,7 @@ export default function Play() {
 
   useEffect(() => {
     const handleVisibilityChange = async () => {
-      if (document.visibilityState === "visible") {
-      } else {
+      if (document.visibilityState !== "visible") {
         setUnfinished(true);
         await cancel(key || "");
       }

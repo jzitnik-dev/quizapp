@@ -1,7 +1,5 @@
 package cz.jzitnik.quizapp.payload.request;
 
-import java.util.Set;
-
 import jakarta.validation.constraints.*;
 
 public class SignupRequest {

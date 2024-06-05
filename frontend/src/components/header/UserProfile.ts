@@ -1,4 +1,4 @@
 export default interface UserProfile {
-    username: string
-    displayName: string
+  username: string;
+  displayName: string;
 }

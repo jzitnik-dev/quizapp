@@ -35,7 +35,7 @@ import AnswerCorrectPercentageChart from "../../../components/quiz/answerCorrect
 import QuizPlayChart from "../../../components/quiz/quizPlayChart";
 import QuizViewChart from "../../../components/quiz/quizViewChart";
 
-export default function quiz() {
+export default function Quiz() {
   const [data, setData] = useState<Quiz>();
   const [author, setAuthor] = useState<User | undefined>();
   const { id } = useParams();

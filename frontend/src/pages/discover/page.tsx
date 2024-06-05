@@ -12,7 +12,7 @@ import {
   Slider,
 } from "@radix-ui/themes";
 import QuizEl from "../../components/quiz/quiz";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import getDiscover from "../../api/getDiscover";
 import { Link, useParams } from "react-router-dom";
 import { ListBulletIcon } from "@radix-ui/react-icons";
@@ -41,9 +41,7 @@ export default function Discover() {
     toast.error("Chyba: " + (error as Response).statusText);
   }
 
-  function setSort(_: string) {
-    // If there will be more sorting options, implement here.
-  }
+  function setSort() {}
 
   function setFilterQuestionAmount() {
     questionAmountDialog.current?.click();
@@ -121,7 +119,7 @@ export default function Discover() {
                     <DropdownMenu.Sub>
                       <DropdownMenu.SubTrigger>Řazení</DropdownMenu.SubTrigger>
                       <DropdownMenu.SubContent>
-                        <DropdownMenu.Item onClick={() => setSort("newest")}>
+                        <DropdownMenu.Item onClick={() => setSort()}>
                           Nejnovější
                         </DropdownMenu.Item>
                       </DropdownMenu.SubContent>

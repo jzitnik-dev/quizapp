@@ -1,6 +1,6 @@
 import { Badge } from "@radix-ui/themes";
 
-export default function ({number}: {number: number}) {
+export default function QuestionBadge({number}: {number: number}) {
   return (
     <Badge color="green">
       {number == 1

@@ -3,9 +3,10 @@ import isLogedIn from "../utils/logedin";
 export default async function getQuiz(id: number) {
   const url = new URL(import.meta.env.VITE_BACKEND);
   url.pathname = "/api/quiz/get/" + id;
+  let response;
 
   if (isLogedIn()) {
-    var response = await fetch(url.toString(), {
+    response = await fetch(url.toString(), {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -13,7 +14,7 @@ export default async function getQuiz(id: number) {
       },
     });
   } else {
-    var response = await fetch(url.toString(), {
+    response = await fetch(url.toString(), {
       method: "GET",
     });
   }

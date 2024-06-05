@@ -1,5 +1,5 @@
 export default interface QuizStats {
-  questions: String[];
+  questions: string[];
   percentages: number[];
   plays: number[];
 }

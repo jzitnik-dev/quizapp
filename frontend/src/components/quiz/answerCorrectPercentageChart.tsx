@@ -15,9 +15,9 @@ export default function AnswerCorrectPercentageChart({
   quizData: QuizStats;
 }) {
   const data: Data = [];
-  const questions: String[] = [];
+  const questions: string[] = [];
 
-  for (var i = 0; i < quizData.questions.length; i++) {
+  for (let i = 0; i < quizData.questions.length; i++) {
     const question = quizData.questions[i];
     questions.push(question);
     const percentage = quizData.percentages[i];
