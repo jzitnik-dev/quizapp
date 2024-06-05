@@ -1,14 +1,8 @@
 import UserType from "../../types/User";
 import { Link } from "react-router-dom";
-import {
-  Card,
-  Heading,
-  Badge,
-  Flex,
-  Avatar,
-  Box,
-} from "@radix-ui/themes";
+import { Card, Heading, Badge, Flex, Avatar, Box } from "@radix-ui/themes";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
+import RolesBadge from "./RolesBadge";
 
 export default function User({ user }: { user: UserType }) {
   return (
@@ -24,6 +18,7 @@ export default function User({ user }: { user: UserType }) {
           <Box>
             <Heading>{user.displayName}</Heading>
             <Flex gap="2">
+              <RolesBadge roles={user.roles} />
               <Badge>@{user.username}</Badge>
               <Badge>
                 {user?.quizzes.length == 1
