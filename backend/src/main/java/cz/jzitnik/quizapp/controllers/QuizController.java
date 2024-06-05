@@ -4,6 +4,7 @@ package cz.jzitnik.quizapp.controllers;
 import cz.jzitnik.quizapp.entities.*;
 import cz.jzitnik.quizapp.repository.QuizRepository;
 import cz.jzitnik.quizapp.repository.QuizViewRepository;
+import cz.jzitnik.quizapp.repository.ShareAnswerRepository;
 import cz.jzitnik.quizapp.repository.ValidatedQuizAnswerRepository;
 import cz.jzitnik.quizapp.services.QuizStatsService;
 import cz.jzitnik.quizapp.services.UserService;
@@ -37,6 +38,9 @@ public class QuizController {
 
     @Autowired
     QuizViewRepository quizViewRepository;
+
+    @Autowired
+    ShareAnswerRepository shareAnswerRepository;
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
@@ -111,6 +115,44 @@ public class QuizController {
         }
 
         return ResponseEntity.ok(validatedQuizAnswer.get());
+    }
+
+    @PostMapping("/answer/{id}/share")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> shareAnswer(@PathVariable Long id) {
+        User loggedUser = userService.getCurrentUser();
+        var quiz = quizRepository.findById(id);
+        if (quiz.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var validatedQuizAnswer = validatedQuizAnswerRepository.findByUserAndQuiz(loggedUser, quiz.get());
+
+        if (validatedQuizAnswer.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var shareAnswerOptional = shareAnswerRepository.findByValidatedQuizAnswer(validatedQuizAnswer.get());
+
+        if (shareAnswerOptional.isPresent()) {
+            return ResponseEntity.ok(shareAnswerOptional.get().getShareKey());
+        }
+
+        var share = new ShareAnswer(validatedQuizAnswer.get());
+        var shareFinal = shareAnswerRepository.save(share);
+
+        return ResponseEntity.ok(shareFinal.getShareKey());
+    }
+
+    @GetMapping("/answer/share/{key}")
+    public ResponseEntity<ValidatedQuizAnswer> getSharedAnswer(@PathVariable String key) {
+
+        var shareAnswerOptional = shareAnswerRepository.findByShareKey(key);
+
+        if (shareAnswerOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(shareAnswerOptional.get().getValidatedQuizAnswer());
     }
 
     @GetMapping("/owned")

@@ -14,6 +14,7 @@ const Quiz = lazy(() => import("./pages/quiz/[quizid]/page"));
 const Play = lazy(() => import("./pages/play/[id]/page"));
 const Search = lazy(() => import("./pages/search/[string]/page"));
 const ChangePassword = lazy(() => import("./pages/me/changePassword/page"));
+const Share = lazy(() => import("./pages/answer/share/[id]/page"));
 
 export default function RoutesComponent() {
   return (
@@ -119,6 +120,14 @@ export default function RoutesComponent() {
         element={
           <Page title="QuizAPP - Vyhledávání">
             <Search />
+          </Page>
+        }
+      ></Route>
+      <Route
+        path="/answer/share/:id"
+        element={
+          <Page title="QuizAPP - Odpověď">
+            <Share />
           </Page>
         }
       ></Route>

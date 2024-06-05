@@ -54,13 +54,6 @@ export default function Play() {
   const [finishData, setFinishData] = useState<ValidatedQuizAnswer>();
   const [unfinished, setUnfinished] = useState(false);
 
-  const sortedQuestions = useMemo(() => {
-    if (data && data.questions) {
-      return [...data.questions].sort((a, b) => (a?.id || 0) - (b?.id || 0));
-    }
-    return [];
-  }, [data?.questions]) as any;
-
   useEffect(() => {
     const handleVisibilityChange = async () => {
       if (document.visibilityState !== "visible") {
@@ -230,7 +223,7 @@ export default function Play() {
                       <Text>
                         <Flex gap="1" align="center">
                           <Text>Vaše odpověď:</Text>
-                          {sortedQuestions[index].type == "Multiselect"
+                          {answer.question.type.toString() == "Multiselect"
                             ? JSON.parse(answer.answer).map(
                                 (e: string, index: number) => (
                                   <Badge key={index}>{e}</Badge>

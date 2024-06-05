@@ -12,6 +12,8 @@ import {
   AlertDialog,
   Spinner,
   Callout,
+  IconButton,
+  TextField,
 } from "@radix-ui/themes";
 import { useEffect, useRef, useState, useMemo } from "react";
 import Quiz from "../../../types/Quiz";
@@ -25,7 +27,12 @@ import play, { isPlaying } from "../../../api/play";
 import isLogedIn from "../../../utils/logedin";
 import { validatedQuizAnswer } from "../../../api/validatedQuizAnswer";
 import ValidatedQuizAnswer from "../../../types/ValidatedQuizAnswer";
-import { CheckIcon, Cross1Icon, TrashIcon } from "@radix-ui/react-icons";
+import {
+  CheckIcon,
+  Cross1Icon,
+  Share1Icon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
 import QuestionBadge from "../../../components/quiz/questionBadge";
 import removeQuiz from "../../../api/removeQuiz";
@@ -34,6 +41,7 @@ import { getStatistics, getViews } from "../../../api/getStatistics";
 import AnswerCorrectPercentageChart from "../../../components/quiz/answerCorrectPercentageChart";
 import QuizPlayChart from "../../../components/quiz/quizPlayChart";
 import QuizViewChart from "../../../components/quiz/quizViewChart";
+import shareAnswerAPI from "../../../api/shareAnswer";
 
 export default function QuizComponent() {
   const [data, setData] = useState<Quiz>();
@@ -47,13 +55,8 @@ export default function QuizComponent() {
   const [owned, setOwned] = useState<boolean>();
   const [stats, setStats] = useState<QuizStats | null>();
   const [views, setViews] = useState<number[]>();
-
-  const sortedQuestions = useMemo(() => {
-    if (data && data.questions) {
-      return [...data.questions].sort((a, b) => (a?.id || 0) - (b?.id || 0));
-    }
-    return [];
-  }, [data?.questions]) as any;
+  const shareDialogTrigger = useRef<HTMLButtonElement>(null);
+  const [shareUrl, setShareUrl] = useState<string>();
 
   useEffect(() => {
     if (!isLogedIn()) {
@@ -108,6 +111,15 @@ export default function QuizComponent() {
     await removeQuiz(parseInt(id || "0"));
     navigate("/");
     toast.success("Kvíz byl odstraněn!");
+  }
+
+  async function shareAnswer() {
+    const key = await shareAnswerAPI(id || "");
+
+    const currentLocation = new URL(window.location.href);
+    currentLocation.pathname = "/answer/share/" + key;
+    setShareUrl(currentLocation.href);
+    shareDialogTrigger.current?.click();
   }
 
   return (
@@ -317,7 +329,7 @@ export default function QuizComponent() {
                           <Text>
                             <Flex gap="1" align="center">
                               <Text>Vaše odpověď:</Text>
-                              {sortedQuestions[index].type == "Multiselect"
+                              {answer.question.type.toString() == "Multiselect"
                                 ? JSON.parse(answer.answer).map(
                                     (e: string, index: number) => (
                                       <Badge key={index}>{e}</Badge>
@@ -331,6 +343,41 @@ export default function QuizComponent() {
                     );
                   })}
                 </Flex>
+                <Flex justify="center" mt="4">
+                  <IconButton onClick={shareAnswer}>
+                    <Share1Icon />
+                  </IconButton>
+                </Flex>
+                <AlertDialog.Root>
+                  <AlertDialog.Trigger>
+                    <Button
+                      style={{ display: "none" }}
+                      ref={shareDialogTrigger}
+                    ></Button>
+                  </AlertDialog.Trigger>
+                  <AlertDialog.Content maxWidth="450px">
+                    <AlertDialog.Title>
+                      Sdílení odpovédi kvízu
+                    </AlertDialog.Title>
+                    <AlertDialog.Description size="2">
+                      Odpověď kvízu byla zveřejněna pod tímto odkazem. Kdokoliv
+                      s tímto odkazem může se podívat na vaši odpověď kvízu.
+                    </AlertDialog.Description>
+
+                    <TextField.Root
+                      placeholder="URL"
+                      defaultValue={shareUrl}
+                      readOnly
+                      mt="2"
+                    />
+
+                    <Flex gap="3" mt="4" justify="end">
+                      <AlertDialog.Action>
+                        <Button variant="solid">OK</Button>
+                      </AlertDialog.Action>
+                    </Flex>
+                  </AlertDialog.Content>
+                </AlertDialog.Root>
               </>
             ) : (
               <Heading align="center" size="7" mt="5">
