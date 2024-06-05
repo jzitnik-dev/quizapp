@@ -35,8 +35,8 @@ export default function Login() {
     try {
       const res = await login(username, password);
       localStorage.setItem("accessToken", res.accessToken);
-      navigate("/");
       setUserProfile(res);
+      navigate("/");
     } catch (e: any) {
       setErrorMessage(
         e.message == "Bad credentials"

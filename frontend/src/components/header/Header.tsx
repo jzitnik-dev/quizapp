@@ -28,7 +28,12 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const logedIn = isLogedIn();
-  const { userProfile, loading: fetching, error } = useUserProfile();
+  const {
+    userProfile,
+    loading: fetching,
+    error,
+    setUserProfile,
+  } = useUserProfile();
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false);
 
   const name = userProfile?.displayName || "";
@@ -36,6 +41,7 @@ export default function Header() {
 
   function logout() {
     localStorage.removeItem("accessToken");
+    setUserProfile(null);
     navigate("/");
   }
 
