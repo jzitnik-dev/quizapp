@@ -115,7 +115,7 @@ export default function UserPage() {
                   data?.displayName
                 )}
               </Heading>
-              <Flex gap="2">
+              <Flex gap="2" wrap="wrap">
                 {userStatus === "loading" || !data?.roles ? null : (
                   <RolesBadge roles={data?.roles} />
                 )}
@@ -142,11 +142,11 @@ export default function UserPage() {
                   {finishedStatus === "loading" ? (
                     <Skeleton height="20px" width="50px" />
                   ) : finished == 1 ? (
-                    "Dokončil: " + finished + " kvíz"
+                    "Dokončil " + finished + " kvíz"
                   ) : (finished || 0) >= 2 && (finished || 0) <= 4 ? (
-                    "Dokončil: " + finished + " kvízy"
+                    "Dokončil " + finished + " kvízy"
                   ) : (
-                    "Dokončil: " + finished + " kvízů"
+                    "Dokončil " + finished + " kvízů"
                   )}
                 </Badge>
               </Flex>

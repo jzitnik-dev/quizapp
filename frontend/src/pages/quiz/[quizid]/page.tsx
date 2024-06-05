@@ -78,7 +78,6 @@ export default function quiz() {
           }
           const views = await getViews(id || "");
           setViews(views);
-          console.log(views);
         }
       } catch (e: any) {
         if (e.status == 404) {
@@ -166,13 +165,13 @@ export default function quiz() {
                 <HoverCard.Root>
                   <HoverCard.Trigger>
                     <Badge style={{ cursor: "pointer" }}>
-                      <Link to={"/user/" + author?.username}>
+                      <Link to={owned ? "/me" : "/user/" + author?.username}>
                         {author?.displayName}
                       </Link>
                     </Badge>
                   </HoverCard.Trigger>
                   <HoverCard.Content maxWidth="300px">
-                    <Link to={"/user/" + author?.username}>
+                    <Link to={owned ? "/me" : "/user/" + author?.username}>
                       <Flex gap="4">
                         <Avatar
                           size="3"

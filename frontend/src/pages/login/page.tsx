@@ -13,13 +13,15 @@ import { FormEvent, useState, useEffect } from "react";
 import login from "../../api/login";
 import { useNavigate } from "react-router-dom";
 import isLogedIn from "../../utils/logedin";
-import "../../styles/login.css"
+import "../../styles/login.css";
+import { useUserProfile } from "../../components/header/UserProfileProvider";
 
 export default function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
   const [loading, setLoading] = useState(false);
+  const { setUserProfile } = useUserProfile();
 
   // Form data
   const [username, setUsername] = useState("");
@@ -34,6 +36,7 @@ export default function Login() {
       const res = await login(username, password);
       localStorage.setItem("accessToken", res.accessToken);
       navigate("/");
+      setUserProfile(res);
     } catch (e: any) {
       setErrorMessage(
         e.message == "Bad credentials"
