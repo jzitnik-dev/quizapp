@@ -12,22 +12,48 @@ import {
 } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
-import User from "../../../types/User";
 import getUser, { getFinished } from "../../../api/getUser";
 import { useParams } from "react-router-dom";
-import isLogedIn from "../../../utils/logedin";
-import me from "../../../api/me";
 import getProfilePictureUrl from "../../../api/getProfilePictureUrl";
 import Quiz from "../../../components/quiz/quiz";
 import RolesBadge from "../../../components/user/RolesBadge";
+import { useQuery } from "react-query";
+import { useUserProfile } from "../../../components/header/UserProfileProvider";
 
 export default function UserPage() {
-  const [data, setData] = useState<User | undefined>();
-  const [notfound, setNotFound] = useState(false);
-  const [fetching, setFetching] = useState(true);
-  const [finished, setFinished] = useState();
-  const { username } = useParams();
   const navigate = useNavigate();
+  const { username } = useParams();
+  const [isUserNotFound, setIsUserNotFound] = useState(false);
+  const { userProfile, loading } = useUserProfile();
+
+  const {
+    data,
+    status: userStatus,
+    error,
+  } = useQuery("userpage", async () => await getUser(username?.trim() || ""), {
+    enabled: !isUserNotFound,
+    retry: (failureCount, error) => {
+      if ((error as any).status === 404) {
+        setIsUserNotFound(true);
+        return false;
+      }
+      return failureCount < 3;
+    },
+  });
+  const { data: finished, status: finishedStatus } = useQuery(
+    "finished",
+    async () => await getFinished(username?.trim() || ""),
+    {
+      enabled: !isUserNotFound,
+      retry: (failureCount, error) => {
+        if ((error as any).status === 404) {
+          setIsUserNotFound(true);
+          return false;
+        }
+        return failureCount < 3;
+      },
+    },
+  );
 
   const quizzesReverse = useMemo(() => {
     if (data && data.quizzes) {
@@ -37,43 +63,26 @@ export default function UserPage() {
   }, [data?.quizzes]);
 
   useEffect(() => {
-    (async () => {
-      if (isLogedIn()) {
-        const res = await me();
-        if (res.username.trim() == username?.trim()) {
-          navigate("/me", {
-            replace: true,
-          });
-          return;
-        }
-      }
-      try {
-        const res = await getUser(username?.trim() || "");
-        setData(res);
-        const finished = await getFinished(username?.trim() || "");
-        setFinished(finished);
-      } catch (e: any) {
-        if (e.status == "404") {
-          setNotFound(true);
-        }
-      }
-      setFetching(false);
-    })();
-  }, []);
+    if (userProfile?.username == username) {
+      navigate("/me");
+    }
+  }, [loading]);
 
-  if (notfound) {
-    return (
-      <Section>
-        <Container>
-          <Heading size="9" align="center">
-            Nenalezeno!
-          </Heading>
-          <Text align="center" style={{ display: "block" }}>
-            Uživatel nebyl nalezen.
-          </Text>
-        </Container>
-      </Section>
-    );
+  if (userStatus === "error") {
+    if ((error as any).status == "404") {
+      return (
+        <Section>
+          <Container>
+            <Heading size="9" align="center">
+              Nenalezeno!
+            </Heading>
+            <Text align="center" style={{ display: "block" }}>
+              Uživatel nebyl nalezen.
+            </Text>
+          </Container>
+        </Section>
+      );
+    }
   }
 
   return (
@@ -100,25 +109,25 @@ export default function UserPage() {
             />
             <Card className="w-5/6 md:w-1/2">
               <Heading size="9">
-                {fetching ? (
+                {userStatus === "loading" ? (
                   <Skeleton height="50px" width="250px" />
                 ) : (
                   data?.displayName
                 )}
               </Heading>
               <Flex gap="2">
-                {fetching || !data?.roles ? null : (
+                {userStatus === "loading" || !data?.roles ? null : (
                   <RolesBadge roles={data?.roles} />
                 )}
                 <Badge>
-                  {fetching ? (
+                  {userStatus === "loading" ? (
                     <Skeleton height="20px" width="60px" />
                   ) : (
                     `@${data?.username}`
                   )}
                 </Badge>
                 <Badge>
-                  {fetching ? (
+                  {userStatus === "loading" ? (
                     <Skeleton height="20px" width="50px" />
                   ) : data?.quizzes.length == 1 ? (
                     data.quizzes.length + " kvíz"
@@ -130,20 +139,19 @@ export default function UserPage() {
                   )}
                 </Badge>
                 <Badge color="green">
-                  Dokončil{" "}
-                  {fetching ? (
+                  {finishedStatus === "loading" ? (
                     <Skeleton height="20px" width="50px" />
                   ) : finished == 1 ? (
-                    finished + " kvíz"
+                    "Dokončil: " + finished + " kvíz"
                   ) : (finished || 0) >= 2 && (finished || 0) <= 4 ? (
-                    finished + " kvízy"
+                    "Dokončil: " + finished + " kvízy"
                   ) : (
-                    finished + " kvízů"
+                    "Dokončil: " + finished + " kvízů"
                   )}
                 </Badge>
               </Flex>
 
-              {fetching ? (
+              {userStatus === "loading" ? (
                 <Skeleton height="118px" />
               ) : data?.bio ? (
                 <>

@@ -11,26 +11,35 @@ import {
   Dialog,
   Slider,
 } from "@radix-ui/themes";
-import Quiz from "../../types/Quiz";
 import QuizEl from "../../components/quiz/quiz";
 import { useEffect, useRef, useState } from "react";
-import Page from "../../types/Page";
 import getDiscover from "../../api/getDiscover";
 import { Link, useParams } from "react-router-dom";
 import { ListBulletIcon } from "@radix-ui/react-icons";
+import { useQuery } from "react-query";
+import { toast } from "react-toastify";
 
 export default function Discover() {
-  const [quizzes, setQuizzes] = useState<Page<Quiz>>();
   const [questionAmount, setQuestionAmount] = useState<number>();
   const questionAmountDialog = useRef<HTMLButtonElement>(null);
   const { pagenumber } = useParams();
+  const {
+    data: quizzes,
+    status,
+    error,
+    refetch,
+  } = useQuery(
+    "discover",
+    async () => await getDiscover(pagenumber, questionAmount),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  );
 
-  useEffect(() => {
-    (async () => {
-      const res = await getDiscover(pagenumber);
-      setQuizzes(res);
-    })();
-  }, []);
+  if (status === "error") {
+    toast.error("Chyba: " + (error as Response).statusText);
+  }
 
   function setSort(_: string) {
     // If there will be more sorting options, implement here.
@@ -41,10 +50,7 @@ export default function Discover() {
   }
 
   function submitFilterQuestionAmount() {
-    (async () => {
-      const res = await getDiscover(pagenumber, questionAmount);
-      setQuizzes(res);
-    })();
+    refetch();
   }
 
   return (
@@ -84,7 +90,7 @@ export default function Discover() {
         </Dialog.Content>
       </Dialog.Root>
       <Container>
-        {quizzes === undefined ? (
+        {status === "loading" || !quizzes ? (
           <Flex justify="center">
             <Spinner size="3" />
           </Flex>
@@ -131,7 +137,9 @@ export default function Discover() {
             ) : (
               <>
                 <Flex direction="column" mt="3" gap="2">
-                  {quizzes?.content.map((el, index) => <QuizEl key={index} quiz={el} />)}
+                  {quizzes?.content.map((el, index) => (
+                    <QuizEl key={index} quiz={el} />
+                  ))}
                 </Flex>
                 <Flex align="center" justify="center" mt="5" gap="3">
                   {quizzes.first ? (

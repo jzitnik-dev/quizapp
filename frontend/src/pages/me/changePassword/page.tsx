@@ -9,10 +9,11 @@ import {
   Button,
   Strong,
 } from "@radix-ui/themes";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { changePassword } from "../../../api/updateProfile";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import isLogedIn from "../../../utils/logedin";
 
 export default function ChangePassword() {
   const [current, setCurrent] = useState("");
@@ -37,6 +38,10 @@ export default function ChangePassword() {
     toast.success(res);
     navigate("/me");
   }
+
+  useEffect(() => {
+    if (!isLogedIn()) navigate("/login");
+  }, []);
 
   return (
     <Container maxWidth="800px">

@@ -14,7 +14,6 @@ import {
   Skeleton,
   TextArea,
 } from "@radix-ui/themes";
-import User from "../../types/User";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef, useMemo } from "react";
 import me from "../../api/me";
@@ -28,15 +27,18 @@ import Quiz from "../../components/quiz/quiz";
 import RolesBadge from "../../components/user/RolesBadge";
 import { useUserProfile } from "../../components/header/UserProfileProvider";
 import { getFinished } from "../../api/getUser";
+import { useQuery } from "react-query";
 
 export default function Me() {
   const navigate = useNavigate();
-  const [fetching, setFetching] = useState(true);
-  const [data, setData] = useState<User | undefined>();
   const input = useRef<HTMLInputElement | null>(null);
   const [fileUploaded, setFileUploaded] = useState(false);
   const { setUserProfile } = useUserProfile();
-  const [finished, setFinished] = useState();
+  const { data } = useQuery("me", me);
+  const { data: finished, status } = useQuery(
+    ["finished", data],
+    async () => await getFinished(data?.username || ""),
+  );
 
   // Form data
   const [displayName, setDisplayName] = useState<string | undefined>();
@@ -85,14 +87,6 @@ export default function Me() {
 
   useEffect(() => {
     if (!isLogedIn()) navigate("/login");
-
-    (async () => {
-      const response = (await me()) as User;
-      const finished = await getFinished(response.username);
-      setData(response);
-      setFinished(finished);
-      setFetching(false);
-    })();
   }, []);
 
   return (
@@ -126,25 +120,25 @@ export default function Me() {
             />
             <Card className="w-5/6 md:w-1/2">
               <Heading size="9">
-                {fetching ? (
+                {status === "loading" ? (
                   <Skeleton height="50px" width="250px" />
                 ) : (
                   data?.displayName
                 )}
               </Heading>
               <Flex gap="2">
-                {fetching || !data?.roles ? null : (
+                {status === "loading" || !data?.roles ? null : (
                   <RolesBadge roles={data?.roles} />
                 )}
                 <Badge>
-                  {fetching ? (
+                  {status === "loading" ? (
                     <Skeleton height="20px" width="60px" />
                   ) : (
                     `@${data?.username}`
                   )}
                 </Badge>
                 <Badge>
-                  {fetching ? (
+                  {status === "loading" ? (
                     <Skeleton height="20px" width="50px" />
                   ) : data?.quizzes.length == 1 ? (
                     data.quizzes.length + " kvíz"
@@ -156,20 +150,19 @@ export default function Me() {
                   )}
                 </Badge>
                 <Badge color="green">
-                  Dokončil{" "}
-                  {fetching ? (
+                  {status === "loading" ? (
                     <Skeleton height="20px" width="50px" />
                   ) : finished == 1 ? (
-                    finished + " kvíz"
+                    "Dokončil: " + finished + " kvíz"
                   ) : (finished || 0) >= 2 && (finished || 0) <= 4 ? (
-                    finished + " kvízy"
+                    "Dokončil: " + finished + " kvízy"
                   ) : (
-                    finished + " kvízů"
+                    "Dokončil: " + finished + " kvízů"
                   )}
                 </Badge>
               </Flex>
 
-              {fetching ? (
+              {status === "loading" ? (
                 <Skeleton height="118px" />
               ) : data?.bio ? (
                 <>

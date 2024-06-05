@@ -2,18 +2,15 @@ import QuizType from "../../types/Quiz";
 import { Link } from "react-router-dom";
 import { Card, Heading, Text, Badge } from "@radix-ui/themes";
 import QuestionBadge from "./questionBadge";
-import { useEffect, useState } from "react";
 import { getFinished } from "../../api/getQuiz";
+import { useQuery } from "react-query";
 
 export default function Quiz({ quiz }: { quiz: QuizType }) {
-  const [finished, setFinished] = useState<boolean>();
+  const { data: finished } = useQuery(
+    "finishedQuiz:" + quiz.id,
+    async () => await getFinished(quiz.id.toString()),
+  );
 
-  useEffect(() => {
-    (async () => {
-      const finished = await getFinished(quiz.id.toString());
-      setFinished(finished);
-    })();
-  }, []);
   return (
     <Link to={`/quiz/${quiz.id}`}>
       <Card>

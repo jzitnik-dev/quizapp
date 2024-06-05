@@ -1,3 +1,4 @@
+import User from "../types/User";
 import isLogedIn from "../utils/logedin";
 
 export default async function me() {
@@ -24,7 +25,7 @@ export default async function me() {
     }
     throw new Error(errorData.message || "Registration failed");
   }
-  return await response.json();
+  return await response.json() as User;
 }
 
 export async function meHeader() {
