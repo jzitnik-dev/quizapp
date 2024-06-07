@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import cz.jzitnik.quizapp.security.jwt.AuthEntryPointJwt;
 import cz.jzitnik.quizapp.security.jwt.AuthTokenFilter;
 
 @Configuration
@@ -23,9 +22,6 @@ import cz.jzitnik.quizapp.security.jwt.AuthTokenFilter;
 public class WebSecurityConfig {
   @Autowired
   UserDetailsServiceImpl userDetailsService;
-
-  @Autowired
-  private AuthEntryPointJwt unauthorizedHandler;
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -55,10 +51,9 @@ public class WebSecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
-        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> 
-          auth.requestMatchers("/api/**").permitAll()
+          auth.requestMatchers("/**").permitAll()
               .anyRequest().authenticated()
         );
     

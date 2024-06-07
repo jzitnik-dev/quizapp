@@ -3,7 +3,7 @@ import isLogedIn from "../utils/logedin";
 
 export default async function me() {
   if (!isLogedIn()) {
-    window.location.reload();
+    throw new Error("Not logged in!");
   }
 
   const url = new URL(import.meta.env.VITE_BACKEND);
@@ -25,12 +25,12 @@ export default async function me() {
     }
     throw new Error(errorData.message || "Registration failed");
   }
-  return await response.json() as User;
+  return (await response.json()) as User;
 }
 
 export async function meHeader() {
   if (!isLogedIn()) {
-    window.location.reload();
+    throw new Error("Not logged in!");
   }
 
   const url = new URL(import.meta.env.VITE_BACKEND);
