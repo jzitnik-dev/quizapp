@@ -153,11 +153,11 @@ export default function Me() {
                   {status === "loading" ? (
                     <Skeleton height="20px" width="50px" />
                   ) : finished == 1 ? (
-                    "Dokončil " + finished + " kvíz"
+                    "Dokončil/a " + finished + " kvíz"
                   ) : (finished || 0) >= 2 && (finished || 0) <= 4 ? (
-                    "Dokončil " + finished + " kvízy"
+                    "Dokončil/a " + finished + " kvízy"
                   ) : (
-                    "Dokončil " + finished + " kvízů"
+                    "Dokončil/a " + finished + " kvízů"
                   )}
                 </Badge>
               </Flex>
