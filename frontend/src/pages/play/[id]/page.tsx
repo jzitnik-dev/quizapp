@@ -16,7 +16,7 @@ import {
   SegmentedControl,
   Badge,
 } from "@radix-ui/themes";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import {
   Link,
   useNavigate,

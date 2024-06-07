@@ -15,7 +15,7 @@ import {
   IconButton,
   TextField,
 } from "@radix-ui/themes";
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 import Quiz from "../../../types/Quiz";
 import getQuiz, { getOwned } from "../../../api/getQuiz";
 import { useNavigate, useParams } from "react-router-dom";
