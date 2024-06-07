@@ -15,6 +15,7 @@ import {
   CheckboxCards,
   SegmentedControl,
   Badge,
+  Progress,
 } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import {
@@ -172,7 +173,16 @@ export default function Play() {
   return (
     <Section>
       <Container>
-        <Heading size="9" align="center">
+        {!unfinished ? (
+          <Flex justify="center">
+            <Progress
+              max={data?.questions.length}
+              value={finish ? data?.questions.length : currentQuestion - 1}
+            />
+          </Flex>
+        ) : null}
+
+        <Heading size="9" align="center" mt="5">
           {data?.title}
         </Heading>
         <Separator size="4" my="3" />
