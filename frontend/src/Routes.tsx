@@ -15,6 +15,7 @@ const Play = lazy(() => import("./pages/play/[id]/page"));
 const Search = lazy(() => import("./pages/search/[string]/page"));
 const ChangePassword = lazy(() => import("./pages/me/changePassword/page"));
 const Share = lazy(() => import("./pages/answer/share/[id]/page"));
+const NotFound = lazy(() => import("./pages/404/page"))
 
 export default function RoutesComponent() {
   return (
@@ -130,6 +131,14 @@ export default function RoutesComponent() {
             <Share />
           </Page>
         }
+      ></Route>
+
+      {/* 404 */}
+      <Route
+        path="/*"
+        element={<Page title="QuizAPP - Nenalezeno">
+          <NotFound />
+        </Page>}
       ></Route>
     </Routes>
   );
