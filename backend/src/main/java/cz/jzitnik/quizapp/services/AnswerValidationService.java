@@ -45,7 +45,7 @@ public class AnswerValidationService {
                     answer.setValidatedQuizAnswer(validatedQuizAnswer);
                     validatedQuizAnswer.getAnswers().add(answer);
                 } catch(JsonProcessingException e) {
-                    var answer = new Answer("[\"Interní chyba\"]", question, false);
+                    var answer = new Answer("[\"Otázka přeskočena\"]", question, false);
                     answer.setValidatedQuizAnswer(validatedQuizAnswer);
                     validatedQuizAnswer.getAnswers().add(answer);
                 }
