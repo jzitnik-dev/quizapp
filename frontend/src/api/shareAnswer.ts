@@ -1,4 +1,4 @@
-import ValidatedQuizAnswer from "../types/ValidatedQuizAnswer";
+import ShareAnswer from "../types/ShareAnswer";
 import isLogedIn from "../utils/logedin";
 
 export default async function shareAnswer(quizId: string) {
@@ -37,8 +37,11 @@ export async function getShared(key: string) {
     },
   });
   if (!response.ok) {
+    if (response.status == 404) {
+      return null;
+    }
     const errorData = await response.json();
     throw new Error(errorData);
   }
-  return await response.json() as ValidatedQuizAnswer;
+  return await response.json() as ShareAnswer;
 }
