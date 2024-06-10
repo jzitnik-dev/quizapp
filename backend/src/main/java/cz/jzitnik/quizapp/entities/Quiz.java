@@ -2,7 +2,6 @@ package cz.jzitnik.quizapp.entities;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +27,7 @@ public class Quiz {
     @Size(max = 500)
     private String description;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JsonManagedReference(value = "quiz-questions")
     private List<Question> questions = new ArrayList<>();
 
@@ -40,7 +39,7 @@ public class Quiz {
         this.validatedQuizAnswers = validatedQuizAnswers;
     }
 
-    @OneToMany(mappedBy = "quiz", cascade = {CascadeType.ALL, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
     @JsonManagedReference(value = "quiz-validatedQuizAnswers")
     @JsonIgnore
     private Set<ValidatedQuizAnswer> validatedQuizAnswers;

@@ -16,7 +16,15 @@ public class ShareAnswer {
     @Column(unique = true)
     private String shareKey;
 
-    public ShareAnswer(ValidatedQuizAnswer validatedQuizAnswer) {
+    @ManyToOne
+    @JoinColumn
+    private User user;
+
+    @ManyToOne
+    @JoinColumn
+    private Quiz quiz;
+
+    public ShareAnswer(ValidatedQuizAnswer validatedQuizAnswer, User user, Quiz quiz) {
         this.validatedQuizAnswer = validatedQuizAnswer;
 
         final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -31,6 +39,24 @@ public class ShareAnswer {
         }
 
         this.shareKey = stringBuilder.toString();
+        this.user = user;
+        this.quiz = quiz;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public ShareAnswer() {

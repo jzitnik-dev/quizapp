@@ -10,7 +10,7 @@ public class Answer {
     private Long id;
     private String answer;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 

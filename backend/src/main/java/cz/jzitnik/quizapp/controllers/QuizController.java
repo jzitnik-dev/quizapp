@@ -137,14 +137,14 @@ public class QuizController {
             return ResponseEntity.ok(shareAnswerOptional.get().getShareKey());
         }
 
-        var share = new ShareAnswer(validatedQuizAnswer.get());
+        var share = new ShareAnswer(validatedQuizAnswer.get(), loggedUser, quiz.get());
         var shareFinal = shareAnswerRepository.save(share);
 
         return ResponseEntity.ok(shareFinal.getShareKey());
     }
 
     @GetMapping("/answer/share/{key}")
-    public ResponseEntity<ValidatedQuizAnswer> getSharedAnswer(@PathVariable String key) {
+    public ResponseEntity<ShareAnswer> getSharedAnswer(@PathVariable String key) {
 
         var shareAnswerOptional = shareAnswerRepository.findByShareKey(key);
 
@@ -152,7 +152,7 @@ public class QuizController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(shareAnswerOptional.get().getValidatedQuizAnswer());
+        return ResponseEntity.ok(shareAnswerOptional.get());
     }
 
     @GetMapping("/owned")
