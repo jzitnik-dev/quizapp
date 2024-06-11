@@ -27,7 +27,7 @@ public class Quiz {
     @Size(max = 500)
     private String description;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "quiz", cascade = {CascadeType.ALL, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     @JsonManagedReference(value = "quiz-questions")
     private List<Question> questions = new ArrayList<>();
 
