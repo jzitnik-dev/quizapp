@@ -15,7 +15,11 @@ export default function FinishedBadge({ finished }: { finished?: Finished }) {
     );
   }
 
-  return <Badge color="red">Nedokončeno</Badge>;
+  return (
+    <Badge color="red">
+      Nedokončeno {new Date(finished.date).toLocaleDateString()}
+    </Badge>
+  );
 }
 
 export function FInishedBadgeAnswer({
@@ -35,5 +39,9 @@ export function FInishedBadgeAnswer({
     );
   }
 
-  return <Badge color="red">Nedokončeno</Badge>;
+  return (
+    <Badge color="red">
+      Nedokončeno {new Date(answer.createDate).toLocaleDateString()}
+    </Badge>
+  );
 }
