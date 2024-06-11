@@ -92,7 +92,7 @@ public class UserController {
 
     @PatchMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> authenicateUser(@RequestBody User user) {
+    public ResponseEntity<String> changeUserDetails(@RequestBody User user) {
         var loggedUser = userService.getCurrentUser();
         loggedUser.setDisplayName(user.getDisplayName());
         loggedUser.setBio(user.getBio());

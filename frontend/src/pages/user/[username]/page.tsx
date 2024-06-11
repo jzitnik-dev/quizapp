@@ -68,21 +68,19 @@ export default function UserPage() {
     }
   }, [loading]);
 
-  if (userStatus === "error") {
-    if ((error as any).status == "404") {
-      return (
-        <Section>
-          <Container>
-            <Heading size="9" align="center">
-              Nenalezeno!
-            </Heading>
-            <Text align="center" style={{ display: "block" }}>
-              Uživatel nebyl nalezen.
-            </Text>
-          </Container>
-        </Section>
-      );
-    }
+  if (userStatus === "error" && (error as any).status == "404") {
+    return (
+      <Section>
+        <Container>
+          <Heading size="9" align="center">
+            Nenalezeno!
+          </Heading>
+          <Text align="center" style={{ display: "block" }}>
+            Uživatel nebyl nalezen.
+          </Text>
+        </Container>
+      </Section>
+    );
   }
 
   return (

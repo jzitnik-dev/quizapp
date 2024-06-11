@@ -8,8 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, Long> {

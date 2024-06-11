@@ -10,7 +10,6 @@ public class PasswordChangeRequest {
 
     @NotBlank
     private String currentPassword;
-
     public String getCurrentPassword() {
         return currentPassword;
     }

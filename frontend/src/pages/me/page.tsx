@@ -18,7 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef, useMemo } from "react";
 import me from "../../api/me";
 import isLogedIn from "../../utils/logedin";
-import { UploadIcon } from "@radix-ui/react-icons";
+import { Pencil1Icon, UploadIcon } from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
 import updateMe from "../../api/updateProfile";
 import updateProfilePicture from "../../api/updateProfilePicture";
@@ -174,7 +174,9 @@ export default function Me() {
               <br />
               <Dialog.Root>
                 <Dialog.Trigger>
-                  <Button>Upravit profil</Button>
+                  <Button>
+                    <Pencil1Icon /> Upravit profil
+                  </Button>
                 </Dialog.Trigger>
                 <Dialog.Content>
                   <Dialog.Title>Upravit profil</Dialog.Title>
@@ -222,11 +224,11 @@ export default function Me() {
                   <Flex gap="3" mt="4" justify="end">
                     <Dialog.Close>
                       <Button variant="soft" color="gray">
-                        Cancel
+                        Zrušit
                       </Button>
                     </Dialog.Close>
                     <Dialog.Close onClick={submitChanges}>
-                      <Button>Save</Button>
+                      <Button>Uložit</Button>
                     </Dialog.Close>
                   </Flex>
                 </Dialog.Content>

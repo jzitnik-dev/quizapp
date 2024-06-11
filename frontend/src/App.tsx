@@ -42,8 +42,8 @@ export default function App() {
                 />
                 <Box style={{ paddingTop: "55px" }}>
                   <RoutesComponent />
-                  <Footer />
                 </Box>
+                <Footer />
               </QueryClientProvider>
             </UserProfileProvider>
           </BrowserRouter>
