@@ -2,6 +2,7 @@ package cz.jzitnik.quizapp.controllers;
 
 
 import cz.jzitnik.quizapp.entities.*;
+import cz.jzitnik.quizapp.payload.response.FinishedResponse;
 import cz.jzitnik.quizapp.repository.QuizRepository;
 import cz.jzitnik.quizapp.repository.QuizViewRepository;
 import cz.jzitnik.quizapp.repository.ShareAnswerRepository;
@@ -173,7 +174,7 @@ public class QuizController {
 
     @GetMapping("/finished")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> getFinished(@RequestParam("quizId") Long id) {
+    public ResponseEntity<FinishedResponse> getFinished(@RequestParam("quizId") Long id) {
         User loggedUser = userService.getCurrentUser();
         var quiz = quizRepository.findById(id);
         if (quiz.isEmpty()) {
@@ -185,7 +186,7 @@ public class QuizController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(validatedQuizAnswer.get().isFinished() ? "true" : "false");
+        return ResponseEntity.ok(new FinishedResponse(validatedQuizAnswer.get().isFinished(), validatedQuizAnswer.get().getCreateDate()));
     }
 
     @DeleteMapping
