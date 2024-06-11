@@ -4,9 +4,10 @@ import { Card, Heading, Text, Badge } from "@radix-ui/themes";
 import QuestionBadge from "./questionBadge";
 import { getFinished } from "../../api/getQuiz";
 import { useQuery } from "react-query";
+import FinishedBadge from "./finishedBadge";
 
 export default function Quiz({ quiz }: { quiz: QuizType }) {
-  const { data: finished } = useQuery(
+  const { data } = useQuery(
     "finishedQuiz:" + quiz.id,
     async () => await getFinished(quiz.id.toString()),
   );
@@ -21,13 +22,7 @@ export default function Quiz({ quiz }: { quiz: QuizType }) {
           {new Date(quiz.createDate).toLocaleDateString()}
         </Badge>{" "}
         <QuestionBadge number={quiz.questions.length} />{" "}
-        {finished !== undefined ? (
-          finished === true ? (
-            <Badge color="green">Dokončeno</Badge>
-          ) : (
-            <Badge color="red">Nedokončeno</Badge>
-          )
-        ) : null}{" "}
+        <FinishedBadge finished={data} />
       </Card>
     </Link>
   );

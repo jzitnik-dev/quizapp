@@ -17,7 +17,7 @@ import {
 } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import Quiz from "../../../types/Quiz";
-import getQuiz, { getOwned } from "../../../api/getQuiz";
+import getQuiz, { getFinished, getOwned } from "../../../api/getQuiz";
 import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import User from "../../../types/User";
@@ -42,6 +42,7 @@ import AnswerCorrectPercentageChart from "../../../components/quiz/answerCorrect
 import QuizPlayChart from "../../../components/quiz/quizPlayChart";
 import QuizViewChart from "../../../components/quiz/quizViewChart";
 import shareAnswerAPI from "../../../api/shareAnswer";
+import { FInishedBadgeAnswer } from "../../../components/quiz/finishedBadge";
 
 export default function QuizComponent() {
   const [data, setData] = useState<Quiz>();
@@ -204,11 +205,7 @@ export default function QuizComponent() {
                   </HoverCard.Content>
                 </HoverCard.Root>
                 <QuestionBadge number={data?.questions.length || 0} />
-                {answer ? (
-                  <Badge color={answer.finished ? "green" : "red"}>
-                    {answer.finished ? "Dokončeno" : "Nedokončeno"}
-                  </Badge>
-                ) : null}
+                <FInishedBadgeAnswer answer={answer} />
               </Flex>
               {owned ? (
                 <Flex gap="1">

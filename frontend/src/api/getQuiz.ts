@@ -1,3 +1,4 @@
+import Finished from "../types/Finished";
 import isLogedIn from "../utils/logedin";
 
 export default async function getQuiz(id: number) {
@@ -74,5 +75,5 @@ export async function getFinished(quizId: string) {
     }
     throw new Error(errorData || "Registration failed");
   }
-  return (await response.text()).trim() == "true";
+  return await response.json() as Finished;
 }
