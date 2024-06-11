@@ -1,4 +1,4 @@
-import { Container, Flex, Heading, Section } from "@radix-ui/themes";
+import { Container, Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { useQuery } from "react-query";
 import { getAllFinished } from "../../../api/getQuiz";
 import Quiz, { QuizSkeleton } from "../../../components/quiz/quiz";
@@ -22,6 +22,10 @@ export default function Finished() {
               <QuizSkeleton />
               <QuizSkeleton />
             </>
+          ) : data.length == 0 ? (
+            <Text as="p" align="center">
+              Zatím jste nedokončil žádný kvíz!
+            </Text>
           ) : (
             <>
               {data.map((e) => (
