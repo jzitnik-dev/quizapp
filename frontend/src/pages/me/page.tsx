@@ -150,15 +150,17 @@ export default function Me() {
                   )}
                 </Badge>
                 <Badge color="green">
-                  {status === "loading" ? (
-                    <Skeleton height="20px" width="50px" />
-                  ) : finished == 1 ? (
-                    "Dokončil/a " + finished + " kvíz"
-                  ) : (finished || 0) >= 2 && (finished || 0) <= 4 ? (
-                    "Dokončil/a " + finished + " kvízy"
-                  ) : (
-                    "Dokončil/a " + finished + " kvízů"
-                  )}
+                  <Link to="/me/finished">
+                    {status === "loading" ? (
+                      <Skeleton height="20px" width="50px" />
+                    ) : finished == 1 ? (
+                      "Dokončil/a " + finished + " kvíz"
+                    ) : (finished || 0) >= 2 && (finished || 0) <= 4 ? (
+                      "Dokončil/a " + finished + " kvízy"
+                    ) : (
+                      "Dokončil/a " + finished + " kvízů"
+                    )}
+                  </Link>
                 </Badge>
               </Flex>
 

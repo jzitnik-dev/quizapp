@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -187,6 +188,18 @@ public class QuizController {
         }
 
         return ResponseEntity.ok(new FinishedResponse(validatedQuizAnswer.get().isFinished(), validatedQuizAnswer.get().getCreateDate()));
+    }
+
+    @GetMapping("/allFinished")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Quiz>> getAllFinished() {
+        User loggedUser = userService.getCurrentUser();
+
+        var validatedQuizAnswers = validatedQuizAnswerRepository.findByUserAndFinishedIsTrueOrderByIdDesc(loggedUser);
+
+        var quizzes = validatedQuizAnswers.stream().map(ValidatedQuizAnswer::getQuiz).collect(Collectors.toList());
+
+        return ResponseEntity.ok(quizzes);
     }
 
     @DeleteMapping

@@ -1,6 +1,6 @@
 import QuizType from "../../types/Quiz";
 import { Link } from "react-router-dom";
-import { Card, Heading, Text, Badge } from "@radix-ui/themes";
+import { Card, Heading, Text, Badge, Skeleton } from "@radix-ui/themes";
 import QuestionBadge from "./questionBadge";
 import { getFinished } from "../../api/getQuiz";
 import { useQuery } from "react-query";
@@ -25,5 +25,24 @@ export default function Quiz({ quiz }: { quiz: QuizType }) {
         <FinishedBadge finished={data} />
       </Card>
     </Link>
+  );
+}
+
+export function QuizSkeleton() {
+  return (
+    <Card>
+      <Heading>
+        <Skeleton height="30px" />
+      </Heading>
+      <Text color="gray" as="p" mt="2">
+        <Skeleton height="100px" />
+      </Text>
+      <Badge color="sky" style={{ height: "20px", width: "70px" }} mt="1">
+        <Skeleton />
+      </Badge>{" "}
+      <Badge color="green" style={{ height: "20px", width: "70px" }} mt="1">
+        <Skeleton />
+      </Badge>{" "}
+    </Card>
   );
 }

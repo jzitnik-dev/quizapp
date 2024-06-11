@@ -15,4 +15,5 @@ public interface ValidatedQuizAnswerRepository extends JpaRepository<ValidatedQu
     Optional<ValidatedQuizAnswer> findByUserAndQuiz(User user, Quiz quiz);
     List<ValidatedQuizAnswer> findByQuizAndFinishedIsTrue(Quiz quiz);
     List<ValidatedQuizAnswer> findByQuizAndCreateDate(Quiz quiz, LocalDate createDate);
+    List<ValidatedQuizAnswer> findByUserAndFinishedIsTrueOrderByIdDesc(User user);
 }

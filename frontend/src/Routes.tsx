@@ -9,13 +9,14 @@ const Register = lazy(() => import("./pages/register/page"));
 const Discover = lazy(() => import("./pages/discover/page"));
 const UserProfile = lazy(() => import("./pages/user/[username]/page"));
 const Me = lazy(() => import("./pages/me/page"));
+const Finished = lazy(() => import("./pages/me/finished/page"));
 const Create = lazy(() => import("./pages/create/page"));
 const Quiz = lazy(() => import("./pages/quiz/[quizid]/page"));
 const Play = lazy(() => import("./pages/play/[id]/page"));
 const Search = lazy(() => import("./pages/search/[string]/page"));
 const ChangePassword = lazy(() => import("./pages/me/changePassword/page"));
 const Share = lazy(() => import("./pages/answer/share/[id]/page"));
-const NotFound = lazy(() => import("./pages/404/page"))
+const NotFound = lazy(() => import("./pages/404/page"));
 
 export default function RoutesComponent() {
   return (
@@ -85,6 +86,14 @@ export default function RoutesComponent() {
         }
       ></Route>
       <Route
+        path="/me/finished"
+        element={
+          <Page title="QuizAPP - Dokončené kvízy">
+            <Finished />
+          </Page>
+        }
+      ></Route>
+      <Route
         path="/me/changePassword"
         element={
           <Page title="QuizAPP - Změna hesla">
@@ -136,9 +145,11 @@ export default function RoutesComponent() {
       {/* 404 */}
       <Route
         path="/*"
-        element={<Page title="QuizAPP - Nenalezeno">
-          <NotFound />
-        </Page>}
+        element={
+          <Page title="QuizAPP - Nenalezeno">
+            <NotFound />
+          </Page>
+        }
       ></Route>
     </Routes>
   );
