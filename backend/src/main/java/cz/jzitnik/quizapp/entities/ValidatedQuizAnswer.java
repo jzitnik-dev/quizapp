@@ -27,7 +27,7 @@ public class ValidatedQuizAnswer {
     private Quiz quiz;
 
     @NotNull
-    @OneToMany(mappedBy = "validatedQuizAnswer", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "validatedQuizAnswer", cascade = {CascadeType.ALL, CascadeType.REMOVE})
     @JsonManagedReference
     private List<Answer> answers;
 

@@ -27,7 +27,7 @@ public class Quiz {
     @Size(max = 500)
     private String description;
 
-    @OneToMany(mappedBy = "quiz", cascade = {CascadeType.ALL, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference(value = "quiz-questions")
     private List<Question> questions = new ArrayList<>();
 
@@ -43,6 +43,11 @@ public class Quiz {
     @JsonManagedReference(value = "quiz-validatedQuizAnswers")
     @JsonIgnore
     private Set<ValidatedQuizAnswer> validatedQuizAnswers;
+
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
+    @JsonManagedReference(value = "quiz-views")
+    @JsonIgnore
+    private Set<QuizView> views;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -106,5 +111,13 @@ public class Quiz {
 
     public void setAuthor(User user) {
         this.author = user;
+    }
+
+    public Set<QuizView> getViews() {
+        return views;
+    }
+
+    public void setViews(Set<QuizView> views) {
+        this.views = views;
     }
 }

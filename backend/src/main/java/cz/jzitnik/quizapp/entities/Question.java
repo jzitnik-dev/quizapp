@@ -7,6 +7,8 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.Set;
+
 @Entity
 public class Question {
     @Id
@@ -21,6 +23,10 @@ public class Question {
     private QuestionType type;
 
     private String options;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private Set<Answer> answers;
 
     @NotBlank
     @JsonIgnore
