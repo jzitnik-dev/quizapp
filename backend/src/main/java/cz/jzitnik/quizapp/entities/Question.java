@@ -100,4 +100,12 @@ public class Question {
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
     }
+
+    public Set<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(Set<Answer> answers) {
+        this.answers = answers;
+    }
 }

@@ -49,6 +49,14 @@ public class Quiz {
     @JsonIgnore
     private Set<QuizView> views;
 
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private Set<PlayingState> playingStates;
+
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private Set<ShareAnswer> shareAnswers;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonBackReference // Prevents infinite recursion when serializing to JSON
@@ -119,5 +127,21 @@ public class Quiz {
 
     public void setViews(Set<QuizView> views) {
         this.views = views;
+    }
+
+    public Set<PlayingState> getPlayingStates() {
+        return playingStates;
+    }
+
+    public void setPlayingStates(Set<PlayingState> playingStates) {
+        this.playingStates = playingStates;
+    }
+
+    public Set<ShareAnswer> getShareAnswers() {
+        return shareAnswers;
+    }
+
+    public void setShareAnswers(Set<ShareAnswer> shareAnswers) {
+        this.shareAnswers = shareAnswers;
     }
 }
