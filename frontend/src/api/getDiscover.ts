@@ -1,5 +1,6 @@
 import Quiz from "../types/Quiz";
 import Page from "../types/Page";
+import isLogedIn from "../utils/logedin";
 
 export default async function getDiscover(
   page?: string,
@@ -21,4 +22,24 @@ export default async function getDiscover(
     throw response;
   }
   return (await response.json()) as Page<Quiz>;
+}
+
+export async function getDiscoverUser() {
+  if (!isLogedIn()) throw new Error("Not loged in!");
+
+  const url = new URL(import.meta.env.VITE_BACKEND);
+  url.pathname = "/api/discover/test";
+
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw response;
+  }
+  return (await response.json()) as Quiz[];
 }

@@ -22,7 +22,7 @@ export default function FinishedBadge({ finished }: { finished?: Finished }) {
   );
 }
 
-export function FInishedBadgeAnswer({
+export function FinishedBadgeAnswer({
   answer,
 }: {
   answer?: ValidatedQuizAnswer;

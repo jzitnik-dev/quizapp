@@ -15,7 +15,6 @@ public class QuizView {
 
     @ManyToOne
     @JoinColumn(name = "quiz_id", nullable = false)
-    @JsonBackReference(value = "quiz-validatedQuizAnswers")
     private Quiz quiz;
 
     private LocalDate date;

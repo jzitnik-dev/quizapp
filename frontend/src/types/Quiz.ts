@@ -8,4 +8,5 @@ export default interface Quiz {
   questions: Question[],
   createDate: Date,
   author: User
+  totalViews: number;
 }

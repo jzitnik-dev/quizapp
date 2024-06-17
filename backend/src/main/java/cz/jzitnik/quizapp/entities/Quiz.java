@@ -2,6 +2,7 @@ package cz.jzitnik.quizapp.entities;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,9 +46,8 @@ public class Quiz {
     private Set<ValidatedQuizAnswer> validatedQuizAnswers;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
-    @JsonManagedReference(value = "quiz-views")
     @JsonIgnore
-    private Set<QuizView> views;
+    private Set<QuizView> views = new HashSet<>();
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
     @JsonIgnore
@@ -143,5 +143,9 @@ public class Quiz {
 
     public void setShareAnswers(Set<ShareAnswer> shareAnswers) {
         this.shareAnswers = shareAnswers;
+    }
+
+    public int getTotalViews() {
+        return views.stream().mapToInt(QuizView::getViews).sum();
     }
 }

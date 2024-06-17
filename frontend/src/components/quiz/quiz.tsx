@@ -5,6 +5,7 @@ import QuestionBadge from "./questionBadge";
 import { getFinished } from "../../api/getQuiz";
 import { useQuery } from "react-query";
 import FinishedBadge from "./finishedBadge";
+import ViewsBadge from "./viewsBadge";
 
 export default function Quiz({ quiz }: { quiz: QuizType }) {
   const { data } = useQuery(
@@ -22,6 +23,7 @@ export default function Quiz({ quiz }: { quiz: QuizType }) {
           {new Date(quiz.createDate).toLocaleDateString()}
         </Badge>{" "}
         <QuestionBadge number={quiz.questions.length} />{" "}
+        <ViewsBadge quiz={quiz} />
         <FinishedBadge finished={data} />
       </Card>
     </Link>

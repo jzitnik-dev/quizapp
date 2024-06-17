@@ -1,12 +1,17 @@
 package cz.jzitnik.quizapp.controllers;
 
 import cz.jzitnik.quizapp.entities.Quiz;
+import cz.jzitnik.quizapp.services.QuizRecommendationService;
 import cz.jzitnik.quizapp.services.QuizService;
 import cz.jzitnik.quizapp.services.SearchService;
+import cz.jzitnik.quizapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -18,6 +23,19 @@ public class DiscoverController {
 
     @Autowired
     private SearchService searchService;
+
+    @Autowired
+    private QuizRecommendationService quizRecommendationService;
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/test")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Quiz>> testQuizzes() {
+        var user = userService.getCurrentUser();
+        return ResponseEntity.ok(quizRecommendationService.getDiscovery(user));
+    }
 
     @GetMapping("/page/{pageNumber}")
     public ResponseEntity<Page<Quiz>> getAllQuizzes(@PathVariable int pageNumber, @RequestParam(value = "questionCount", required = false) Integer questionCount) {
