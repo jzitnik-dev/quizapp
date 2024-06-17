@@ -17,6 +17,7 @@ import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import { UserProfileProvider } from "./components/header/UserProfileProvider";
 import RoutesComponent from "./Routes";
+import ScrollToTop from "./utils/ScrollToTop";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ export default function App() {
       <ErrorBoundary fallback={<Error />}>
         <Suspense fallback={<Loading />}>
           <BrowserRouter>
+            <ScrollToTop />
             <UserProfileProvider>
               <QueryClientProvider client={queryClient}>
                 <Header />

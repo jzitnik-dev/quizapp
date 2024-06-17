@@ -170,7 +170,7 @@ export default function QuizComponent() {
             <Heading size="9">{data?.title}</Heading>
 
             <Flex justify="between">
-              <Flex my="1" gap="1">
+              <Flex my="1" gap="1" wrap="wrap">
                 <Badge color="sky">
                   {new Date(
                     data?.createDate || new Date().toString(),
