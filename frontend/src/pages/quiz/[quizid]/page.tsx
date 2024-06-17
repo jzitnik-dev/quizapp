@@ -207,18 +207,36 @@ export default function QuizComponent() {
                 </HoverCard.Root>
                 <QuestionBadge number={data?.questions.length || 0} />
                 {owned ? (
-                  <HoverCard.Root>
-                    <HoverCard.Trigger>
-                      <Badge color="cyan">{data?.totalViews} zhlédnutí</Badge>
-                    </HoverCard.Trigger>
-                    <HoverCard.Content>
-                      {views !== undefined ? (
-                        <QuizViewChart views={views} />
-                      ) : (
-                        <Spinner />
-                      )}
-                    </HoverCard.Content>
-                  </HoverCard.Root>
+                  <>
+                    <HoverCard.Root>
+                      <HoverCard.Trigger>
+                        <Badge color="cyan">{data?.totalViews} zhlédnutí</Badge>
+                      </HoverCard.Trigger>
+                      <HoverCard.Content>
+                        {views !== undefined ? (
+                          <QuizViewChart views={views} />
+                        ) : (
+                          <Spinner />
+                        )}
+                      </HoverCard.Content>
+                    </HoverCard.Root>
+                    {stats !== null ? (
+                      <HoverCard.Root>
+                        <HoverCard.Trigger>
+                          <Badge color="cyan">{data?.totalPlays} zahrání</Badge>
+                        </HoverCard.Trigger>
+                        <HoverCard.Content>
+                          {stats !== undefined ? (
+                            <QuizPlayChart quizData={stats} />
+                          ) : (
+                            <Spinner />
+                          )}
+                        </HoverCard.Content>
+                      </HoverCard.Root>
+                    ) : (
+                      <Badge color="cyan">{data?.totalPlays} zahrání</Badge>
+                    )}
+                  </>
                 ) : (
                   <ViewsBadge quiz={data} />
                 )}
@@ -263,35 +281,13 @@ export default function QuizComponent() {
             {!answer ? (
               owned ? (
                 <>
-                  <Heading align="center" size="8" mt="5">
-                    Statistiky kvízu
-                  </Heading>
-                  <Text align="center" as="p">
-                    Statistiky Vašeho kvízu.
-                  </Text>
-                  <Heading align="center" mt="4">
+                  <Heading align="center" mt="8" size="8">
                     Odpovědi
                   </Heading>
                   <Flex justify="center">
                     {stats !== undefined ? (
                       stats !== null ? (
                         <AnswerCorrectPercentageChart quizData={stats} />
-                      ) : (
-                        <Text align="center" as="p">
-                          Tento kvíz si zatím nikdo nezahrál.
-                        </Text>
-                      )
-                    ) : (
-                      <Spinner />
-                    )}
-                  </Flex>
-                  <Heading align="center" mt="4">
-                    Počet zahrání
-                  </Heading>
-                  <Flex justify="center">
-                    {stats !== undefined ? (
-                      stats !== null ? (
-                        <QuizPlayChart quizData={stats} />
                       ) : (
                         <Text align="center" as="p">
                           Tento kvíz si zatím nikdo nezahrál.

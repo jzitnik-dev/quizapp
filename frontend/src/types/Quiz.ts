@@ -9,4 +9,5 @@ export default interface Quiz {
   createDate: Date,
   author: User
   totalViews: number;
+  totalPlays: number;
 }

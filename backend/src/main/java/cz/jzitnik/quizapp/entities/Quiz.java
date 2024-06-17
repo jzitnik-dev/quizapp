@@ -148,4 +148,8 @@ public class Quiz {
     public int getTotalViews() {
         return views.stream().mapToInt(QuizView::getViews).sum();
     }
+
+    public int getTotalPlays() {
+        return validatedQuizAnswers.size();
+    }
 }
