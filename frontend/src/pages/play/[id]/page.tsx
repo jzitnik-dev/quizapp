@@ -17,7 +17,7 @@ import {
   Badge,
   Progress,
 } from "@radix-ui/themes";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Link,
   useNavigate,
@@ -55,6 +55,11 @@ export default function Play() {
   const [finishData, setFinishData] = useState<ValidatedQuizAnswer>();
   const [unfinished, setUnfinished] = useState(false);
 
+  const defaultInputBox = useRef<HTMLInputElement>(null);
+  const trueButton = useRef<HTMLButtonElement>(null);
+  const singleSelectButton = useRef<HTMLButtonElement>(null);
+  const multiselectButton = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     const handleVisibilityChange = async () => {
       if (document.visibilityState !== "visible") {
@@ -91,6 +96,19 @@ export default function Play() {
       await loadQuestion(currentQuestion);
     })();
   }, []);
+
+  useEffect(() => {
+    if (question?.type == QuestionType.Default) {
+      defaultInputBox.current?.focus();
+    } else if (question?.type == QuestionType.TrueFalse) {
+      trueButton.current?.focus();
+    } else if (question?.type == QuestionType.Singleselect) {
+      singleSelectButton.current?.focus();
+      singleSelectButton.current?.click();
+    } else if (question?.type == QuestionType.Multiselect) {
+      multiselectButton.current?.focus();
+    }
+  }, [fetching]);
 
   async function loadQuestion(currentQuestion: number) {
     try {
@@ -267,6 +285,12 @@ export default function Play() {
                         value={answerValue}
                         onChange={(e) => setAnswerValue(e.target.value)}
                         placeholder="Vložte vaši odpověď"
+                        ref={defaultInputBox}
+                        onKeyUp={(e) => {
+                          if (e.key == "Enter") {
+                            answer();
+                          }
+                        }}
                       ></TextField.Root>
                       <small>
                         Odpověď nebere v potaz malá a velká písmena ani
@@ -285,7 +309,11 @@ export default function Play() {
                     >
                       {JSON.parse(question?.options || "[]").map(
                         (option: string, index: number) => (
-                          <RadioCards.Item value={index.toString()} key={index}>
+                          <RadioCards.Item
+                            value={index.toString()}
+                            key={index}
+                            ref={index == 0 ? singleSelectButton : null}
+                          >
                             <Flex direction="column" width="100%">
                               <Text>{option}</Text>
                             </Flex>
@@ -309,6 +337,7 @@ export default function Play() {
                             value={index.toString()}
                             style={{ cursor: "pointer" }}
                             key={index}
+                            ref={index == 0 ? multiselectButton : null}
                           >
                             <Flex direction="column" width="100%">
                               <Text>{option}</Text>
@@ -329,7 +358,7 @@ export default function Play() {
                         value={answerValue}
                         onValueChange={(e) => setAnswerValue(e)}
                       >
-                        <SegmentedControl.Item value="true">
+                        <SegmentedControl.Item value="true" ref={trueButton}>
                           Pravda
                         </SegmentedControl.Item>
                         <SegmentedControl.Item value="false">

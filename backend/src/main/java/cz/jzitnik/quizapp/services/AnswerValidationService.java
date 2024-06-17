@@ -14,8 +14,7 @@ public class AnswerValidationService {
         return answer.replaceAll("[^\\p{ASCII}]", "").toLowerCase().trim();
     }
     public ValidatedQuizAnswer validateQuiz(User user, Quiz quiz, List<String> userAnswers) {
-        var questionsSet = quiz.getQuestions();
-        List<Question> questionList = new ArrayList<>(questionsSet);
+        List<Question> questionList = quiz.getQuestions();
         questionList.sort(Comparator.comparingLong(Question::getId));
 
         var validatedQuizAnswer = new ValidatedQuizAnswer(user, quiz, new ArrayList<Answer>(), true);

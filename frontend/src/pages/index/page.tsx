@@ -17,9 +17,7 @@ import { Init, MouseMove } from "../../utils/gradient/MultiCardFlexGradient";
 export default function Index() {
   const cardsFlex = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    Init(cardsFlex.current);
-  }, [cardsFlex]);
+  useEffect(() => Init(cardsFlex.current), [cardsFlex]);
 
   return (
     <Section>

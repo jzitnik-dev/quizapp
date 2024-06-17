@@ -156,7 +156,7 @@ export async function answerQuestion(key: string, answer: string) {
   url.searchParams.append("answer", answer);
 
   const response = await fetch(url.toString(), {
-    method: "POSt",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,

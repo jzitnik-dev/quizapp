@@ -290,7 +290,7 @@ export default function QuizComponent() {
                         <AnswerCorrectPercentageChart quizData={stats} />
                       ) : (
                         <Text align="center" as="p">
-                          Tento kvíz si zatím nikdo nezahrál.
+                          Tento kvíz si zatím nikdo úspěšně nezahrál.
                         </Text>
                       )
                     ) : (

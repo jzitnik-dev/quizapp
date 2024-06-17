@@ -38,7 +38,7 @@ public class QuizStatsService {
             return Optional.empty();
         }
 
-        Map<String, Map<String, Integer>> data = new HashMap<>();
+        Map<Long, Map<String, Integer>> data = new HashMap<>();
 
         var questions = quiz.getQuestions();
 
@@ -49,28 +49,26 @@ public class QuizStatsService {
             Map<String, Integer> innerMap = new HashMap<>();
             innerMap.put("correct", 0);
             innerMap.put("wrong", 0);
-            data.put(question.getQuestion(), innerMap);
+            data.put(question.getId(), innerMap);
         }
 
         for (ValidatedQuizAnswer validatedQuizAnswer : validatedQuizAnswers) {
             for (Answer answer : validatedQuizAnswer.getAnswers()) {
                 if (answer.isCorrect()) {
-                    var now = data.get(answer.getQuestion().getQuestion()).get("correct");
+                    var now = data.get(answer.getQuestion().getId()).get("correct");
                     now++;
-                    data.get(answer.getQuestion().getQuestion()).put("correct", now);
+                    data.get(answer.getQuestion().getId()).put("correct", now);
                 } else {
-                    var now = data.get(answer.getQuestion().getQuestion()).get("wrong");
+                    var now = data.get(answer.getQuestion().getId()).get("wrong");
                     now++;
-                    data.get(answer.getQuestion().getQuestion()).put("wrong", now);
+                    data.get(answer.getQuestion().getId()).put("wrong", now);
                 }
             }
 
         }
 
-        List<String> finalQuestions = questionList.stream().map(Question::getQuestion).toList();
         List<Integer> percentages = new ArrayList<>();
-
-        for (String question : finalQuestions) {
+        for (Long question : questionList.stream().map(Question::getId).toList()) {
             var questionTemp = data.get(question);
             var correct = questionTemp.get("correct");
             var wrong = questionTemp.get("wrong");
@@ -88,7 +86,7 @@ public class QuizStatsService {
             plays.add(playsList.size());
         }
 
-        var finalResponse = new QuizStatsResponse(finalQuestions, percentages, plays);
+        var finalResponse = new QuizStatsResponse(questionList.stream().map(Question::getQuestion).toList(), percentages, plays);
         return Optional.of(finalResponse);
     }
 

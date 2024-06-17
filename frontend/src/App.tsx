@@ -21,6 +21,7 @@ import ScrollToTop from "./utils/ScrollToTop";
 
 export default function App() {
   const queryClient = new QueryClient();
+
   return (
     <Theme appearance="dark">
       <ErrorBoundary fallback={<Error />}>

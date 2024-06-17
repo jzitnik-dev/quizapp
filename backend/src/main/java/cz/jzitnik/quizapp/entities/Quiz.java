@@ -43,7 +43,7 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
     @JsonManagedReference(value = "quiz-validatedQuizAnswers")
     @JsonIgnore
-    private Set<ValidatedQuizAnswer> validatedQuizAnswers;
+    private Set<ValidatedQuizAnswer> validatedQuizAnswers = new HashSet<>();
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
     @JsonIgnore
@@ -51,11 +51,11 @@ public class Quiz {
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
     @JsonIgnore
-    private Set<PlayingState> playingStates;
+    private Set<PlayingState> playingStates = new HashSet<>();
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
     @JsonIgnore
-    private Set<ShareAnswer> shareAnswers;
+    private Set<ShareAnswer> shareAnswers = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
