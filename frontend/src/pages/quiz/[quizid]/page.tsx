@@ -206,7 +206,22 @@ export default function QuizComponent() {
                   </HoverCard.Content>
                 </HoverCard.Root>
                 <QuestionBadge number={data?.questions.length || 0} />
-                <ViewsBadge quiz={data} />
+                {owned ? (
+                  <HoverCard.Root>
+                    <HoverCard.Trigger>
+                      <Badge color="cyan">{data?.totalViews} zhlédnutí</Badge>
+                    </HoverCard.Trigger>
+                    <HoverCard.Content>
+                      {views !== undefined ? (
+                        <QuizViewChart views={views} />
+                      ) : (
+                        <Spinner />
+                      )}
+                    </HoverCard.Content>
+                  </HoverCard.Root>
+                ) : (
+                  <ViewsBadge quiz={data} />
+                )}
                 <FinishedBadgeAnswer answer={answer} />
               </Flex>
               {owned ? (
@@ -282,16 +297,6 @@ export default function QuizComponent() {
                           Tento kvíz si zatím nikdo nezahrál.
                         </Text>
                       )
-                    ) : (
-                      <Spinner />
-                    )}
-                  </Flex>
-                  <Heading align="center" mt="4">
-                    Počet zhlédnutí
-                  </Heading>
-                  <Flex justify="center">
-                    {views !== undefined ? (
-                      <QuizViewChart views={views} />
                     ) : (
                       <Spinner />
                     )}

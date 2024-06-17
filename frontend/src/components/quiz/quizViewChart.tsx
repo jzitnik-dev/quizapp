@@ -12,14 +12,13 @@ export default function QuizViewChart({ views }: { views: number[] }) {
   });
   return (
     <LineChart
-      width={700}
-      height={400}
+      width={400}
+      height={200}
       data={data}
       margin={{
         top: 5,
-        right: 30,
-        left: 20,
-        bottom: 5,
+        right: 25,
+        left: -20,
       }}
     >
       <YAxis />

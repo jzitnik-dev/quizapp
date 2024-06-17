@@ -11,7 +11,7 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
   CaretDownIcon,
-  QuestionMarkIcon
+  QuestionMarkIcon,
 } from "@radix-ui/react-icons";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 
