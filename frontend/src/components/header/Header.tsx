@@ -88,13 +88,13 @@ export default function Header() {
             </Flex>
           </Heading>
         </Link>
-        <Flex className="md:hidden flex">
+        <Flex className="lg:hidden flex">
           <IconButton onClick={() => setMobileMenuOpened(!mobileMenuOpened)}>
             <HamburgerMenuIcon />
           </IconButton>
         </Flex>
 
-        <Flex align="center" gap="3" className="hidden md:flex">
+        <Flex align="center" gap="3" className="hidden lg:flex">
           <TabNav.Root>
             <TabNav.Link
               href="/"

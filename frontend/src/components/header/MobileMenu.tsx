@@ -1,6 +1,18 @@
-import { Box, Flex, DropdownMenu, Avatar, Text, Skeleton } from "@radix-ui/themes";
+import {
+  Box,
+  Flex,
+  DropdownMenu,
+  Avatar,
+  Text,
+  Skeleton,
+} from "@radix-ui/themes";
 import { Link } from "react-router-dom";
-import { MagnifyingGlassIcon, PlusIcon, CaretDownIcon } from "@radix-ui/react-icons";
+import {
+  MagnifyingGlassIcon,
+  PlusIcon,
+  CaretDownIcon,
+  QuestionMarkIcon
+} from "@radix-ui/react-icons";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 
 export default function MobileMenu({
@@ -10,7 +22,7 @@ export default function MobileMenu({
   setMobileMenuOpened,
   name,
   username,
-  logout
+  logout,
 }: {
   fetching: boolean;
   logedIn: boolean;
@@ -18,7 +30,7 @@ export default function MobileMenu({
   setMobileMenuOpened: (value: boolean) => any;
   name: string;
   username: string;
-  logout: () => any
+  logout: () => any;
 }) {
   return (
     <Box
@@ -39,11 +51,18 @@ export default function MobileMenu({
           </Flex>
         </Link>
         {logedIn ? (
-          <Link onClick={() => setMobileMenuOpened(false)} to="/disvover">
-            <Flex align="center" justify="center" gap="2">
-              <PlusIcon height="30px" width="30px" /> Vytvořit kvíz
-            </Flex>
-          </Link>
+          <>
+            <Link onClick={() => setMobileMenuOpened(false)} to="/quiz/random">
+              <Flex align="center" justify="center" gap="2">
+                <QuestionMarkIcon height="30px" width="30px" /> Náhodný kvíz
+              </Flex>
+            </Link>
+            <Link onClick={() => setMobileMenuOpened(false)} to="/disvover">
+              <Flex align="center" justify="center" gap="2">
+                <PlusIcon height="30px" width="30px" /> Vytvořit kvíz
+              </Flex>
+            </Link>
+          </>
         ) : null}
 
         {logedIn ? (
