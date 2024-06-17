@@ -12,8 +12,8 @@ import {
   Slider,
 } from "@radix-ui/themes";
 import QuizEl from "../../components/quiz/quiz";
-import { useEffect, useRef, useState } from "react";
-import getDiscover, { getDiscoverUser } from "../../api/getDiscover";
+import { useRef, useState } from "react";
+import getDiscover from "../../api/getDiscover";
 import { Link, useParams } from "react-router-dom";
 import { ListBulletIcon } from "@radix-ui/react-icons";
 import { useQuery } from "react-query";
@@ -50,12 +50,6 @@ export default function Discover() {
   function submitFilterQuestionAmount() {
     refetch();
   }
-
-  useEffect(() => {
-    getDiscoverUser().then(res => {
-      console.log(res)
-    })
-  }, [])
 
   return (
     <Section position="relative">

@@ -18,6 +18,7 @@ import {
   HamburgerMenuIcon,
   MagnifyingGlassIcon,
   PlusIcon,
+  QuestionMarkIcon,
 } from "@radix-ui/react-icons";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import MobileMenu from "./MobileMenu";
@@ -124,12 +125,20 @@ export default function Header() {
             </IconButton>
           </Link>
           {logedIn ? (
-            <Link to="/create">
-              <Button>
-                <PlusIcon />
-                Vytvořit kvíz
-              </Button>
-            </Link>
+            <>
+              <Link to="/quiz/random">
+                <Button>
+                  <QuestionMarkIcon/>
+                  Náhodný kvíz
+                </Button>
+              </Link>
+              <Link to="/create">
+                <Button>
+                  <PlusIcon />
+                  Vytvořit kvíz
+                </Button>
+              </Link>
+            </>
           ) : null}
           {logedIn ? (
             fetching ? (

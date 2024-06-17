@@ -44,6 +44,17 @@ public class QuizController {
     @Autowired
     ShareAnswerRepository shareAnswerRepository;
 
+    @GetMapping("/random")
+    public ResponseEntity<Long> randomQuiz() {
+        var quizOptional = quizRepository.findRandomQuiz();
+
+        if (quizOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(quizOptional.get().getId());
+    }
+
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public Quiz createQuiz(@RequestBody Quiz quiz) {
