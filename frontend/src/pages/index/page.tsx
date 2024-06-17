@@ -53,7 +53,7 @@ export default function Index() {
             <Card className="basis-full indexgradient">
               <Heading>Jednoduché vytváření</Heading>
               <Text mt="1" as="p">
-                Jednudhé vytváření a publikování kvízu. Vytvoření kvízu Vám
+                Jednoduché vytváření a publikování kvízu. Vytvoření kvízu Vám
                 zabere jen pár minut.
               </Text>
             </Card>
