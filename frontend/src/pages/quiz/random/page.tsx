@@ -2,14 +2,23 @@ import { Flex, Heading, Section, Spinner, Text } from "@radix-ui/themes";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import getRandomQuiz from "../../../api/random";
+import { toast } from "react-toastify";
 
 export default function Random() {
   const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
-      const randomId = await getRandomQuiz();
-      navigate("/quiz/" + randomId);
+      try {
+        const randomId = await getRandomQuiz();
+        navigate("/quiz/" + randomId);
+      } catch (e: any) {
+        if (e.status == 404) {
+          toast.error("Zatím nebyl vytvořen žádný kvíz!");
+          return
+        }
+        toast.error("Chyba: " + e.status)
+      }
     })();
   }, []);
 
