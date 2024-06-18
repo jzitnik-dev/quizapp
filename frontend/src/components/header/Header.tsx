@@ -15,10 +15,14 @@ import { useState } from "react";
 import isLogedIn from "../../utils/logedin";
 import {
   CaretDownIcon,
+  ExitIcon,
+  GearIcon,
   HamburgerMenuIcon,
   MagnifyingGlassIcon,
+  PersonIcon,
   PlusIcon,
   QuestionMarkIcon,
+  StarIcon,
 } from "@radix-ui/react-icons";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import MobileMenu from "./MobileMenu";
@@ -128,7 +132,7 @@ export default function Header() {
             <>
               <Link to="/quiz/random">
                 <Button>
-                  <QuestionMarkIcon/>
+                  <QuestionMarkIcon />
                   Náhodný kvíz
                 </Button>
               </Link>
@@ -168,12 +172,17 @@ export default function Header() {
                 <DropdownMenu.Content>
                   <Link to="/me">
                     <DropdownMenu.Item style={{ cursor: "pointer" }}>
-                      Profil
+                      <PersonIcon /> Profil
+                    </DropdownMenu.Item>
+                  </Link>
+                  <Link to="/me/favourites">
+                    <DropdownMenu.Item style={{ cursor: "pointer" }}>
+                      <StarIcon /> Oblíbené
                     </DropdownMenu.Item>
                   </Link>
                   <Link to="/me/changePassword">
                     <DropdownMenu.Item style={{ cursor: "pointer" }}>
-                      Změnit heslo
+                      <GearIcon /> Změnit heslo
                     </DropdownMenu.Item>
                   </Link>
 
@@ -184,7 +193,7 @@ export default function Header() {
                     color="red"
                     onClick={logout}
                   >
-                    Odhlásit se
+                    <ExitIcon /> Odhlásit se
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>

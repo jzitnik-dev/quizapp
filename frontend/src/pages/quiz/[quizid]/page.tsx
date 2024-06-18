@@ -31,6 +31,8 @@ import {
   CheckIcon,
   Cross1Icon,
   Share1Icon,
+  StarFilledIcon,
+  StarIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
@@ -44,6 +46,7 @@ import QuizViewChart from "../../../components/quiz/quizViewChart";
 import shareAnswerAPI from "../../../api/shareAnswer";
 import { FinishedBadgeAnswer } from "../../../components/quiz/finishedBadge";
 import ViewsBadge from "../../../components/quiz/viewsBadge";
+import { getLiked, setLiked as setLikedAPI } from "../../../api/favourites";
 
 export default function QuizComponent() {
   const [data, setData] = useState<Quiz>();
@@ -55,6 +58,7 @@ export default function QuizComponent() {
   const [notfound, setNotFound] = useState(false);
   const [answer, setAnswer] = useState<ValidatedQuizAnswer | undefined>();
   const [owned, setOwned] = useState<boolean>();
+  const [liked, setLiked] = useState<boolean>();
   const [stats, setStats] = useState<QuizStats | null>();
   const [views, setViews] = useState<number[]>();
   const shareDialogTrigger = useRef<HTMLButtonElement>(null);
@@ -74,6 +78,8 @@ export default function QuizComponent() {
         setAnswer(answer);
         const owned = await getOwned(id || "");
         setOwned(owned);
+        const liked = await getLiked(id || "");
+        setLiked(liked);
         if (owned) {
           const stats = await getStatistics(id || "");
           if (stats == null) {
@@ -122,6 +128,11 @@ export default function QuizComponent() {
     currentLocation.pathname = "/answer/share/" + key;
     setShareUrl(currentLocation.href);
     shareDialogTrigger.current?.click();
+  }
+
+  async function handleLike() {
+    await setLikedAPI(id || "");
+    setLiked(!liked);
   }
 
   return (
@@ -242,8 +253,11 @@ export default function QuizComponent() {
                 )}
                 <FinishedBadgeAnswer answer={answer} />
               </Flex>
-              {owned ? (
-                <Flex gap="1">
+              <Flex gap="1">
+                <Badge color="yellow" style={{cursor: "pointer"}} onClick={handleLike}>
+                  {liked ? <StarFilledIcon /> : <StarIcon />}
+                </Badge>
+                {owned ? (
                   <AlertDialog.Root>
                     <AlertDialog.Trigger>
                       <Badge color="red" style={{ cursor: "pointer" }}>
@@ -274,8 +288,8 @@ export default function QuizComponent() {
                       </Flex>
                     </AlertDialog.Content>
                   </AlertDialog.Root>
-                </Flex>
-              ) : null}
+                ) : null}
+              </Flex>
             </Flex>
             <Text>{data?.description}</Text>
             {!answer ? (

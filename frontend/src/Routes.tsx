@@ -18,6 +18,7 @@ const ChangePassword = lazy(() => import("./pages/me/changePassword/page"));
 const Share = lazy(() => import("./pages/answer/share/[id]/page"));
 const NotFound = lazy(() => import("./pages/404/page"));
 const Random = lazy(() => import("./pages/quiz/random/page"));
+const Favourites = lazy(() => import("./pages/me/favourites/page"));
 
 export default function RoutesComponent() {
   return (
@@ -107,6 +108,14 @@ export default function RoutesComponent() {
         element={
           <Page title="QuizAPP - Změna hesla">
             <ChangePassword />
+          </Page>
+        }
+      ></Route>
+      <Route
+        path="/me/favourites"
+        element={
+          <Page title="QuizAPP - Oblíbené">
+            <Favourites />
           </Page>
         }
       ></Route>

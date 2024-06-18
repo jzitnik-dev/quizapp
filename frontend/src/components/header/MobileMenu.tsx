@@ -12,6 +12,10 @@ import {
   PlusIcon,
   CaretDownIcon,
   QuestionMarkIcon,
+  PersonIcon,
+  GearIcon,
+  ExitIcon,
+  StarIcon,
 } from "@radix-ui/react-icons";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 
@@ -102,7 +106,23 @@ export default function MobileMenu({
                       style={{ cursor: "pointer" }}
                       onClick={() => setMobileMenuOpened(false)}
                     >
-                      Profil
+                      <PersonIcon /> Profil
+                    </DropdownMenu.Item>
+                  </Link>
+                  <Link to="/me/favourites">
+                    <DropdownMenu.Item
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setMobileMenuOpened(false)}
+                    >
+                      <StarIcon /> Oblíbené
+                    </DropdownMenu.Item>
+                  </Link>
+                  <Link to="/me/changePassword">
+                    <DropdownMenu.Item
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setMobileMenuOpened(false)}
+                    >
+                      <GearIcon /> Změnit heslo
                     </DropdownMenu.Item>
                   </Link>
 
@@ -116,7 +136,7 @@ export default function MobileMenu({
                       setMobileMenuOpened(false);
                     }}
                   >
-                    Odhlásit se
+                    <ExitIcon /> Odhlásit se
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>

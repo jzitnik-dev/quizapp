@@ -1,19 +1,24 @@
-package cz.jzitnik.quizapp.utils;
+package cz.jzitnik.quizapp.utils.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
+
 import java.io.IOException;
 import java.util.List;
 
-@Converter(autoApply = true)
-public class JsonConverter implements AttributeConverter<List<String>, String> {
+public abstract class BaseJsonConverter<T> implements AttributeConverter<List<T>, String> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final Class<T> type;
+
+    protected BaseJsonConverter(Class<T> type) {
+        this.type = type;
+    }
 
     @Override
-    public String convertToDatabaseColumn(List<String> attribute) {
+    public String convertToDatabaseColumn(List<T> attribute) {
         if (attribute == null) {
             return null;
         }
@@ -25,12 +30,13 @@ public class JsonConverter implements AttributeConverter<List<String>, String> {
     }
 
     @Override
-    public List<String> convertToEntityAttribute(String dbData) {
+    public List<T> convertToEntityAttribute(String dbData) {
         if (dbData == null) {
             return null;
         }
         try {
-            return objectMapper.readValue(dbData, List.class);
+            CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(List.class, type);
+            return objectMapper.readValue(dbData, collectionType);
         } catch (IOException e) {
             throw new IllegalArgumentException("Error converting JSON to list", e);
         }

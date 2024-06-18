@@ -1,8 +1,7 @@
 package cz.jzitnik.quizapp.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import cz.jzitnik.quizapp.utils.JsonConverter;
+import cz.jzitnik.quizapp.utils.json.StringListJsonConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.security.SecureRandom;
@@ -69,7 +68,7 @@ public class PlayingState {
     private boolean showed;
 
     @NotNull
-    @Convert(converter = JsonConverter.class)
+    @Convert(converter = StringListJsonConverter.class)
     @Column(columnDefinition = "json")
     private List<String> answers;
 
