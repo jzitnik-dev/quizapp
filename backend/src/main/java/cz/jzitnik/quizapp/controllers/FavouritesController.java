@@ -45,8 +45,6 @@ public class FavouritesController {
         return ResponseEntity.ok(favourites);
     }
 
-    ;
-
     @GetMapping("/quiz")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> isFilled(@RequestParam("quizId") long quizId) {
