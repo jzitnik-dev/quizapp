@@ -54,7 +54,7 @@ export default function Quiz({
               {new Date(quiz.createDate).toLocaleDateString()}
             </Badge>{" "}
             <QuestionBadge number={quiz.questions.length} />{" "}
-            <ViewsBadge quiz={quiz} />
+            <ViewsBadge quiz={quiz} />{" "}
             <FinishedBadge finished={data} />
           </Box>
           {customButton}
