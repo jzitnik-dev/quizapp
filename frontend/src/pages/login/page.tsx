@@ -39,7 +39,7 @@ export default function Login() {
       navigate("/");
     } catch (e: any) {
       setErrorMessage(
-        e.message == "Bad credentials"
+        e.response.data.message == "Bad credentials"
           ? "Špatné uživatelské jméno nebo heslo"
           : e.message,
       );

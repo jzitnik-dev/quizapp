@@ -79,15 +79,15 @@ public class UserController {
 
     @GetMapping("/me/playing")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity mePlaying() {
+    public ResponseEntity<Boolean> mePlaying() {
         var user = userService.getCurrentUser();
         var stateOptional = playingStateRepository.findByUser(user);
 
         if (stateOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(false);
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(true);
     }
 
     @PatchMapping("/me")

@@ -170,7 +170,7 @@ public class QuizController {
 
     @GetMapping("/owned")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> getOwned(@RequestParam("quizId") Long id) {
+    public ResponseEntity<Boolean> getOwned(@RequestParam("quizId") Long id) {
         User loggedUser = userService.getCurrentUser();
         var quiz = quizRepository.findById(id);
         if (quiz.isEmpty()) {
@@ -178,10 +178,10 @@ public class QuizController {
         }
 
         if (quiz.get().getAuthor().getId().equals(loggedUser.getId())) {
-            return ResponseEntity.ok("true");
+            return ResponseEntity.ok(true);
         }
 
-        return ResponseEntity.ok("false");
+        return ResponseEntity.ok(false);
     }
 
     @GetMapping("/finished")

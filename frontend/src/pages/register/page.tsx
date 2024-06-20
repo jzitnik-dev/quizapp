@@ -57,7 +57,7 @@ export default function Register() {
       await register(username, passwordAgain);
       setDone(true);
     } catch (e: any) {
-      setErrorMessage(e.message);
+      setErrorMessage(e.response.data.message);
       setError(true);
       setLoading(false);
     }

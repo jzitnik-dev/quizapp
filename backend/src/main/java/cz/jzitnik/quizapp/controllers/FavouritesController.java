@@ -47,13 +47,13 @@ public class FavouritesController {
 
     @GetMapping("/quiz")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> isFilled(@RequestParam("quizId") long quizId) {
+    public ResponseEntity<Boolean> isFilled(@RequestParam("quizId") long quizId) {
         var user = userService.getCurrentUser();
         List<Long> favouritesId = user.getFavourites();
         if (favouritesId.contains(quizId)) {
-            return ResponseEntity.ok("true");
+            return ResponseEntity.ok(true);
         }
-        return ResponseEntity.ok("false");
+        return ResponseEntity.ok(false);
     }
 
     @PostMapping("/quiz")
