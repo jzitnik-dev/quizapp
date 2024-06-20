@@ -1,5 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import User from "../types/User";
 import isLogedIn from "../utils/logedin";
+import { globalNavigate } from "../utils/useGlobalNavigate";
 
 export default async function me() {
   if (!isLogedIn()) {

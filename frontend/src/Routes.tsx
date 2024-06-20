@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Page from "./components/page/Page";
 import { lazy } from "react";
+import { useGlobalNavigate } from "./utils/useGlobalNavigate";
 
 // Pages
 const Index = lazy(() => import("./pages/index/page"));
@@ -21,6 +22,8 @@ const Random = lazy(() => import("./pages/quiz/random/page"));
 const Favourites = lazy(() => import("./pages/me/favourites/page"));
 
 export default function RoutesComponent() {
+  useGlobalNavigate();
+
   return (
     <Routes>
       <Route
