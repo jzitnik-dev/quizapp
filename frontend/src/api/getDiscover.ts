@@ -1,45 +1,48 @@
 import Quiz from "../types/Quiz";
 import Page from "../types/Page";
-import isLogedIn from "../utils/logedin";
+import axiosInstance from "./axios/axiosInstance";
+// import isLogedIn from "../utils/logedin";
+
+interface Params {
+  questionCount?: string;
+}
 
 export default async function getDiscover(
   page?: string,
   questionAmount?: number,
 ) {
-  const url = new URL(import.meta.env.VITE_BACKEND);
-  url.pathname =
-    page === undefined ? "/api/discover/page/1" : "/api/discover/page/" + page;
+  const url = page === undefined ? "/discover/page/1" : "/discover/page/" + page;
+  const params : Params = {};
 
   if (questionAmount) {
-    url.searchParams.set("questionCount", questionAmount.toString());
+    params["questionCount"] = questionAmount.toString()
   }
+  const response = await axiosInstance.get(
+    url,
+    {
+      params
+    }
+  );
 
-  const response = await fetch(url.toString(), {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw response;
-  }
-  return (await response.json()) as Page<Quiz>;
+  return response.data as Page<Quiz>;
 }
 
-export async function getDiscoverUser() {
-  if (!isLogedIn()) throw new Error("Not loged in!");
-
-  const url = new URL(import.meta.env.VITE_BACKEND);
-  url.pathname = "/api/discover/test";
-
-  const response = await fetch(url.toString(), {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw response;
-  }
-  return (await response.json()) as Quiz[];
-}
+// export async function getDiscoverUser() {
+//   if (!isLogedIn()) throw new Error("Not loged in!");
+//
+//   const url = new URL(import.meta.env.VITE_BACKEND);
+//   url.pathname = "/api/discover/test";
+//
+//   const response = await fetch(url.toString(), {
+//     method: "GET",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+//     },
+//   });
+//
+//   if (!response.ok) {
+//     throw response;
+//   }
+//   return (await response.json()) as Quiz[];
+// }

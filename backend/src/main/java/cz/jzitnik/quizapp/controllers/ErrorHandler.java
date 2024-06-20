@@ -1,5 +1,6 @@
 package cz.jzitnik.quizapp.controllers;
 
+import cz.jzitnik.quizapp.exceptions.TokenRefreshException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import cz.jzitnik.quizapp.payload.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.context.request.WebRequest;
 
 /**
  * Handles all exceptions thrown by any REST controller.
@@ -30,6 +32,12 @@ public class ErrorHandler {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public @ResponseBody ErrorResponse handleAccessDenied(HttpServletRequest request, AccessDeniedException ex) {
+        return new ErrorResponse(request.getRequestURL().toString(), ex);
+    }
+
+    @ExceptionHandler(value = TokenRefreshException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public @ResponseBody ErrorResponse handleTokenRefreshException(HttpServletRequest request, TokenRefreshException ex) {
         return new ErrorResponse(request.getRequestURL().toString(), ex);
     }
 

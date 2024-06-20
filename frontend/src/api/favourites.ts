@@ -1,103 +1,50 @@
 import Quiz from "../types/Quiz";
 import isLogedIn from "../utils/logedin";
+import axiosInstance from "./axios/axiosInstance";
 
 export async function getFavourites() {
   if (!isLogedIn()) throw new Error("Not loged in!");
 
-  const url = new URL(import.meta.env.VITE_BACKEND);
-  url.pathname = "/api/favourites";
-
-  const response = await fetch(url.toString(), {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.text();
-    if (response.status == 401) {
-      localStorage.removeItem("accessToken");
-      throw new Error(errorData);
-    }
-    throw new Error(errorData || "Registration failed");
-  }
-  return (await response.json()) as (Quiz | number)[];
+  const response = await axiosInstance.get("/favourites");
+  return response.data as (Quiz | number)[];
 }
 
 export async function getLiked(quizId: string) {
   if (!isLogedIn()) throw new Error("Not loged in!");
 
-  const url = new URL(import.meta.env.VITE_BACKEND);
-  url.pathname = "/api/favourites/quiz";
-  url.searchParams.append("quizId", quizId);
-
-  const response = await fetch(url.toString(), {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+  const response = await axiosInstance.get("/favourites/quiz", {
+    params: {
+      quizId,
     },
   });
-  if (!response.ok) {
-    const errorData = await response.text();
-    if (response.status == 401) {
-      localStorage.removeItem("accessToken");
-      throw new Error(errorData);
-    }
-    throw new Error(errorData || "Registration failed");
-  }
-  return (await response.text()) == "true";
+
+  return response.data;
 }
 
 export async function setLiked(quizId: string) {
   if (!isLogedIn()) throw new Error("Not loged in!");
 
-  const url = new URL(import.meta.env.VITE_BACKEND);
-  url.pathname = "/api/favourites/quiz";
-  url.searchParams.append("quizId", quizId);
-
-  const response = await fetch(url.toString(), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+  await axiosInstance.post(
+    "/favourites/quiz",
+    {},
+    {
+      params: {
+        quizId,
+      },
     },
-  });
-  if (!response.ok) {
-    const errorData = await response.text();
-    if (response.status == 401) {
-      localStorage.removeItem("accessToken");
-      throw new Error(errorData);
-    }
-    throw new Error(errorData || "Registration failed");
-  }
+  );
+
   return true;
 }
 
 export async function removeLiked(quizId: string) {
   if (!isLogedIn()) throw new Error("Not loged in!");
 
-  const url = new URL(import.meta.env.VITE_BACKEND);
-  url.pathname = "/api/favourites/quiz";
-  url.searchParams.append("quizId", quizId);
-
-  const response = await fetch(url.toString(), {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+  await axiosInstance.delete("/favourites/quiz", {
+    params: {
+      quizId,
     },
   });
-  if (!response.ok) {
-    const errorData = await response.text();
-    if (response.status == 401) {
-      localStorage.removeItem("accessToken");
-      throw new Error(errorData);
-    }
-    throw new Error(errorData || "Registration failed");
-  }
+
   return true;
 }
-
-
