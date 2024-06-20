@@ -58,6 +58,10 @@ public class User {
   @Column(columnDefinition = "json")
   private List<Long> favourites = new ArrayList<>();
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+  @JsonIgnore
+  private Set<RefreshToken> refreshTokens = new HashSet<>();
+
   public Set<ValidatedQuizAnswer> getValidatedQuizAnswers() {
     return validatedQuizAnswers;
   }

@@ -3,6 +3,7 @@ package cz.jzitnik.quizapp.controllers;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
 import cz.jzitnik.quizapp.payload.request.PasswordChangeRequest;
 import cz.jzitnik.quizapp.repository.PlayingStateRepository;
 import cz.jzitnik.quizapp.repository.UserRepository;
@@ -62,7 +63,7 @@ public class UserController {
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        var validatedQuizAnswers = user.get().getValidatedQuizAnswers().stream().filter(e -> e.isFinished()).collect(Collectors.toSet());
+        var validatedQuizAnswers = user.get().getValidatedQuizAnswers().stream().filter(ValidatedQuizAnswer::isFinished).collect(Collectors.toSet());
 
         return ResponseEntity.ok(validatedQuizAnswers.size());
     }

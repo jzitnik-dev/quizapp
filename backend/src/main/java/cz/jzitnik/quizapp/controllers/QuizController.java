@@ -195,7 +195,7 @@ public class QuizController {
         var validatedQuizAnswer = validatedQuizAnswerRepository.findByUserAndQuiz(loggedUser, quiz.get());
 
         if (validatedQuizAnswer.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(new FinishedResponse(validatedQuizAnswer.get().isFinished(), validatedQuizAnswer.get().getCreateDate()));

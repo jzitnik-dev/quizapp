@@ -35,6 +35,7 @@ export default function Login() {
     try {
       const res = await login(username, password);
       localStorage.setItem("accessToken", res.accessToken);
+      localStorage.setItem("refreshToken", res.refreshToken);
       setUserProfile(res);
       navigate("/");
     } catch (e: any) {
