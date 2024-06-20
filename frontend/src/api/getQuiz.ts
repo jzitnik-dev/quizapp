@@ -26,6 +26,10 @@ export async function getFinished(quizId: string) {
       quizId,
     },
   });
+
+  if (response.status == 204) {
+    return;
+  }
   return response.data as Finished;
 }
 

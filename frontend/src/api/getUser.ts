@@ -12,6 +12,10 @@ export default async function getUser(username: string) {
 }
 
 export async function getFinished(username: string) {
+  if (!username) {
+    return;
+  }
+
   const response = await axiosInstance.get("/user/finished", {
     params: {
       username
