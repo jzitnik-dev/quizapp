@@ -21,15 +21,17 @@ export default function QuestionDialog({
   children,
   callback,
   defaultValue,
+  clean = false,
 }: {
   questionMessage: string;
   children: JSX.Element;
   callback: (response: Question) => any;
   defaultValue?: Question;
+  clean?: boolean
 }) {
   // Form data
   const [type, setType] = useState(
-    // Again, I have my life
+    // Again, I hate my life
     defaultValue
       ? defaultValue.type == QuestionType.TrueFalse
         ? "truefalse"
@@ -54,8 +56,6 @@ export default function QuestionDialog({
   const [error, setError] = useState<string | undefined>("");
 
   function cleanup() {
-    // I hate my life. Why tf the Dialog element doesn't have something like onclose or something for fuck's sake.
-    // Now i need to put onclick on the close button. BUT WHEN USER CLICKS OUT OF THE DIALOG THE BUTTON IS NOT PRESSED.
     setError(undefined);
     setQuestion("");
     setAnswerx("");
@@ -136,7 +136,7 @@ export default function QuestionDialog({
   return (
     <Dialog.Root
       onOpenChange={(e) => {
-        if (!e) cleanup();
+        if (e && clean) cleanup();
       }}
     >
       <Dialog.Trigger>{children}</Dialog.Trigger>
@@ -378,7 +378,6 @@ export default function QuestionDialog({
               ref={closeBtn}
               variant="soft"
               color="gray"
-              onClick={cleanup}
             >
               Zrušit
             </Button>

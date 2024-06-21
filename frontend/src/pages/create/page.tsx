@@ -187,6 +187,7 @@ export default function Create() {
               <QuestionDialog
                 questionMessage="Vytvořit otázku"
                 callback={createQuestion}
+                clean
               >
                 <Button>
                   <PlusIcon />
