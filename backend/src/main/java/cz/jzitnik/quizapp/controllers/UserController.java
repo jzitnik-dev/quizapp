@@ -1,13 +1,16 @@
 package cz.jzitnik.quizapp.controllers;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import cz.jzitnik.quizapp.entities.ShareAnswer;
 import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
 import cz.jzitnik.quizapp.payload.request.PasswordChangeRequest;
 import cz.jzitnik.quizapp.payload.response.UserFinishedResponse;
 import cz.jzitnik.quizapp.repository.PlayingStateRepository;
+import cz.jzitnik.quizapp.repository.ShareAnswerRepository;
 import cz.jzitnik.quizapp.repository.UserRepository;
 import cz.jzitnik.quizapp.payload.response.MeHeaderResponse;
 import cz.jzitnik.quizapp.services.UserService;
@@ -43,6 +46,9 @@ public class UserController {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    ShareAnswerRepository shareAnswerRepository;
+
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public User authenticateUser() {
@@ -51,11 +57,22 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<User> getUser(@RequestParam("username") String username) {
-        Optional<User> user =  userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(user.get());
+    }
+
+    @GetMapping("/answers")
+    public ResponseEntity<List<ShareAnswer>> getSharedAnswers(@RequestParam("username") String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var shares = shareAnswerRepository.findByUser(user.get());
+
+        return ResponseEntity.ok(shares);
     }
 
     @GetMapping("/finished")

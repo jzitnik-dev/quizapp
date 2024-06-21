@@ -20,6 +20,7 @@ const Share = lazy(() => import("./pages/answer/share/[id]/page"));
 const NotFound = lazy(() => import("./pages/404/page"));
 const Random = lazy(() => import("./pages/quiz/random/page"));
 const Favourites = lazy(() => import("./pages/me/favourites/page"));
+const Shares = lazy(() => import("./pages/user/[username]/shares/page"));
 
 export default function RoutesComponent() {
   useGlobalNavigate();
@@ -87,6 +88,14 @@ export default function RoutesComponent() {
         element={
           <Page title="QuizAPP - Uživatel">
             <UserProfile />
+          </Page>
+        }
+      ></Route>
+      <Route
+        path="/user/:username/shares"
+        element={
+          <Page title="QuizAPP - Sdílené kvízy">
+            <Shares />
           </Page>
         }
       ></Route>

@@ -11,7 +11,7 @@ import {
   Skeleton,
   Tooltip,
 } from "@radix-ui/themes";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import getUser, { getFinished } from "../../../api/getUser";
 import { useParams } from "react-router-dom";
@@ -138,19 +138,21 @@ export default function UserPage() {
                   )}
                 </Badge>
                 <Tooltip
-                  content={`${finished?.questions + " správně odpověděných otázek"}`}
+                  content={`Počet správně odpověděných otázek: ${finished?.questions}`}
                 >
                   <Badge color="green">
-                    {finishedStatus === "loading" ? (
-                      <Skeleton height="20px" width="50px" />
-                    ) : finished?.quizCount == 1 ? (
-                      "Dokončil/a " + finished.quizCount + " kvíz"
-                    ) : (finished?.quizCount || 0) >= 2 &&
-                      (finished?.quizCount || 0) <= 4 ? (
-                      "Dokončil/a " + finished?.quizCount + " kvízy"
-                    ) : (
-                      "Dokončil/a " + finished?.quizCount + " kvízů"
-                    )}
+                    <Link to={`/user/${username}/shares`}>
+                      {finishedStatus === "loading" ? (
+                        <Skeleton height="20px" width="50px" />
+                      ) : finished?.quizCount == 1 ? (
+                        "Dokončil/a " + finished.quizCount + " kvíz"
+                      ) : (finished?.quizCount || 0) >= 2 &&
+                        (finished?.quizCount || 0) <= 4 ? (
+                        "Dokončil/a " + finished?.quizCount + " kvízy"
+                      ) : (
+                        "Dokončil/a " + finished?.quizCount + " kvízů"
+                      )}
+                    </Link>
                   </Badge>
                 </Tooltip>
               </Flex>

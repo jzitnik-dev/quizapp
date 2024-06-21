@@ -1,5 +1,4 @@
 import {
-  Callout,
   Container,
   Heading,
   Section,
@@ -14,7 +13,6 @@ import {
   RadioCards,
   CheckboxCards,
   SegmentedControl,
-  Badge,
   Progress,
 } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
@@ -25,7 +23,6 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import getQuiz from "../../../api/getQuiz";
-import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import isLogedIn from "../../../utils/logedin";
 import {
   answerQuestion,
@@ -40,6 +37,7 @@ import QuestionType from "../../../types/QuestionType";
 import { toast } from "react-toastify";
 import ValidatedQuizAnswer from "../../../types/ValidatedQuizAnswer";
 import Quiz from "../../../types/Quiz";
+import AnswersList from "../../../components/quiz/answersList";
 
 export default function Play() {
   const { id } = useParams();
@@ -237,33 +235,7 @@ export default function Play() {
               Vaše odpovědi
             </Heading>
             <Flex direction="column" gap="3" mx="3">
-              {finishData?.answers.map((answer, index) => {
-                return (
-                  <Callout.Root
-                    color={answer.correct ? "green" : "red"}
-                    key={index}
-                  >
-                    <Callout.Icon>
-                      {answer.correct ? <CheckIcon /> : <Cross1Icon />}
-                    </Callout.Icon>
-                    <Box>
-                      <Heading>Otázka: {answer.question.question}</Heading>
-                      <Text>
-                        <Flex gap="1" align="center">
-                          <Text>Vaše odpověď:</Text>
-                          {answer.question.type.toString() == "Multiselect"
-                            ? JSON.parse(answer.answer).map(
-                                (e: string, index: number) => (
-                                  <Badge key={index}>{e}</Badge>
-                                ),
-                              )
-                            : answer.answer}
-                        </Flex>
-                      </Text>
-                    </Box>
-                  </Callout.Root>
-                );
-              })}
+              <AnswersList answers={finishData?.answers || []} />
               <Link to={"/quiz/" + data?.id}>
                 <Button>Zpět</Button>
               </Link>

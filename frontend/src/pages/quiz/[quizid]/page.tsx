@@ -6,11 +6,9 @@ import {
   Flex,
   Badge,
   HoverCard,
-  Box,
   Button,
   AlertDialog,
   Spinner,
-  Callout,
   IconButton,
   TextField,
   Tooltip,
@@ -26,8 +24,6 @@ import isLogedIn from "../../../utils/logedin";
 import { validatedQuizAnswer } from "../../../api/validatedQuizAnswer";
 import ValidatedQuizAnswer from "../../../types/ValidatedQuizAnswer";
 import {
-  CheckIcon,
-  Cross1Icon,
   Share1Icon,
   StarFilledIcon,
   StarIcon,
@@ -46,6 +42,7 @@ import { FinishedBadgeAnswer } from "../../../components/quiz/finishedBadge";
 import ViewsBadge from "../../../components/quiz/viewsBadge";
 import { getLiked, setLiked as setLikedAPI } from "../../../api/favourites";
 import UserBadge from "../../../components/user/UserBadge";
+import AnswersList from "../../../components/quiz/answersList";
 
 export default function QuizComponent() {
   const [data, setData] = useState<Quiz>();
@@ -99,7 +96,7 @@ export default function QuizComponent() {
   }, []);
 
   async function handleShareRemove() {
-    await removeShareAnswer(id || "")
+    await removeShareAnswer(id || "");
     shareDialogClose.current?.click();
     toast.success("Sdílení kvízu bylo odstaněno!");
   }
@@ -314,33 +311,7 @@ export default function QuizComponent() {
                   Vaše odpovědi
                 </Heading>
                 <Flex direction="column" gap="3" mx="3">
-                  {answer?.answers.map((answer, index) => {
-                    return (
-                      <Callout.Root
-                        color={answer.correct ? "green" : "red"}
-                        key={index}
-                      >
-                        <Callout.Icon>
-                          {answer.correct ? <CheckIcon /> : <Cross1Icon />}
-                        </Callout.Icon>
-                        <Box>
-                          <Heading>Otázka: {answer.question.question}</Heading>
-                          <Text>
-                            <Flex gap="1" align="center">
-                              <Text>Vaše odpověď:</Text>
-                              {answer.question.type.toString() == "Multiselect"
-                                ? JSON.parse(answer.answer).map(
-                                    (e: string, index: number) => (
-                                      <Badge key={index}>{e}</Badge>
-                                    ),
-                                  )
-                                : answer.answer}
-                            </Flex>
-                          </Text>
-                        </Box>
-                      </Callout.Root>
-                    );
-                  })}
+                  <AnswersList answers={answer.answers} />
                 </Flex>
                 <Flex justify="center" mt="4">
                   <IconButton onClick={shareAnswer}>
@@ -359,8 +330,9 @@ export default function QuizComponent() {
                       Sdílení odpovédi kvízu
                     </AlertDialog.Title>
                     <AlertDialog.Description size="2">
-                      Odpověď kvízu byla zveřejněna pod tímto odkazem. Kdokoliv
-                      s tímto odkazem může se podívat na vaši odpověď kvízu.
+                      Odpověď kvízu byla zveřejněna pod tímto odkazem a na Vašem
+                      profilu. Kdokoliv se může podívat na vaši odpověď tohoto
+                      kvízu.
                     </AlertDialog.Description>
 
                     <TextField.Root
@@ -371,9 +343,17 @@ export default function QuizComponent() {
                     />
 
                     <Flex gap="3" mt="4" justify="between">
-                      <Button color="red" onClick={handleShareRemove}>Odstranit sdílení</Button>
+                      <Button color="red" onClick={handleShareRemove}>
+                        Odstranit sdílení
+                      </Button>
                       <AlertDialog.Action>
-                        <Button variant="solid" ref={shareDialogClose} onClick={() => setShareUrl("")}>OK</Button>
+                        <Button
+                          variant="solid"
+                          ref={shareDialogClose}
+                          onClick={() => setShareUrl("")}
+                        >
+                          OK
+                        </Button>
                       </AlertDialog.Action>
                     </Flex>
                   </AlertDialog.Content>

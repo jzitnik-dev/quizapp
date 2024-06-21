@@ -6,4 +6,5 @@ export default interface ShareAnswer {
   validatedQuizAnswer: ValidatedQuizAnswer;
   user: User;
   quiz: Quiz;
+  shareKey: string;
 }
