@@ -17,6 +17,7 @@ import { getShared } from "../../../../api/shareAnswer";
 import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
 import getProfilePictureUrl from "../../../../api/getProfilePictureUrl";
+import UserBadge from "../../../../components/user/UserBadge";
 
 export default function Share() {
   const { id } = useParams();
@@ -50,39 +51,7 @@ export default function Share() {
                   Sdílená odpověď
                 </Heading>
                 <Text as="p">
-                  Uživatel:{" "}
-                  <HoverCard.Root>
-                    <HoverCard.Trigger>
-                      <Badge style={{ cursor: "pointer" }}>
-                        <Link to={"/user/" + data.user?.username}>
-                          {data.user?.displayName}
-                        </Link>
-                      </Badge>
-                    </HoverCard.Trigger>
-                    <HoverCard.Content maxWidth="300px">
-                      <Link to={"/user/" + data.user?.username}>
-                        <Flex gap="4">
-                          <Avatar
-                            size="3"
-                            fallback={data.user?.displayName[0] || "R"}
-                            radius="full"
-                            src={getProfilePictureUrl(
-                              data.user?.username || "",
-                            )}
-                          />
-                          <Box>
-                            <Heading size="3" as="h3">
-                              {data.user?.displayName}
-                            </Heading>
-                            <Text as="div" size="2" color="gray">
-                              @{data.user?.username}
-                            </Text>
-                          </Box>
-                        </Flex>
-                      </Link>
-                    </HoverCard.Content>
-                  </HoverCard.Root>
-                  <br />
+                  Uživatel: <UserBadge user={data.user} /> <br />
                   Kvíz:{" "}
                   <Link to={"/quiz/" + data.quiz.id}>
                     <Badge color="plum">{data.quiz.title}</Badge>

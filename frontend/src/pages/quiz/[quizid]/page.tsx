@@ -6,7 +6,6 @@ import {
   Flex,
   Badge,
   HoverCard,
-  Avatar,
   Box,
   Button,
   AlertDialog,
@@ -20,10 +19,8 @@ import { useEffect, useRef, useState } from "react";
 import Quiz from "../../../types/Quiz";
 import getQuiz, { getOwned } from "../../../api/getQuiz";
 import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import User from "../../../types/User";
 import getAuthor from "../../../api/getAuthor";
-import getProfilePictureUrl from "../../../api/getProfilePictureUrl";
 import play, { isPlaying } from "../../../api/play";
 import isLogedIn from "../../../utils/logedin";
 import { validatedQuizAnswer } from "../../../api/validatedQuizAnswer";
@@ -48,6 +45,7 @@ import shareAnswerAPI, { removeShareAnswer } from "../../../api/shareAnswer";
 import { FinishedBadgeAnswer } from "../../../components/quiz/finishedBadge";
 import ViewsBadge from "../../../components/quiz/viewsBadge";
 import { getLiked, setLiked as setLikedAPI } from "../../../api/favourites";
+import UserBadge from "../../../components/user/UserBadge";
 
 export default function QuizComponent() {
   const [data, setData] = useState<Quiz>();
@@ -195,35 +193,7 @@ export default function QuizComponent() {
                     data?.createDate || new Date().toString(),
                   ).toLocaleDateString()}
                 </Badge>{" "}
-                <HoverCard.Root>
-                  <HoverCard.Trigger>
-                    <Badge style={{ cursor: "pointer" }}>
-                      <Link to={owned ? "/me" : "/user/" + author?.username}>
-                        {author?.displayName}
-                      </Link>
-                    </Badge>
-                  </HoverCard.Trigger>
-                  <HoverCard.Content maxWidth="300px">
-                    <Link to={owned ? "/me" : "/user/" + author?.username}>
-                      <Flex gap="4">
-                        <Avatar
-                          size="3"
-                          fallback={author?.displayName[0] || "R"}
-                          radius="full"
-                          src={getProfilePictureUrl(author?.username || "")}
-                        />
-                        <Box>
-                          <Heading size="3" as="h3">
-                            {author?.displayName}
-                          </Heading>
-                          <Text as="div" size="2" color="gray">
-                            @{author?.username}
-                          </Text>
-                        </Box>
-                      </Flex>
-                    </Link>
-                  </HoverCard.Content>
-                </HoverCard.Root>
+                <UserBadge user={author} />
                 <QuestionBadge number={data?.questions.length || 0} />
                 <Tooltip content={`${data?.likes} lidem se tento kvíz líbí.`}>
                   <Badge color="amber">{data?.likes + " liků"}</Badge>
