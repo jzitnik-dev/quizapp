@@ -11,10 +11,11 @@ import {
 } from "@radix-ui/themes";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import RolesBadge from "./RolesBadge";
+import parseUserPath from "../../utils/parseUserPath";
 
 export default function User({ user }: { user: UserType }) {
   return (
-    <Link to={`/user/${user.username}`}>
+    <Link to={parseUserPath(user.username)}>
       <Card>
         <Flex align="center" gap="2">
           <Avatar
