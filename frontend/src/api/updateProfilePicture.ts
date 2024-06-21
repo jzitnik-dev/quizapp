@@ -7,7 +7,11 @@ export default async function updateProfilePicture(profilePicture: File) {
   const formData = new FormData();
   formData.append("file", profilePicture);
 
-  const response = await axiosInstance.post("/user/profilepicture", formData);
+  const response = await axiosInstance.post("/user/profilepicture", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 
   return response.data;
 }
