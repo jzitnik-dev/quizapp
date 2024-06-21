@@ -44,7 +44,7 @@ import { getStatistics, getViews } from "../../../api/getStatistics";
 import AnswerCorrectPercentageChart from "../../../components/quiz/answerCorrectPercentageChart";
 import QuizPlayChart from "../../../components/quiz/quizPlayChart";
 import QuizViewChart from "../../../components/quiz/quizViewChart";
-import shareAnswerAPI from "../../../api/shareAnswer";
+import shareAnswerAPI, { removeShareAnswer } from "../../../api/shareAnswer";
 import { FinishedBadgeAnswer } from "../../../components/quiz/finishedBadge";
 import ViewsBadge from "../../../components/quiz/viewsBadge";
 import { getLiked, setLiked as setLikedAPI } from "../../../api/favourites";
@@ -63,6 +63,7 @@ export default function QuizComponent() {
   const [stats, setStats] = useState<QuizStats | null>();
   const [views, setViews] = useState<number[]>();
   const shareDialogTrigger = useRef<HTMLButtonElement>(null);
+  const shareDialogClose = useRef<HTMLButtonElement>(null);
   const [shareUrl, setShareUrl] = useState<string>();
 
   useEffect(() => {
@@ -98,6 +99,12 @@ export default function QuizComponent() {
       }
     })();
   }, []);
+
+  async function handleShareRemove() {
+    await removeShareAnswer(id || "")
+    shareDialogClose.current?.click();
+    toast.success("Sdílení kvízu bylo odstaněno!");
+  }
 
   async function playHandle() {
     setFetching(true);
@@ -393,9 +400,10 @@ export default function QuizComponent() {
                       mt="2"
                     />
 
-                    <Flex gap="3" mt="4" justify="end">
+                    <Flex gap="3" mt="4" justify="between">
+                      <Button color="red" onClick={handleShareRemove}>Odstranit sdílení</Button>
                       <AlertDialog.Action>
-                        <Button variant="solid">OK</Button>
+                        <Button variant="solid" ref={shareDialogClose} onClick={() => setShareUrl("")}>OK</Button>
                       </AlertDialog.Action>
                     </Flex>
                   </AlertDialog.Content>

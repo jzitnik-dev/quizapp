@@ -156,6 +156,30 @@ public class QuizController {
         return ResponseEntity.ok(shareFinal.getShareKey());
     }
 
+    @DeleteMapping("/answer/{id}/share")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity removeShareAnswer(@PathVariable Long id) {
+        User loggedUser = userService.getCurrentUser();
+        var quiz = quizRepository.findById(id);
+        if (quiz.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var validatedQuizAnswer = validatedQuizAnswerRepository.findByUserAndQuiz(loggedUser, quiz.get());
+
+        if (validatedQuizAnswer.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var share = shareAnswerRepository.findByValidatedQuizAnswer(validatedQuizAnswer.get());
+
+        if (share.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        shareAnswerRepository.delete(share.get());
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/answer/share/{key}")
     public ResponseEntity<ShareAnswer> getSharedAnswer(@PathVariable String key) {
 

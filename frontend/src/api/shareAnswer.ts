@@ -9,6 +9,13 @@ export default async function shareAnswer(quizId: string) {
   return response.data;
 }
 
+export async function removeShareAnswer(quizId: string) {
+  if (!isLogedIn()) throw new Error("Not logged in!");
+
+  const response = await axiosInstance.delete(`/quiz/answer/${quizId}/share`);
+  return response.data;
+}
+
 export async function getShared(key: string) {
   try {
     const response = await axiosInstance.get("/quiz/answer/share/" + key);
