@@ -55,9 +55,9 @@ export default function Shares() {
           </Flex>
         ) : (
           <Flex direction="column" gap="5" mt="5">
-            {data?.map((share) => {
+            {data?.map((share, index) => {
               return (
-                <Link to={`/answer/share/${share.shareKey}`}>
+                <Link to={`/answer/share/${share.shareKey}`} key={index}>
                   <Heading size="8">Kvíz: {share.quiz.title}</Heading>
                   <Flex mx="4" direction="column" gap="2" mt="2">
                     <AnswersList answers={share.validatedQuizAnswer.answers} />
