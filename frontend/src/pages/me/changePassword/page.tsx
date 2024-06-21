@@ -32,11 +32,12 @@ export default function ChangePassword() {
 
     try {
       res = await changePassword(newPass, current);
+      toast.success(res);
+      navigate("/me");
     } catch (e: any) {
-      toast.error(e);
+      console.log(e)
+      toast.error(e.response.data);
     }
-    toast.success(res);
-    navigate("/me");
   }
 
   useEffect(() => {
