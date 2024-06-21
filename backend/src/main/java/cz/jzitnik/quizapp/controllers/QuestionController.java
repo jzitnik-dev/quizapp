@@ -15,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/play/question")
@@ -116,7 +113,8 @@ public class QuestionController {
 
     @PostMapping("/answer")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity answer(@RequestParam("key") String key, @RequestParam("answer") String answer) {
+    public ResponseEntity answer(@RequestParam("key") String key, @RequestBody Map<String, String> body) {
+        var answer = body.get("answer");
         var playingStateOptional = playingStateRepository.findBySecretKey(key);
         var loggedInUser = userService.getCurrentUser();
         if (playingStateOptional.isEmpty() || !Objects.equals(playingStateOptional.get().getUser().getId(), loggedInUser.getId())) {

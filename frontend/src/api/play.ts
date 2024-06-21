@@ -97,11 +97,12 @@ export async function answerQuestion(key: string, answer: string) {
 
   const response = await axiosInstance.post(
     "/play/question/answer",
-    {},
+    {
+      answer
+    },
     {
       params: {
         key,
-        answer,
       },
     },
   );
