@@ -1,6 +1,14 @@
 import UserType from "../../types/User";
 import { Link } from "react-router-dom";
-import { Card, Heading, Badge, Flex, Avatar, Box } from "@radix-ui/themes";
+import {
+  Card,
+  Heading,
+  Badge,
+  Flex,
+  Avatar,
+  Box,
+  Tooltip,
+} from "@radix-ui/themes";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import RolesBadge from "./RolesBadge";
 
@@ -20,14 +28,16 @@ export default function User({ user }: { user: UserType }) {
             <Flex gap="2">
               <RolesBadge roles={user.roles} />
               <Badge>@{user.username}</Badge>
-              <Badge>
-                {user?.quizzes.length == 1
-                  ? user.quizzes.length + " kvíz"
-                  : (user?.quizzes.length || 0) >= 2 &&
-                      (user?.quizzes.length || 0) <= 4
-                    ? user?.quizzes.length + " kvízy"
-                    : user?.quizzes.length + " kvízů"}
-              </Badge>
+              <Tooltip content="Počet vytvořených vízů">
+                <Badge>
+                  {user?.quizzes.length == 1
+                    ? user.quizzes.length + " kvíz"
+                    : (user?.quizzes.length || 0) >= 2 &&
+                        (user?.quizzes.length || 0) <= 4
+                      ? user?.quizzes.length + " kvízy"
+                      : user?.quizzes.length + " kvízů"}
+                </Badge>
+              </Tooltip>
             </Flex>
           </Box>
         </Flex>

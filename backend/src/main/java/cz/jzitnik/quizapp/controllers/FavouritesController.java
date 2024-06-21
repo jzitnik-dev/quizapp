@@ -1,6 +1,5 @@
 package cz.jzitnik.quizapp.controllers;
 
-import cz.jzitnik.quizapp.entities.Quiz;
 import cz.jzitnik.quizapp.repository.QuizRepository;
 import cz.jzitnik.quizapp.repository.UserRepository;
 import cz.jzitnik.quizapp.services.UserService;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/favourites")
@@ -62,14 +60,29 @@ public class FavouritesController {
         var user = userService.getCurrentUser();
         List<Long> favouritesId = user.getFavourites();
         if (favouritesId.contains(quizId)) {
+            var quizOptional = quizRepository.findById(quizId);
+            if (quizOptional.isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            var quiz = quizOptional.get();
+            quiz.setLikes(quiz.getLikes() - 1);
+            quizRepository.save(quiz);
+
             favouritesId.remove(quizId);
             userRepository.save(user);
             return ResponseEntity.ok().build();
         }
 
-        if (quizRepository.findById(quizId).isEmpty()) {
+        var quizOptional = quizRepository.findById(quizId);
+
+        if (quizOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
+        var quiz = quizOptional.get();
+        quiz.setLikes(quiz.getLikes() + 1);
+        quizRepository.save(quiz);
 
         favouritesId.add(quizId);
         userRepository.save(user);

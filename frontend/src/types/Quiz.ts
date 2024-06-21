@@ -10,4 +10,5 @@ export default interface Quiz {
   author: User
   totalViews: number;
   totalPlays: number;
+  likes: number;
 }

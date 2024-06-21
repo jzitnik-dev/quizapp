@@ -13,6 +13,7 @@ import {
   TextField,
   Skeleton,
   TextArea,
+  Tooltip,
 } from "@radix-ui/themes";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef, useMemo } from "react";
@@ -137,18 +138,20 @@ export default function Me() {
                     `@${data?.username}`
                   )}
                 </Badge>
-                <Badge>
-                  {status === "loading" ? (
-                    <Skeleton height="20px" width="50px" />
-                  ) : data?.quizzes.length == 1 ? (
-                    data.quizzes.length + " kvíz"
-                  ) : (data?.quizzes.length || 0) >= 2 &&
-                    (data?.quizzes.length || 0) <= 4 ? (
-                    data?.quizzes.length + " kvízy"
-                  ) : (
-                    data?.quizzes.length + " kvízů"
-                  )}
-                </Badge>
+                <Tooltip content="Počet vytvořených kvízů">
+                  <Badge>
+                    {status === "loading" ? (
+                      <Skeleton height="20px" width="50px" />
+                    ) : data?.quizzes.length == 1 ? (
+                      data.quizzes.length + " kvíz"
+                    ) : (data?.quizzes.length || 0) >= 2 &&
+                      (data?.quizzes.length || 0) <= 4 ? (
+                      data?.quizzes.length + " kvízy"
+                    ) : (
+                      data?.quizzes.length + " kvízů"
+                    )}
+                  </Badge>
+                </Tooltip>
                 <Badge color="green">
                   <Link to="/me/finished">
                     {status === "loading" ? (

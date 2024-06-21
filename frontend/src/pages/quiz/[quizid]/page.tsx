@@ -14,6 +14,7 @@ import {
   Callout,
   IconButton,
   TextField,
+  Tooltip,
 } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import Quiz from "../../../types/Quiz";
@@ -217,6 +218,9 @@ export default function QuizComponent() {
                   </HoverCard.Content>
                 </HoverCard.Root>
                 <QuestionBadge number={data?.questions.length || 0} />
+                <Tooltip content={`${data?.likes} lidem se tento kvíz líbí.`}>
+                  <Badge color="amber">{data?.likes + " liků"}</Badge>
+                </Tooltip>{" "}
                 {owned ? (
                   <>
                     <HoverCard.Root>
@@ -254,7 +258,11 @@ export default function QuizComponent() {
                 <FinishedBadgeAnswer answer={answer} />
               </Flex>
               <Flex gap="1">
-                <Badge color="yellow" style={{cursor: "pointer"}} onClick={handleLike}>
+                <Badge
+                  color="yellow"
+                  style={{ cursor: "pointer" }}
+                  onClick={handleLike}
+                >
                   {liked ? <StarFilledIcon /> : <StarIcon />}
                 </Badge>
                 {owned ? (

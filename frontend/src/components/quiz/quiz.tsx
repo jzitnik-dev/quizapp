@@ -8,6 +8,7 @@ import {
   Skeleton,
   Flex,
   Box,
+  Tooltip
 } from "@radix-ui/themes";
 import QuestionBadge from "./questionBadge";
 import { getFinished } from "../../api/getQuiz";
@@ -54,8 +55,10 @@ export default function Quiz({
               {new Date(quiz.createDate).toLocaleDateString()}
             </Badge>{" "}
             <QuestionBadge number={quiz.questions.length} />{" "}
-            <ViewsBadge quiz={quiz} />{" "}
-            <FinishedBadge finished={data} />
+            <Tooltip content={`${quiz.likes} lidem se tento kvíz líbí.`}>
+              <Badge color="amber">{quiz.likes + " liků"}</Badge>
+            </Tooltip>{" "}
+            <ViewsBadge quiz={quiz} /> <FinishedBadge finished={data} />
           </Box>
           {customButton}
         </Flex>

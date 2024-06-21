@@ -9,6 +9,8 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import cz.jzitnik.quizapp.payload.response.FinishedResponse;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -61,6 +63,16 @@ public class Quiz {
     @JoinColumn(name = "user_id")
     @JsonBackReference // Prevents infinite recursion when serializing to JSON
     private User author;
+
+    private int likes = 0;
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
 
     private LocalDateTime createDate;
 
