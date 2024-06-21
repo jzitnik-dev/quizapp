@@ -9,6 +9,7 @@ import {
   Quote,
   Text,
   Skeleton,
+  Tooltip,
 } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
@@ -136,17 +137,22 @@ export default function UserPage() {
                     data?.quizzes.length + " kvízů"
                   )}
                 </Badge>
-                <Badge color="green">
-                  {finishedStatus === "loading" ? (
-                    <Skeleton height="20px" width="50px" />
-                  ) : finished == 1 ? (
-                    "Dokončil/a " + finished + " kvíz"
-                  ) : (finished || 0) >= 2 && (finished || 0) <= 4 ? (
-                    "Dokončil/a " + finished + " kvízy"
-                  ) : (
-                    "Dokončil/a " + finished + " kvízů"
-                  )}
-                </Badge>
+                <Tooltip
+                  content={`${finished?.questions + " správně odpověděných otázek"}`}
+                >
+                  <Badge color="green">
+                    {finishedStatus === "loading" ? (
+                      <Skeleton height="20px" width="50px" />
+                    ) : finished?.quizCount == 1 ? (
+                      "Dokončil/a " + finished.quizCount + " kvíz"
+                    ) : (finished?.quizCount || 0) >= 2 &&
+                      (finished?.quizCount || 0) <= 4 ? (
+                      "Dokončil/a " + finished?.quizCount + " kvízy"
+                    ) : (
+                      "Dokončil/a " + finished?.quizCount + " kvízů"
+                    )}
+                  </Badge>
+                </Tooltip>
               </Flex>
 
               {userStatus === "loading" ? (

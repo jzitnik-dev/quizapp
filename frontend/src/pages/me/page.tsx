@@ -152,19 +152,22 @@ export default function Me() {
                     )}
                   </Badge>
                 </Tooltip>
-                <Badge color="green">
-                  <Link to="/me/finished">
-                    {status === "loading" ? (
-                      <Skeleton height="20px" width="50px" />
-                    ) : finished == 1 ? (
-                      "Dokončil/a " + finished + " kvíz"
-                    ) : (finished || 0) >= 2 && (finished || 0) <= 4 ? (
-                      "Dokončil/a " + finished + " kvízy"
-                    ) : (
-                      "Dokončil/a " + finished + " kvízů"
-                    )}
-                  </Link>
-                </Badge>
+                <Tooltip content={`${finished?.questions + " správně odpověděných otázek"}`}>
+                  <Badge color="green">
+                    <Link to="/me/finished">
+                      {status === "loading" ? (
+                        <Skeleton height="20px" width="50px" />
+                      ) : finished?.quizCount == 1 ? (
+                        "Dokončil/a " + finished.quizCount + " kvíz"
+                      ) : (finished?.quizCount || 0) >= 2 &&
+                        (finished?.quizCount || 0) <= 4 ? (
+                        "Dokončil/a " + finished?.quizCount + " kvízy"
+                      ) : (
+                        "Dokončil/a " + finished?.quizCount + " kvízů"
+                      )}
+                    </Link>
+                  </Badge>
+                </Tooltip>
               </Flex>
 
               {status === "loading" ? (

@@ -1,4 +1,5 @@
 import User from "../types/User";
+import UserFinished from "../types/UserFinished";
 import axiosInstance from "./axios/axiosInstance";
 
 export default async function getUser(username: string) {
@@ -22,5 +23,5 @@ export async function getFinished(username: string) {
     }
   })
 
-  return response.data as number;
+  return response.data as UserFinished;
 }

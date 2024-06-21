@@ -1,10 +1,12 @@
 package cz.jzitnik.quizapp.controllers;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
 import cz.jzitnik.quizapp.payload.request.PasswordChangeRequest;
+import cz.jzitnik.quizapp.payload.response.UserFinishedResponse;
 import cz.jzitnik.quizapp.repository.PlayingStateRepository;
 import cz.jzitnik.quizapp.repository.UserRepository;
 import cz.jzitnik.quizapp.payload.response.MeHeaderResponse;
@@ -16,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -58,14 +59,27 @@ public class UserController {
     }
 
     @GetMapping("/finished")
-    public ResponseEntity<Integer> getFinished(@RequestParam("username") String username) {
+    public ResponseEntity<UserFinishedResponse> getFinished(@RequestParam("username") String username) {
         Optional<User> user =  userRepository.findByUsername(username);
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         var validatedQuizAnswers = user.get().getValidatedQuizAnswers().stream().filter(ValidatedQuizAnswer::isFinished).collect(Collectors.toSet());
 
-        return ResponseEntity.ok(validatedQuizAnswers.size());
+        var quizCount = validatedQuizAnswers.size();
+        AtomicInteger questions = new AtomicInteger();
+
+        validatedQuizAnswers.forEach(validatedQuizAnswer -> {
+            validatedQuizAnswer.getAnswers().forEach(answer -> {
+                if (answer.isCorrect()) {
+                    questions.getAndIncrement();
+                }
+            });
+        });
+
+        return ResponseEntity.ok(
+            new UserFinishedResponse(quizCount, questions.get())
+        );
     }
 
     @GetMapping("/me/header")
