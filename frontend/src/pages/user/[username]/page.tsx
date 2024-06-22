@@ -20,6 +20,7 @@ import Quiz from "../../../components/quiz/quiz";
 import RolesBadge from "../../../components/user/RolesBadge";
 import { useQuery } from "react-query";
 import { useUserProfile } from "../../../components/header/UserProfileProvider";
+import Activity from "../../../components/activity/Activity";
 
 export default function UserPage() {
   const navigate = useNavigate();
@@ -166,6 +167,16 @@ export default function UserPage() {
                 </>
               ) : null}
             </Card>
+          </Flex>
+        </Container>
+      </Section>
+      <Section>
+        <Heading align="center" size="9">
+          Aktivita
+        </Heading>
+        <Container p="8">
+          <Flex justify="center">
+            <Activity activity={data?.activity || []} user={data} />
           </Flex>
         </Container>
       </Section>

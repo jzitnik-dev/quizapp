@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import cz.jzitnik.quizapp.entities.RefreshToken;
+import cz.jzitnik.quizapp.entities.*;
 import cz.jzitnik.quizapp.exceptions.TokenRefreshException;
 import cz.jzitnik.quizapp.payload.request.TokenRefreshRequest;
 import cz.jzitnik.quizapp.payload.response.TokenRefreshResponse;
 import cz.jzitnik.quizapp.repository.UserRepository;
 import cz.jzitnik.quizapp.security.services.RefreshTokenService;
+import cz.jzitnik.quizapp.services.ActivityService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cz.jzitnik.quizapp.entities.ERole;
-import cz.jzitnik.quizapp.entities.Role;
-import cz.jzitnik.quizapp.entities.User;
 import cz.jzitnik.quizapp.payload.request.LoginRequest;
 import cz.jzitnik.quizapp.payload.request.SignupRequest;
 import cz.jzitnik.quizapp.payload.response.JwtResponse;
@@ -58,6 +56,9 @@ public class AuthController {
 
   @Autowired
   RefreshTokenService refreshTokenService;
+
+  @Autowired
+  ActivityService activityService;
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -115,7 +116,9 @@ public class AuthController {
     roles.add(userRole);
 
     user.setRoles(roles);
-    userRepository.save(user);
+    var userDB = userRepository.save(user);
+
+    activityService.submitActivity(EActivity.ACCOUNT_CREATE, userDB);
 
     return ResponseEntity.ok(new MessageResponse("Uživatel byl zaregistrován!"));
   }

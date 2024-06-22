@@ -1,12 +1,14 @@
 package cz.jzitnik.quizapp.controllers;
 
 import cz.jzitnik.quizapp.entities.Answer;
+import cz.jzitnik.quizapp.entities.EActivity;
 import cz.jzitnik.quizapp.entities.Question;
 import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
 import cz.jzitnik.quizapp.repository.PlayingStateRepository;
 import cz.jzitnik.quizapp.repository.QuizRepository;
 import cz.jzitnik.quizapp.repository.UserRepository;
 import cz.jzitnik.quizapp.repository.ValidatedQuizAnswerRepository;
+import cz.jzitnik.quizapp.services.ActivityService;
 import cz.jzitnik.quizapp.services.AnswerValidationService;
 import cz.jzitnik.quizapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class QuestionController {
     @Autowired
     private ValidatedQuizAnswerRepository validatedQuizAnswerRepository;
 
+    @Autowired
+    private ActivityService activityService;
+
     @GetMapping("/allquestions")
     public ResponseEntity<List<Question>> getQuestions(@RequestParam("quizId") Long quizId) {
         var quizOptional = quizRepository.findById(quizId);
@@ -68,6 +73,7 @@ public class QuestionController {
             var validated = new ValidatedQuizAnswer(loggedInUser, quiz, new ArrayList<Answer>(), false);
             validatedQuizAnswerRepository.save(validated);
             playingStateRepository.delete(playingState);
+            activityService.submitActivity(EActivity.QUIZ_PLAY, loggedInUser);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -157,6 +163,8 @@ public class QuestionController {
         validatedQuizAnswerRepository.save(validated);
         playingStateRepository.delete(playingState);
 
+        activityService.submitActivity(EActivity.QUIZ_PLAY, loggedInUser);
+
         return ResponseEntity.ok(validated);
     }
 
@@ -173,6 +181,7 @@ public class QuestionController {
         var validated = new ValidatedQuizAnswer(loggedInUser, quiz, new ArrayList<Answer>(), false);
         validatedQuizAnswerRepository.save(validated);
         playingStateRepository.delete(playingState);
+        activityService.submitActivity(EActivity.QUIZ_PLAY, loggedInUser);
         return ResponseEntity.ok().build();
     }
 }

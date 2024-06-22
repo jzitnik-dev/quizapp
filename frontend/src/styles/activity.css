@@ -1,0 +1,31 @@
+.graph {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 5px;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  grid-auto-flow: column;
+}
+
+.activity-grid li {
+  width: 20px;
+  height: 20px;
+}
+
+.activity-grid .realday {
+  background-color: rgb(79, 131, 191);
+  border: 1px solid gray;
+  cursor: pointer;
+}
+
+.activity-grid .empty-day {
+  background-color: transparent;
+}

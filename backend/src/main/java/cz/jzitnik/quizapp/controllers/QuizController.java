@@ -7,6 +7,7 @@ import cz.jzitnik.quizapp.repository.QuizRepository;
 import cz.jzitnik.quizapp.repository.QuizViewRepository;
 import cz.jzitnik.quizapp.repository.ShareAnswerRepository;
 import cz.jzitnik.quizapp.repository.ValidatedQuizAnswerRepository;
+import cz.jzitnik.quizapp.services.ActivityService;
 import cz.jzitnik.quizapp.services.QuizStatsService;
 import cz.jzitnik.quizapp.services.UserService;
 import org.hibernate.Hibernate;
@@ -44,6 +45,9 @@ public class QuizController {
     @Autowired
     ShareAnswerRepository shareAnswerRepository;
 
+    @Autowired
+    ActivityService activityService;
+
     @GetMapping("/random")
     public ResponseEntity<Long> randomQuiz() {
         var quizOptional = quizRepository.findRandomQuiz();
@@ -69,6 +73,8 @@ public class QuizController {
         quiz.setAuthor(loggedUser);
 
         Quiz quizSaved = quizRepository.save(quiz);
+
+        activityService.submitActivity(EActivity.QUIZ_CREATE, loggedUser);
 
         return quizSaved;
     }
