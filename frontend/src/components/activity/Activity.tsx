@@ -1,15 +1,34 @@
 import "../../styles/activity.css";
-import { Tooltip } from "@radix-ui/themes";
+import {
+  Flex,
+  Text,
+  Tooltip,
+  Section,
+  Heading,
+  Container,
+} from "@radix-ui/themes";
+import ActivityType from "../../types/Activity";
+import groupActivitiesByDays from "./group";
+import { useState } from "react";
+import ActivityList from "./ActivityList";
+import User from "../../types/User";
 
-export default function Activity() {
-  const weekCount = 30;
+export default function Activity({
+  activity,
+  user,
+}: {
+  activity: ActivityType[];
+  user?: User;
+}) {
+  const weekCount = 32;
   const totalDays = weekCount * 7;
   const date = new Date();
+  const [datel, setDatel] = useState<string | undefined>();
 
-  const days = [];
-  for (let i = 1; i <= 365; i++) {
-    const level = Math.random();
-    days.push(level);
+  const data = groupActivitiesByDays(activity);
+  const max = Math.max(...Object.values(data).map((e) => e.length));
+  function convert(num: number) {
+    return num / max;
   }
 
   const day = new Date().getDay() == 0 ? 7 : date.getDay();
@@ -19,30 +38,60 @@ export default function Activity() {
   }
 
   const realDays = [];
+  const realDaysDate = [];
   for (let i = 0; i < totalDays - (7 - day); i++) {
     const daysFromNow = totalDays - (7 - day) - i - 1;
     let dayObj = new Date();
     dayObj.setDate(dayObj.getDate() - daysFromNow);
+
+    const dayLook = dayObj.toISOString().split("T")[0];
+    const activities = data[dayLook] || [];
+    const str = `${dayObj.getDate()}.${dayObj.getMonth() + 1}. ${activities.length == 0 ? "Žádná akvitita" : "Počet aktivity: " + activities.length}`;
+
+    realDaysDate.push(dayObj);
     realDays.push(
-      <Tooltip content={`${dayObj.getDate()}. ${dayObj.getMonth() + 1}.`}>
+      <Tooltip content={str}>
         <li
           key={`real-${i}`}
           className="realday"
-          style={{ opacity: days[i + 1] }}
+          style={{
+            backgroundColor: `rgba(79, 131, 191, ${convert(activities.length)})`,
+          }}
+          onClick={() => setDatel(dayLook)}
         ></li>
       </Tooltip>,
     );
   }
 
   return (
-    <div className="graph">
-      <ul
-        className="activity-grid"
-        style={{ gridTemplateRows: `repeat(7, 1fr)` }}
-      >
-        {realDays}
-        {remainingDays}
-      </ul>
-    </div>
+    <Section>
+      <Container p="8" pt="0">
+        <Heading align="center" size="9">
+          Aktivita
+        </Heading>
+        <Flex justify="center">
+          <Flex className="graph" justify="center" align="center">
+            <Flex gap="2">
+              <Flex direction="column" justify="center" gap="5">
+                <Text>Po</Text>
+                <Text>St</Text>
+                <Text>Pa</Text>
+              </Flex>
+
+              <ul
+                className="activity-grid"
+                style={{ gridTemplateRows: `repeat(7, 1fr)` }}
+              >
+                {realDays}
+                {remainingDays}
+              </ul>
+            </Flex>
+          </Flex>
+        </Flex>
+        {datel ? (
+          <ActivityList data={data} dateLook={datel} user={user} />
+        ) : null}
+      </Container>
+    </Section>
   );
 }

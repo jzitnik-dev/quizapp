@@ -29,6 +29,7 @@ import RolesBadge from "../../components/user/RolesBadge";
 import { useUserProfile } from "../../components/header/UserProfileProvider";
 import { getFinished } from "../../api/getUser";
 import { useQuery } from "react-query";
+import Activity from "../../components/activity/Activity";
 
 export default function Me() {
   const navigate = useNavigate();
@@ -152,7 +153,9 @@ export default function Me() {
                     )}
                   </Badge>
                 </Tooltip>
-                <Tooltip content={`${finished?.questions + " správně odpověděných otázek"}`}>
+                <Tooltip
+                  content={`${finished?.questions + " správně odpověděných otázek"}`}
+                >
                   <Badge color="green">
                     <Link to="/me/finished">
                       {status === "loading" ? (
@@ -245,6 +248,7 @@ export default function Me() {
           </Flex>
         </Container>
       </Section>
+      <Activity activity={data?.activity || []} user={data}/>
       <Section>
         <Heading align="center" size="9">
           Kvízy

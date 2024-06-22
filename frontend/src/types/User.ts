@@ -1,3 +1,4 @@
+import Activity from "./Activity";
 import Quiz from "./Quiz";
 import Role from "./Role";
 
@@ -8,4 +9,5 @@ export default interface User {
   bio?: string;
   quizzes: Quiz[];
   roles: Role[];
+  activity: Activity[];
 }

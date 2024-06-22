@@ -62,6 +62,10 @@ public class User {
   @JsonIgnore
   private Set<RefreshToken> refreshTokens = new HashSet<>();
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+  @JsonManagedReference
+  private List<Activity> activity = new ArrayList<>();
+
   public Set<ValidatedQuizAnswer> getValidatedQuizAnswers() {
     return validatedQuizAnswers;
   }
@@ -149,5 +153,21 @@ public class User {
 
   public void setFavourites(@NotNull List<Long> favourites) {
     this.favourites = favourites;
+  }
+
+  public List<Activity> getActivity() {
+    return activity;
+  }
+
+  public void setActivity(List<Activity> activity) {
+    this.activity = activity;
+  }
+
+  public Set<RefreshToken> getRefreshTokens() {
+    return refreshTokens;
+  }
+
+  public void setRefreshTokens(Set<RefreshToken> refreshTokens) {
+    this.refreshTokens = refreshTokens;
   }
 }
