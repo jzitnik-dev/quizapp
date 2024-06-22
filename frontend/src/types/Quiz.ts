@@ -1,5 +1,6 @@
 import User from "./User"
 import Question from "./Question"
+import Comment from "./Comment";
 
 export default interface Quiz {
   id: number,
@@ -11,4 +12,5 @@ export default interface Quiz {
   totalViews: number;
   totalPlays: number;
   likes: number;
+  comments: Comment[];
 }

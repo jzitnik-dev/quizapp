@@ -12,6 +12,10 @@ import {
   IconButton,
   TextField,
   Tooltip,
+  Popover,
+  Box,
+  TextArea,
+  Avatar,
 } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import Quiz from "../../../types/Quiz";
@@ -28,6 +32,7 @@ import {
   StarFilledIcon,
   StarIcon,
   TrashIcon,
+  ChatBubbleIcon,
 } from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
 import QuestionBadge from "../../../components/quiz/questionBadge";
@@ -43,6 +48,10 @@ import ViewsBadge from "../../../components/quiz/viewsBadge";
 import { getLiked, setLiked as setLikedAPI } from "../../../api/favourites";
 import UserBadge from "../../../components/user/UserBadge";
 import AnswersList from "../../../components/quiz/answersList";
+import Comment from "../../../components/quiz/comment";
+import { deleteComment, submitComment } from "../../../api/comment";
+import { useUserProfile } from "../../../components/header/UserProfileProvider";
+import getProfilePictureUrl from "../../../api/getProfilePictureUrl";
 
 export default function QuizComponent() {
   const [data, setData] = useState<Quiz>();
@@ -57,9 +66,11 @@ export default function QuizComponent() {
   const [liked, setLiked] = useState<boolean>();
   const [stats, setStats] = useState<QuizStats | null>();
   const [views, setViews] = useState<number[]>();
+  const [commentValue, setCommentValue] = useState("");
   const shareDialogTrigger = useRef<HTMLButtonElement>(null);
   const shareDialogClose = useRef<HTMLButtonElement>(null);
   const [shareUrl, setShareUrl] = useState<string>();
+  const { userProfile } = useUserProfile();
 
   useEffect(() => {
     if (!isLogedIn()) {
@@ -94,6 +105,27 @@ export default function QuizComponent() {
       }
     })();
   }, []);
+
+  async function handleComment() {
+    if (commentValue.trim().length < 5 || commentValue.trim().length > 500) {
+      toast.error(
+        "Komentář musí být delší než 5 znaků a musí být kratší než 500 znaků.",
+      );
+      return;
+    }
+
+    await submitComment(id || "", commentValue);
+    toast.success("Komentář vytvořen!");
+    const res = await getQuiz((id || 0) as number);
+    setData(res);
+  }
+
+  async function handleCommentRemove() {
+    await deleteComment(id || "");
+    toast.success("Komentář odstraněn!");
+    const res = await getQuiz((id || 0) as number);
+    setData(res);
+  }
 
   async function handleShareRemove() {
     await removeShareAnswer(id || "");
@@ -364,6 +396,67 @@ export default function QuizComponent() {
                 Kvíz nebyl dokončen!
               </Heading>
             )}
+            <Section>
+              <Flex align="center" justify="center" gap="2" mb="4">
+                <Heading size="8" align="center">
+                  Komentáře
+                </Heading>
+                {!data?.comments.some(
+                  (e) => e.author.username == userProfile?.username,
+                ) ? (
+                  <Popover.Root>
+                    <Popover.Trigger>
+                      <Button variant="soft">
+                        <ChatBubbleIcon width="16" height="16" />
+                        Napsat komentář
+                      </Button>
+                    </Popover.Trigger>
+                    <Popover.Content width="360px">
+                      <Flex gap="3">
+                        <Avatar
+                          size="2"
+                          fallback={userProfile?.displayName[0] || "U"}
+                          radius="full"
+                          src={getProfilePictureUrl(
+                            userProfile?.username || "",
+                          )}
+                        />
+                        <Box flexGrow="1">
+                          <TextArea
+                            placeholder="Napište komentář…"
+                            style={{ height: 80 }}
+                            value={commentValue}
+                            onChange={(e) => setCommentValue(e.target.value)}
+                          />
+                          <Flex mt="3" justify="end">
+                            <Popover.Close>
+                              <Button onClick={handleComment} size="1">
+                                Odeslat
+                              </Button>
+                            </Popover.Close>
+                          </Flex>
+                        </Box>
+                      </Flex>
+                    </Popover.Content>
+                  </Popover.Root>
+                ) : null}
+              </Flex>
+              {data?.comments.length == 0 ? (
+                <Text align="center" as="p">
+                  Žádné komentáře nebyly zatím vytvořeny.
+                </Text>
+              ) : (
+                <Flex direction="column" gap="2" mt="5" align="center">
+                  {data?.comments.map((e, index) => (
+                    <Comment
+                      key={index}
+                      comment={e}
+                      handleRemove={handleCommentRemove}
+                    />
+                  ))}
+                </Flex>
+              )}
+            </Section>
           </Container>
         </>
       )}

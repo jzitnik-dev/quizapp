@@ -4,4 +4,5 @@ public enum EActivity {
     QUIZ_CREATE,
     QUIZ_PLAY,
     ACCOUNT_CREATE,
+    COMMENT_CREATE
 }

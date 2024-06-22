@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.jzitnik.quizapp.utils.json.LongListJsonConverter;
@@ -65,6 +66,10 @@ public class User {
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
   @JsonManagedReference
   private List<Activity> activity = new ArrayList<>();
+
+  @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+  @JsonBackReference
+  private List<Comment> comments = new ArrayList<>();
 
   public Set<ValidatedQuizAnswer> getValidatedQuizAnswers() {
     return validatedQuizAnswers;

@@ -59,6 +59,10 @@ public class Quiz {
     @JsonIgnore
     private Set<ShareAnswer> shareAnswers = new HashSet<>();
 
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
+    private List<Comment> comments = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonBackReference // Prevents infinite recursion when serializing to JSON
@@ -163,5 +167,13 @@ public class Quiz {
 
     public int getTotalPlays() {
         return validatedQuizAnswers.size();
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

@@ -2,11 +2,9 @@ package cz.jzitnik.quizapp.controllers;
 
 
 import cz.jzitnik.quizapp.entities.*;
+import cz.jzitnik.quizapp.payload.request.CommentRequest;
 import cz.jzitnik.quizapp.payload.response.FinishedResponse;
-import cz.jzitnik.quizapp.repository.QuizRepository;
-import cz.jzitnik.quizapp.repository.QuizViewRepository;
-import cz.jzitnik.quizapp.repository.ShareAnswerRepository;
-import cz.jzitnik.quizapp.repository.ValidatedQuizAnswerRepository;
+import cz.jzitnik.quizapp.repository.*;
 import cz.jzitnik.quizapp.services.ActivityService;
 import cz.jzitnik.quizapp.services.QuizStatsService;
 import cz.jzitnik.quizapp.services.UserService;
@@ -47,6 +45,9 @@ public class QuizController {
 
     @Autowired
     ActivityService activityService;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @GetMapping("/random")
     public ResponseEntity<Long> randomQuiz() {
@@ -105,6 +106,48 @@ public class QuizController {
         }
 
         return ResponseEntity.ok(quiz.get());
+    }
+
+    @PostMapping("/comment")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity comment(@RequestBody CommentRequest commentRequest) {
+        var loggedUser = userService.getCurrentUser();
+        var quizOptional = quizRepository.findById(commentRequest.getQuizId());
+        if (quizOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var comment = commentRepository.findByAuthorAndQuiz(loggedUser, quizOptional.get());
+
+        if (comment.isPresent()) {
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
+        }
+
+        var newComment = new Comment(quizOptional.get(), loggedUser, commentRequest.getContent());
+        commentRepository.save(newComment);
+
+        activityService.submitActivity(EActivity.COMMENT_CREATE, loggedUser);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/comment")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity delete(@RequestParam("quizId") Long quizId) {
+        var loggedUser = userService.getCurrentUser();
+        var quizOptional = quizRepository.findById(quizId);
+        if (quizOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var commentOptional = commentRepository.findByAuthorAndQuiz(loggedUser, quizOptional.get());
+
+        if (commentOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        commentRepository.delete(commentOptional.get());
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/author/{id}")
