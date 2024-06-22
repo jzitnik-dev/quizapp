@@ -36,6 +36,10 @@ export default function ActivityList({
     if (activityType == "QUIZ_PLAY") {
       return `${user?.displayName} si zahrál kvíz.`;
     }
+
+    if (activityType == "COMMENT_CREATE") {
+      return `${user?.displayName} napsal komentář ke kvízu.`;
+    }
   }
 
   return (
