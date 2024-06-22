@@ -403,7 +403,7 @@ export default function QuizComponent() {
                 </Heading>
                 {!data?.comments.some(
                   (e) => e.author.username == userProfile?.username,
-                ) ? (
+                ) && author?.username !== userProfile?.username ? (
                   <Popover.Root>
                     <Popover.Trigger>
                       <Button variant="soft">

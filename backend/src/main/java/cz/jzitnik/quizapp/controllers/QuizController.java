@@ -116,6 +116,9 @@ public class QuizController {
         if (quizOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        if (quizOptional.get().getAuthor().getUsername().equals(loggedUser.getUsername())) {
+            return ResponseEntity.badRequest().build();
+        }
         var comment = commentRepository.findByAuthorAndQuiz(loggedUser, quizOptional.get());
 
         if (comment.isPresent()) {
