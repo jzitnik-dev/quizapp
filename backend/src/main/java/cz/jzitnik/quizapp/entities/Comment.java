@@ -1,6 +1,7 @@
 package cz.jzitnik.quizapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -22,17 +23,23 @@ public class Comment {
     @JsonManagedReference
     private User author;
 
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "activity_id")
+    @JsonIgnore
+    private Activity linkedActivity;
+
     private LocalDate date;
 
     public Comment() {
 
     }
 
-    public Comment(Quiz quiz, User author, String content) {
+    public Comment(Quiz quiz, User author, String content, Activity linkedActivity) {
         this.quiz = quiz;
         this.author = author;
         this.content = content;
         this.date = LocalDate.now();
+        this.linkedActivity = linkedActivity;
     }
 
     public Long getId() {
@@ -73,5 +80,13 @@ public class Comment {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public Activity getLinkedActivity() {
+        return linkedActivity;
+    }
+
+    public void setLinkedActivity(Activity linkedActivity) {
+        this.linkedActivity = linkedActivity;
     }
 }

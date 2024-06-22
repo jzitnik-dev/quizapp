@@ -63,6 +63,11 @@ public class Quiz {
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "activity_id")
+    @JsonIgnore
+    private Activity linkedActivity;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonBackReference // Prevents infinite recursion when serializing to JSON
@@ -175,5 +180,13 @@ public class Quiz {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Activity getLinkedActivity() {
+        return linkedActivity;
+    }
+
+    public void setLinkedActivity(Activity linkedActivity) {
+        this.linkedActivity = linkedActivity;
     }
 }

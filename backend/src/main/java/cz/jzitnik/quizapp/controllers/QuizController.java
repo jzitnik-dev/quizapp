@@ -73,11 +73,10 @@ public class QuizController {
         loggedUser.getQuizzes().add(quiz);
         quiz.setAuthor(loggedUser);
 
-        Quiz quizSaved = quizRepository.save(quiz);
+        var activity = activityService.submitActivity(EActivity.QUIZ_CREATE, loggedUser);
+        quiz.setLinkedActivity(activity);
 
-        activityService.submitActivity(EActivity.QUIZ_CREATE, loggedUser);
-
-        return quizSaved;
+        return quizRepository.save(quiz);
     }
 
     @GetMapping("/get/{id}")
@@ -125,10 +124,10 @@ public class QuizController {
             return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
         }
 
-        var newComment = new Comment(quizOptional.get(), loggedUser, commentRequest.getContent());
-        commentRepository.save(newComment);
+        var activity = activityService.submitActivity(EActivity.COMMENT_CREATE, loggedUser);
 
-        activityService.submitActivity(EActivity.COMMENT_CREATE, loggedUser);
+        var newComment = new Comment(quizOptional.get(), loggedUser, commentRequest.getContent(), activity);
+        commentRepository.save(newComment);
 
         return ResponseEntity.ok().build();
     }
