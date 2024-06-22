@@ -16,6 +16,7 @@ import {
   Box,
   TextArea,
   Avatar,
+  Strong,
 } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import Quiz from "../../../types/Quiz";
@@ -71,6 +72,7 @@ export default function QuizComponent() {
   const shareDialogClose = useRef<HTMLButtonElement>(null);
   const [shareUrl, setShareUrl] = useState<string>();
   const { userProfile } = useUserProfile();
+  const [playingQuiz, setPlayingQuiz] = useState<Quiz | undefined>();
 
   useEffect(() => {
     if (!isLogedIn()) {
@@ -135,7 +137,14 @@ export default function QuizComponent() {
 
   async function playHandle() {
     setFetching(true);
-    if (await isPlaying()) {
+    const playing = await isPlaying();
+    if (playing) {
+      if (playing.id == parseInt(id || "")) {
+        toast.error("Tento kvíz již hrajete!");
+        setFetching(false);
+        return;
+      }
+      setPlayingQuiz(playing);
       dialog.current?.click();
     } else {
       await newGameHandle();
@@ -190,7 +199,8 @@ export default function QuizComponent() {
             <AlertDialog.Content maxWidth="450px">
               <AlertDialog.Title>Probíhající hra</AlertDialog.Title>
               <AlertDialog.Description size="2">
-                Na Vašem účtu hra již probíhá! Pokud začněte novou hru,
+                Na Vašem účtu hra již probíhá! Právě hrajete kvíz{" "}
+                <Strong>{playingQuiz?.title}</Strong>. Pokud začněte novou hru,
                 předchozí hra se zruší!
               </AlertDialog.Description>
 

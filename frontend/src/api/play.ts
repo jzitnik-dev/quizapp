@@ -3,6 +3,7 @@ import QuestionType from "../types/QuestionType";
 import ValidatedQuizAnswer from "../types/ValidatedQuizAnswer";
 import isLogedIn from "../utils/logedin";
 import axiosInstance from "./axios/axiosInstance";
+import Quiz from "../types/Quiz";
 
 export default async function play(quizId: string) {
   if (!isLogedIn()) throw new Error("Not loged in!");
@@ -24,7 +25,7 @@ export async function isPlaying() {
   if (!isLogedIn()) throw new Error("Not loged in!");
 
   const response = await axiosInstance.get("/user/me/playing");
-  return response.data;
+  return response.data as Quiz | false;
 }
 
 export async function isValid(key: string, quizId: string) {

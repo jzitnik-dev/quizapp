@@ -111,7 +111,7 @@ public class UserController {
 
     @GetMapping("/me/playing")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Boolean> mePlaying() {
+    public ResponseEntity<Object> mePlaying() {
         var user = userService.getCurrentUser();
         var stateOptional = playingStateRepository.findByUser(user);
 
@@ -119,7 +119,7 @@ public class UserController {
             return ResponseEntity.ok(false);
         }
 
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok(stateOptional.get().getQuiz());
     }
 
     @PatchMapping("/me")
