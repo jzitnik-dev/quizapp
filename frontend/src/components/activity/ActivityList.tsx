@@ -49,8 +49,8 @@ export default function ActivityList({
       </Heading>
       <Flex justify="center">
         <Flex direction="column" maxWidth="500px" mt="5" gap="2">
-          {list.map((e) => (
-            <Card>
+          {list.map((e, index) => (
+            <Card key={index}>
               <Heading align="center">{parseText(e.type)}</Heading>
             </Card>
           ))}

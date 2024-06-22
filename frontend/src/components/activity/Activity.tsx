@@ -50,9 +50,8 @@ export default function Activity({
 
     realDaysDate.push(dayObj);
     realDays.push(
-      <Tooltip content={str}>
+      <Tooltip content={str} key={`real-${i}`}>
         <li
-          key={`real-${i}`}
           className="realday"
           style={{
             backgroundColor: `rgba(79, 131, 191, ${convert(activities.length)})`,
