@@ -12,6 +12,7 @@ import groupActivitiesByDays from "./group";
 import { useState } from "react";
 import ActivityList from "./ActivityList";
 import User from "../../types/User";
+import { useRef, useEffect } from "react";
 
 export default function Activity({
   activity,
@@ -62,6 +63,15 @@ export default function Activity({
     );
   }
 
+  const scrollContainerRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.scrollLeft = container.scrollWidth;
+    }
+  }, []);
+
   return (
     <Section>
       <Container p="8" pt="0">
@@ -70,7 +80,7 @@ export default function Activity({
         </Heading>
         <Flex justify="center">
           <Flex className="graph" justify="center" align="center">
-            <Flex gap="2">
+            <Flex gap="2" maxWidth="100vw" px="2">
               <Flex direction="column" justify="center" gap="5">
                 <Text>Po</Text>
                 <Text>St</Text>
@@ -80,6 +90,7 @@ export default function Activity({
               <ul
                 className="activity-grid"
                 style={{ gridTemplateRows: `repeat(7, 1fr)` }}
+                ref={scrollContainerRef}
               >
                 {realDays}
                 {remainingDays}
