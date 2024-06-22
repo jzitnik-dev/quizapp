@@ -80,7 +80,7 @@ export default function Activity({
         </Heading>
         <Flex justify="center">
           <Flex className="graph" justify="center" align="center">
-            <Flex gap="2" maxWidth="100vw" px="2">
+            <Flex gap="2" maxWidth="100vw" px="4">
               <Flex direction="column" justify="center" gap="5">
                 <Text>Po</Text>
                 <Text>St</Text>
