@@ -30,6 +30,8 @@ public class Quiz {
     @Size(max = 500)
     private String description;
 
+    private int timeInMinutes;
+
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference(value = "quiz-questions")
     private List<Question> questions = new ArrayList<>();
@@ -75,7 +77,7 @@ public class Quiz {
 
     private int likes = 0;
 
-    public int getLikes() {
+    public Integer getLikes() {
         return likes;
     }
 
@@ -188,5 +190,13 @@ public class Quiz {
 
     public void setLinkedActivity(Activity linkedActivity) {
         this.linkedActivity = linkedActivity;
+    }
+
+    public Integer getTimeInMinutes() {
+        return timeInMinutes;
+    }
+
+    public void setTimeInMinutes(Integer timeInMinutes) {
+        this.timeInMinutes = timeInMinutes;
     }
 }

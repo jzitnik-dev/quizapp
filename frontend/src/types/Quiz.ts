@@ -13,4 +13,5 @@ export default interface Quiz {
   totalPlays: number;
   likes: number;
   comments: Comment[];
+  timeInMinutes: number;
 }
