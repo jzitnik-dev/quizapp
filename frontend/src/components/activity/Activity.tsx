@@ -29,7 +29,13 @@ export default function Activity({
   const data = groupActivitiesByDays(activity);
   const max = Math.max(...Object.values(data).map((e) => e.length));
   function convert(num: number) {
-    return num / max;
+    if (num == 0) {
+      return 0;
+    }
+    const newMin = 0.25;
+    const newMax = 1;
+
+    return newMin + (num * (newMax - newMin)) / max;
   }
 
   const day = new Date().getDay() == 0 ? 7 : date.getDay();

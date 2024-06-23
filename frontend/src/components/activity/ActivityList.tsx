@@ -1,4 +1,4 @@
-import { Callout, Card, Flex, Heading } from "@radix-ui/themes";
+import { Card, Flex, Heading } from "@radix-ui/themes";
 import Activity from "../../types/Activity";
 import User from "../../types/User";
 
