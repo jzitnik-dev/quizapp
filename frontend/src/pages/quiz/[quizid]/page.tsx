@@ -237,6 +237,21 @@ export default function QuizComponent() {
                 <Tooltip content={`${data?.likes} lidem se tento kvíz líbí.`}>
                   <Badge color="amber">{data?.likes + " liků"}</Badge>
                 </Tooltip>{" "}
+                {data?.timeInMinutes !== 0 ? (
+                  <>
+                    <Tooltip content="Časový limit na kvíz">
+                      <Badge>
+                        {data?.timeInMinutes}{" "}
+                        {data?.timeInMinutes == 0
+                          ? "minut"
+                          : (data?.timeInMinutes || 0) >= 2 &&
+                              (data?.timeInMinutes || 0) <= 4
+                            ? "minuty"
+                            : "minut"}
+                      </Badge>
+                    </Tooltip>{" "}
+                  </>
+                ) : null}
                 {owned ? (
                   <>
                     <HoverCard.Root>

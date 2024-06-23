@@ -8,7 +8,7 @@ import {
   Skeleton,
   Flex,
   Box,
-  Tooltip
+  Tooltip,
 } from "@radix-ui/themes";
 import QuestionBadge from "./questionBadge";
 import { getFinished } from "../../api/getQuiz";
@@ -58,6 +58,20 @@ export default function Quiz({
             <Tooltip content={`${quiz.likes} lidem se tento kvíz líbí.`}>
               <Badge color="amber">{quiz.likes + " liků"}</Badge>
             </Tooltip>{" "}
+            {quiz.timeInMinutes !== 0 ? (
+              <>
+                <Tooltip content="Časový limit na kvíz">
+                  <Badge>
+                    {quiz.timeInMinutes}{" "}
+                    {quiz.timeInMinutes == 0
+                      ? "minut"
+                      : quiz.timeInMinutes >= 2 && quiz.timeInMinutes <= 4
+                        ? "minuty"
+                        : "minut"}
+                  </Badge>
+                </Tooltip>{" "}
+              </>
+            ) : null}
             <ViewsBadge quiz={quiz} /> <FinishedBadge finished={data} />
           </Box>
           {customButton}
