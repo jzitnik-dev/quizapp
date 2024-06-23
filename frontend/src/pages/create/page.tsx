@@ -34,6 +34,7 @@ export default function Create() {
   const navigate = useNavigate();
   const [next, setNext] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [minutes, setMinutes] = useState<number | null>(0);
   const [fetching, setFetching] = useState(false);
   const [sent, setSent] = useState(false);
   const [quizId, setQuizId] = useState<number | undefined>();
@@ -84,11 +85,21 @@ export default function Create() {
     if (questions.length < 5) {
       return toast.error("Musíte mít alespoň 5 otázek.");
     }
+    let finalMinutes = minutes || 0;
+
+    if (!Number.isInteger(finalMinutes)) {
+      return toast.error("Počet minut musí být celé číslo!");
+    }
+
+    if (finalMinutes > 30) {
+      return toast.error("Počet minut nesmí být delší jak 30 minut.");
+    }
 
     const finalQuiz = {
       title: name,
       description: desc,
       questions: questions,
+      timeInMinutes: finalMinutes
     } as Quiz;
 
     setFetching(true);
@@ -147,6 +158,29 @@ export default function Create() {
                       <Strong>{desc.length}</Strong>/500
                     </small>
                   </Flex>
+                </label>
+                <label style={{ maxWidth: "400px" }}>
+                  <Text as="div" size="2" mb="1" weight="bold">
+                    Počet minut na kvíz
+                  </Text>
+                  <TextField.Root
+                    placeholder="Počet minut"
+                    type="number"
+                    value={minutes == null ? "" : minutes}
+                    onChange={(e) => {
+                      if (e.target.value.length === 0) {
+                        setMinutes(null);
+                        return;
+                      }
+                      if (isNaN(parseInt(e.target.value))) {
+                        return;
+                      }
+                      setMinutes(parseInt(e.target.value));
+                    }}
+                    required
+                  ></TextField.Root>
+
+                  <small>Pokud nechcete časovač na kvízu zadejte 0.</small>
                 </label>
                 <Flex justify="end">
                   <Button>

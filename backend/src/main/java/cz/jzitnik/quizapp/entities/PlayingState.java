@@ -5,6 +5,7 @@ import cz.jzitnik.quizapp.utils.json.StringListJsonConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -25,6 +26,8 @@ public class PlayingState {
 
     @Column(unique = true)
     private String secretKey;
+
+    private LocalDateTime startTime;
 
     @PrePersist
     private void generateSecretKey() {
@@ -98,6 +101,7 @@ public class PlayingState {
         this.questionNumber = 1;
         this.showed = false;
         this.answers = List.of();
+        this.startTime = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -122,5 +126,13 @@ public class PlayingState {
 
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -158,6 +159,23 @@ public class QuestionController {
         if (playingState.getQuestionNumber() <= quiz.getQuestions().size()) {
             return ResponseEntity.badRequest().build();
         }
+
+        if (quiz.getTimeInMinutes() != null) {
+            LocalDateTime endTime = playingState.getStartTime().plusMinutes(quiz.getTimeInMinutes());
+            LocalDateTime currentTime = LocalDateTime.now();
+            if (currentTime.isAfter(endTime)) {
+                // User played longer than is the limit
+                var validated = answerValidationService.validateQuiz(loggedInUser, quiz, playingState.getAnswers());
+
+                validatedQuizAnswerRepository.save(validated);
+                playingStateRepository.delete(playingState);
+                activityService.submitActivity(EActivity.QUIZ_PLAY, loggedInUser);
+
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
+
+
         var validated = answerValidationService.validateQuiz(loggedInUser, quiz, playingState.getAnswers());
 
         validatedQuizAnswerRepository.save(validated);

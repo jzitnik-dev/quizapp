@@ -52,6 +52,9 @@ export default function Play() {
   const [answerValue, setAnswerValue] = useState("");
   const [finishData, setFinishData] = useState<ValidatedQuizAnswer>();
   const [unfinished, setUnfinished] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState<number | undefined>(0);
+  const [timer, setTimer] = useState<number>();
+  const [timeLost, setTimeLost] = useState(false);
 
   const defaultInputBox = useRef<HTMLInputElement>(null);
   const trueButton = useRef<HTMLButtonElement>(null);
@@ -90,6 +93,23 @@ export default function Play() {
     (async () => {
       const res = await getQuiz((id || 0) as number);
       setData(res);
+
+      if (res?.timeInMinutes !== 0 && res?.timeInMinutes) {
+        const seconds = (res?.timeInMinutes || 0) * 60;
+        setSecondsLeft(seconds);
+
+        const int = setInterval(() => {
+          setSecondsLeft((prevSecondsLeft) => {
+            if ((prevSecondsLeft || 0) <= 0) {
+              clearInterval(int);
+              setTimeLost(true);
+              cancel(key || "");
+            }
+            return (prevSecondsLeft || 0) - 1;
+          });
+        }, 1000);
+        setTimer(int);
+      }
 
       await loadQuestion(currentQuestion);
     })();
@@ -136,6 +156,7 @@ export default function Play() {
   async function finishFun() {
     setFetching(false);
     setFinish(true);
+    clearInterval(timer);
     const res = await finishQuiz(key || "");
     setFinishData(res);
   }
@@ -186,10 +207,19 @@ export default function Play() {
     await loadQuestion(next);
   }
 
+  function convertSeconds(seconds: number) {
+    const minutes = Math.floor(seconds / 60);
+    let remainingSeconds = (seconds % 60).toString();
+    if (remainingSeconds.length == 1) {
+      remainingSeconds = "0" + remainingSeconds;
+    }
+    return `${minutes}:${remainingSeconds}`;
+  }
+
   return (
     <Section>
       <Container>
-        {!unfinished ? (
+        {!unfinished && !timeLost ? (
           <Flex justify="center">
             <Progress
               max={data?.questions.length}
@@ -222,6 +252,21 @@ export default function Play() {
               </Link>
             </Flex>
           </>
+        ) : timeLost ? (
+          <>
+            <Heading align="center">Vypršel čas!</Heading>
+            <Text align="center" as="p">
+              Vypršel Vám čas! Tento kvíz je nyní nedokončen!
+            </Text>
+            <Text align="center" as="p">
+              Tento kvíz si již nebudete moct zahrát.
+            </Text>
+            <Flex justify="center" mt="2">
+              <Link to={`/quiz/${data?.id}`}>
+                <Button>Zpět</Button>
+              </Link>
+            </Flex>
+          </>
         ) : finish ? (
           <>
             <Heading size="8" align="center">
@@ -243,8 +288,15 @@ export default function Play() {
           </>
         ) : (
           <>
-            <Heading size="8">{currentQuestion}.</Heading>
-            <Heading size="8">{question?.question}</Heading>
+            <Flex align="center" justify="between">
+              <Box>
+                <Heading size="8">{currentQuestion}.</Heading>
+                <Heading size="8">{question?.question}</Heading>
+              </Box>
+              {data?.timeInMinutes == 0 ? null : (
+                <Heading size="7">{convertSeconds(secondsLeft || 0)}</Heading>
+              )}
+            </Flex>
             <Flex justify="center" mt="5">
               <Box maxWidth="500px" width="100%">
                 {question?.type == QuestionType.Default ? (
