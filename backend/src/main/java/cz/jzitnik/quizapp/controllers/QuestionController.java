@@ -163,9 +163,9 @@ public class QuestionController {
         if (quiz.getTimeInMinutes() != null) {
             LocalDateTime endTime = playingState.getStartTime().plusMinutes(quiz.getTimeInMinutes());
             LocalDateTime currentTime = LocalDateTime.now();
-            if (currentTime.isAfter(endTime)) {
+            if (currentTime.isAfter(endTime) && !quiz.getTimeInMinutes().equals(0)) {
                 // User played longer than is the limit
-                var validated = answerValidationService.validateQuiz(loggedInUser, quiz, playingState.getAnswers());
+                var validated = new ValidatedQuizAnswer(loggedInUser, quiz, new ArrayList<Answer>(), false);
 
                 validatedQuizAnswerRepository.save(validated);
                 playingStateRepository.delete(playingState);
