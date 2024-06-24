@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import cz.jzitnik.quizapp.entities.ShareAnswer;
 import cz.jzitnik.quizapp.entities.ValidatedQuizAnswer;
 import cz.jzitnik.quizapp.payload.request.PasswordChangeRequest;
+import cz.jzitnik.quizapp.payload.request.UpdateProfileRequest;
 import cz.jzitnik.quizapp.payload.response.UserFinishedResponse;
 import cz.jzitnik.quizapp.repository.PlayingStateRepository;
 import cz.jzitnik.quizapp.repository.ShareAnswerRepository;
@@ -124,7 +125,7 @@ public class UserController {
 
     @PatchMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> changeUserDetails(@RequestBody User user) {
+    public ResponseEntity<String> changeUserDetails(@RequestBody UpdateProfileRequest user) {
         var loggedUser = userService.getCurrentUser();
         loggedUser.setDisplayName(user.getDisplayName());
         loggedUser.setBio(user.getBio());
