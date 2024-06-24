@@ -13,11 +13,11 @@ export default function Random() {
         const randomId = await getRandomQuiz();
         navigate("/quiz/" + randomId);
       } catch (e: any) {
-        if (e.status == 404) {
+        if (e.response.status == 404) {
           toast.error("Zatím nebyl vytvořen žádný kvíz!");
           return
         }
-        toast.error("Chyba: " + e.status)
+        toast.error("Chyba: " + e.response.statusText)
       }
     })();
   }, []);
