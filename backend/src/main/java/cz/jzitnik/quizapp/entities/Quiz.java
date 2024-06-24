@@ -6,17 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import cz.jzitnik.quizapp.payload.response.FinishedResponse;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "quizzes")
+@JsonIgnoreProperties(value = { "comments" }, allowGetters = true)
 public class Quiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,7 +59,7 @@ public class Quiz {
     private Set<ShareAnswer> shareAnswers = new HashSet<>();
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
+    @JsonManagedReference(value = "quiz-comments")
     private List<Comment> comments = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.REMOVE)
@@ -72,7 +69,7 @@ public class Quiz {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    @JsonBackReference // Prevents infinite recursion when serializing to JSON
+    @JsonBackReference(value = "user-quizzes")
     private User author;
 
     private int likes = 0;

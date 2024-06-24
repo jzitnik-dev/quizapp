@@ -14,13 +14,12 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference(value = "quiz-comments")
     private Quiz quiz;
 
     private String content;
 
     @ManyToOne
-    @JsonManagedReference
     private User author;
 
     @OneToOne(cascade = CascadeType.REMOVE)

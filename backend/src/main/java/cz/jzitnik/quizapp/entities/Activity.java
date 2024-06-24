@@ -19,7 +19,7 @@ public class Activity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonBackReference(value = "user-activity")
     private User user;
 
     public Activity() {

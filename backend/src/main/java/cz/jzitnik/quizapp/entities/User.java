@@ -46,11 +46,10 @@ public class User {
   private String bio;
 
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JsonManagedReference
+  @JsonManagedReference(value = "user-quizzes")
   private List<Quiz> quizzes = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonManagedReference
   @JsonIgnore
   private Set<ValidatedQuizAnswer> validatedQuizAnswers = new HashSet<>();
 
@@ -64,12 +63,9 @@ public class User {
   private Set<RefreshToken> refreshTokens = new HashSet<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-  @JsonManagedReference
+  @JsonManagedReference(value = "user-activity")
   private List<Activity> activity = new ArrayList<>();
 
-  @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-  @JsonBackReference
-  private List<Comment> comments = new ArrayList<>();
 
   public Set<ValidatedQuizAnswer> getValidatedQuizAnswers() {
     return validatedQuizAnswers;
