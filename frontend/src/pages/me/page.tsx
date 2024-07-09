@@ -221,11 +221,15 @@ export default function Me() {
                       <Text as="div" size="2" mb="1" weight="bold">
                         Profilový obrázek
                       </Text>
+                      <Text color="red" as="div" size="2" mb="1" weight="bold">
+                        Nahrávání vlastních profilovek je dočasně zakázáno.
+                      </Text>
                       <Button
                         color="gray"
                         highContrast
                         variant="soft"
                         onClick={() => input.current?.click()}
+                        disabled
                       >
                         <UploadIcon />
                         Nahrát obrázek
