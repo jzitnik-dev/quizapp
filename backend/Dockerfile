@@ -13,6 +13,8 @@ FROM openjdk:17-jdk-slim AS runtime
 WORKDIR /app
 # Copy the built JAR file from the previous stage to the container
 COPY --from=build /app/target/*.jar ./app.jar
+
+EXPOSE 8080
 # Set the command to run the application
 CMD ["java", "-jar", "app.jar"]
 
