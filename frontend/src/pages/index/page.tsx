@@ -9,10 +9,13 @@ import {
   Link,
   Badge,
   Strong,
+  Callout,
+  Box,
 } from "@radix-ui/themes";
 import { MouseEvent, useEffect, useRef } from "react";
 import "../../styles/index.css";
 import { Init, MouseMove } from "../../utils/gradient/MultiCardFlexGradient";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 export default function Index() {
   const cardsFlex = useRef<HTMLDivElement>(null);
@@ -22,6 +25,18 @@ export default function Index() {
   return (
     <Section>
       <Container>
+        <Box maxWidth="500px" className="mx-auto">
+          <Callout.Root>
+            <Callout.Icon>
+              <InfoCircledIcon />
+            </Callout.Icon>
+            <Callout.Text>
+              Tato aplikace nyní běží na velice pomalém serveru. Omlouvám se za
+              potíže.
+            </Callout.Text>
+          </Callout.Root>
+        </Box>
+
         <Section>
           <Flex align="center" direction="column">
             <Flex align="center" gap="2">
