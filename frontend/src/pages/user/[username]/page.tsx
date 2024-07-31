@@ -171,9 +171,6 @@ export default function UserPage() {
         </Container>
       </Section>
       <Section>
-        <Heading align="center" size="9">
-          Aktivita
-        </Heading>
         <Container p="8">
           <Flex justify="center">
             <Activity activity={data?.activity || []} user={data} />
