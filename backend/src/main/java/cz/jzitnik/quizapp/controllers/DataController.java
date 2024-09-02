@@ -26,7 +26,7 @@ public class DataController {
 
     @GetMapping("/globalMessages")
     public ResponseEntity<List<GlobalMessage>> getGlobalMessages() {
-        if (userRepository.findAll().isEmpty() || true) {
+        if (userRepository.findAll().isEmpty()) {
             var list = new ArrayList<GlobalMessage>();
             list.add(new GlobalMessage("**Upozornění**\n\n<br>Zatím nebyl vytvořen žádný účet!\n\nPrvní registrovaný účet bude zaregistrován jako administrátor!", EGlobalMessageType.DANGER));
             return ResponseEntity.ok(list);
