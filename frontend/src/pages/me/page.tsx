@@ -30,6 +30,7 @@ import { useUserProfile } from "../../components/header/UserProfileProvider";
 import { getFinished } from "../../api/getUser";
 import { useQuery } from "react-query";
 import Activity from "../../components/activity/Activity";
+import getUploadAllowed from "../../api/getUploadAllowed";
 
 export default function Me() {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ export default function Me() {
   const [fileUploaded, setFileUploaded] = useState(false);
   const { setUserProfile } = useUserProfile();
   const { data } = useQuery("me", me);
+  const { data: uploadAllowed } = useQuery("uploadAllowed", getUploadAllowed);
   const { data: finished, status } = useQuery(
     ["finished", data],
     async () => await getFinished(data?.username || ""),
@@ -81,6 +83,7 @@ export default function Me() {
       setUserProfile({
         username: data?.username || "",
         displayName: xdisplayName || "",
+        roles: data?.roles || [],
       });
     } catch (e: any) {
       toast.error(e.message);
@@ -221,15 +224,25 @@ export default function Me() {
                       <Text as="div" size="2" mb="1" weight="bold">
                         Profilový obrázek
                       </Text>
-                      <Text color="red" as="div" size="2" mb="1" weight="bold">
-                        Nahrávání vlastních profilovek je dočasně zakázáno.
-                      </Text>
+                      {uploadAllowed == false && (
+                        <Text
+                          color="red"
+                          as="div"
+                          size="2"
+                          mb="1"
+                          weight="bold"
+                        >
+                          Nahrávání vlastních profilovek je zakázáno.
+                          Kontaktujte administrátora pro povolení.
+                        </Text>
+                      )}
+
                       <Button
                         color="gray"
                         highContrast
                         variant="soft"
                         onClick={() => input.current?.click()}
-                        disabled
+                        disabled={!uploadAllowed}
                       >
                         <UploadIcon />
                         Nahrát obrázek
@@ -252,7 +265,7 @@ export default function Me() {
           </Flex>
         </Container>
       </Section>
-      <Activity activity={data?.activity || []} user={data}/>
+      <Activity activity={data?.activity || []} user={data} />
       <Section>
         <Heading align="center" size="9">
           Kvízy

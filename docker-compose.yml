@@ -24,6 +24,7 @@ services:
       DB_PASSWORD: quizapp
       DATASOURCE_URL: jdbc:mysql://database:3306/QuizAPP
       DISABLE_REGISTER: false
+      DISABLE_PROFILE_PICTURE_UPLOAD: false
     depends_on:
       - database
     networks:

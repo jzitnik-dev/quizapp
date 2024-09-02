@@ -35,11 +35,19 @@ public class DataController {
         return ResponseEntity.ok(new MessageResponse("Done!"));
     }
 
+    @Value("${jzitnik.app.disableProfilePictureUpload}")
+    private String disablePPUpload;
+
+    @GetMapping("/config/uploadAllowed")
+    public ResponseEntity<Boolean> getUploadAllowed() {
+        return ResponseEntity.ok(!disablePPUpload.equals("true"));
+    }
+
     @Value("${jzitnik.app.disableRegister}")
     private String disableRegister;
 
     @GetMapping("/config/registerAllowed")
-    public ResponseEntity<String> getRegisterAllowed() {
-        return ResponseEntity.ok(disableRegister.equals("true") ? "false" : "true");
+    public ResponseEntity<Boolean> getRegisterAllowed() {
+        return ResponseEntity.ok(!disableRegister.equals("true"));
     }
 }
