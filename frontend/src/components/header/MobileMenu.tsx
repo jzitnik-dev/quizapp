@@ -18,6 +18,7 @@ import {
   StarIcon,
 } from "@radix-ui/react-icons";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
+import Role from "../../types/Role";
 
 export default function MobileMenu({
   fetching,
@@ -26,6 +27,7 @@ export default function MobileMenu({
   setMobileMenuOpened,
   name,
   username,
+  roles,
   logout,
   registerAllowed,
 }: {
@@ -35,6 +37,7 @@ export default function MobileMenu({
   setMobileMenuOpened: (value: boolean) => any;
   name: string;
   username: string;
+  roles: Role[];
   logout: () => any;
   registerAllowed: boolean | undefined;
 }) {
@@ -127,6 +130,18 @@ export default function MobileMenu({
                       <GearIcon /> Změnit heslo
                     </DropdownMenu.Item>
                   </Link>
+
+                  {roles.some((e) => e.name == "ROLE_ADMIN") ? (
+                    <>
+                      <DropdownMenu.Separator />
+
+                      <Link to="/admin">
+                        <DropdownMenu.Item style={{ cursor: "pointer" }}>
+                          <GearIcon /> Admin Panel
+                        </DropdownMenu.Item>
+                      </Link>
+                    </>
+                  ) : null}
 
                   <DropdownMenu.Separator />
 

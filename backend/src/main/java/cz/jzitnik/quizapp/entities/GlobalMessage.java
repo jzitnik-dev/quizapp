@@ -14,6 +14,11 @@ public class GlobalMessage {
     @Column(length = 20)
     private EGlobalMessageType type;
 
+    public GlobalMessage(String markdownContent, EGlobalMessageType type) {
+        this.markdownContent = markdownContent;
+        this.type = type;
+    }
+
     public GlobalMessage() {}
 
     public Long getId() {

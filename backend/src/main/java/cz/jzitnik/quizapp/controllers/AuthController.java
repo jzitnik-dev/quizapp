@@ -126,6 +126,11 @@ public class AuthController {
     Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Interní chyba: Role nebyla nalezena!"));
     roles.add(userRole);
 
+    if (userRepository.findAll().isEmpty()) {
+      Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Interní chyba: Role nebyla nalezena!"));
+      roles.add(adminRole);
+    }
+
     user.setRoles(roles);
     var userDB = userRepository.save(user);
 

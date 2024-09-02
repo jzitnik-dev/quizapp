@@ -80,6 +80,7 @@ export default function Header() {
         name={name}
         username={username}
         logout={logout}
+        roles={userProfile?.roles || []}
         registerAllowed={registerAllowed}
       />
 
