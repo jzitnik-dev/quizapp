@@ -27,6 +27,7 @@ export default function MobileMenu({
   name,
   username,
   logout,
+  registerAllowed,
 }: {
   fetching: boolean;
   logedIn: boolean;
@@ -35,6 +36,7 @@ export default function MobileMenu({
   name: string;
   username: string;
   logout: () => any;
+  registerAllowed: boolean | undefined;
 }) {
   return (
     <Box
@@ -147,9 +149,12 @@ export default function MobileMenu({
             <Link onClick={() => setMobileMenuOpened(false)} to="/login">
               Přihlásit se
             </Link>
-            <Link onClick={() => setMobileMenuOpened(false)} to="/signup">
-              Registrovat se
-            </Link>
+
+            {registerAllowed == true ? (
+              <Link onClick={() => setMobileMenuOpened(false)} to="/signup">
+                Registrovat se
+              </Link>
+            ) : null}
           </>
         )}
       </Flex>
