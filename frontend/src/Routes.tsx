@@ -21,6 +21,7 @@ const NotFound = lazy(() => import("./pages/404/page"));
 const Random = lazy(() => import("./pages/quiz/random/page"));
 const Favourites = lazy(() => import("./pages/me/favourites/page"));
 const Shares = lazy(() => import("./pages/user/[username]/shares/page"));
+const AdminPanel = lazy(() => import("./pages/admin/page"));
 
 export default function RoutesComponent() {
   useGlobalNavigate();
@@ -168,6 +169,16 @@ export default function RoutesComponent() {
         element={
           <Page title="QuizAPP - Odpověď">
             <Share />
+          </Page>
+        }
+      ></Route>
+
+      {/* Admin panel */}
+      <Route
+        path="/admin"
+        element={
+          <Page title="QuizAPP - Admin panel">
+            <AdminPanel />
           </Page>
         }
       ></Route>

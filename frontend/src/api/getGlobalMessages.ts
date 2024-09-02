@@ -13,3 +13,13 @@ export default async function getGlobalMessages() {
 
   return data;
 }
+
+export async function getGlobalMessagesRaw() {
+  const response = await dataAxiosInstance.get("/globalMessages");
+
+  return response.data as GlobalMessage[];
+}
+
+export async function setGlobalMessage(data: GlobalMessage[]) {
+  await dataAxiosInstance.post("/globalMessages", data);
+}

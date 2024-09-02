@@ -2,6 +2,9 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+ARG BACKEND
+ENV VITE_BACKEND $BACKEND
+
 COPY package.json .
 
 RUN npm install

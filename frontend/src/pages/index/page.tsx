@@ -61,31 +61,6 @@ export default function Index() {
                   ></Callout.Text>
                 </Callout.Root>
               ))}
-              <Callout.Root color="red">
-                <Callout.Icon>
-                  <InfoCircledIcon />
-                </Callout.Icon>
-                <Callout.Text>
-                  <strong>QuizAPP bude ukončen!</strong>
-                  <br />
-                  <br />
-                  Už neplánuju dlouhodobě hostovat QuizAPP a proto jsem se
-                  rozhodl QuizAPP ukončit dne 6.9.2024.
-                  <br />
-                  <br />
-                  Ale QuizAPP kompletně nekončí, bude pokračovat jako jeden z
-                  mých úplně zbytečných open-source projektů.
-                </Callout.Text>
-              </Callout.Root>
-              <Callout.Root>
-                <Callout.Icon>
-                  <InfoCircledIcon />
-                </Callout.Icon>
-                <Callout.Text>
-                  Tato aplikace nyní běží na velice pomalém serveru. Omlouvám se
-                  za potíže.
-                </Callout.Text>
-              </Callout.Root>
             </Flex>
           )
         ) : (

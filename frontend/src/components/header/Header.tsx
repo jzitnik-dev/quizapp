@@ -194,6 +194,18 @@ export default function Header() {
                     </DropdownMenu.Item>
                   </Link>
 
+                  {userProfile?.roles.some((e) => e.name == "ROLE_ADMIN") ? (
+                    <>
+                      <DropdownMenu.Separator />
+
+                      <Link to="/admin">
+                        <DropdownMenu.Item style={{ cursor: "pointer" }}>
+                          <GearIcon /> Admin Panel
+                        </DropdownMenu.Item>
+                      </Link>
+                    </>
+                  ) : null}
+
                   <DropdownMenu.Separator />
 
                   <DropdownMenu.Item

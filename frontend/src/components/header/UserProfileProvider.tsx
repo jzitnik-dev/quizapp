@@ -2,7 +2,7 @@ import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import UserProfile from "./UserProfile.ts";
 import UserProfileContextType from "./UserProfileContextType.ts";
 import isLogedIn from "../../utils/logedin.ts";
-import {meHeader} from "../../api/me.ts";
+import me from "../../api/me.ts";
 
 const AuthContext = createContext<UserProfileContextType>({
   userProfile: null,
@@ -20,10 +20,11 @@ const UserProfileProvider = ({ children }: { children : ReactNode }) => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await meHeader();
+      const response = await me();
       setUserProfile({
         username: response.username,
-        displayName: response.displayName
+        displayName: response.displayName,
+        roles: response.roles
       });
       setLoading(false);
     } catch (error: any) {

@@ -4,6 +4,8 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        - BACKEND=http://localhost:8080 # This needs to be the user accesible backend url
     ports:
       - "3000:3000"
     depends_on:
@@ -15,7 +17,7 @@ services:
     build:
       context: ./backend
     ports:
-      - "8080:8080"
+      - "8080:8080" # This needs to be accesible to the user too
     environment:
       JWT_SECRET: ======================jzitnik==Spring===========================
       DB_USERNAME: root

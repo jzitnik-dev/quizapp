@@ -85,7 +85,7 @@ export default function Create() {
     if (questions.length < 5) {
       return toast.error("Musíte mít alespoň 5 otázek.");
     }
-    let finalMinutes = minutes || 0;
+    const finalMinutes = minutes || 0;
 
     if (!Number.isInteger(finalMinutes)) {
       return toast.error("Počet minut musí být celé číslo!");

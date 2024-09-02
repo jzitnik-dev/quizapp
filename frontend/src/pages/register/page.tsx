@@ -19,7 +19,7 @@ import { useQuery } from "react-query";
 import getRegisterAllowed from "../../api/getRegisterAllowed";
 
 export default function Register() {
-  const { data: registerAllowed, status: registerAllowedStatus } = useQuery(
+  const { data: registerAllowed } = useQuery(
     "registerAllowed",
     getRegisterAllowed,
   );

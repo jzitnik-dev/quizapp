@@ -10,12 +10,3 @@ export default async function me() {
   const response = await axiosInstance.get("/user/me");
   return response.data as User;
 }
-
-export async function meHeader() {
-  if (!isLogedIn()) {
-    throw new Error("Not logged in!");
-  }
-
-  const response = await axiosInstance.get("/user/me/header");
-  return response.data;
-}

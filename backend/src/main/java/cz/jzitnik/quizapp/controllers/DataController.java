@@ -1,10 +1,12 @@
 package cz.jzitnik.quizapp.controllers;
 
 import cz.jzitnik.quizapp.entities.GlobalMessage;
+import cz.jzitnik.quizapp.payload.response.MessageResponse;
 import cz.jzitnik.quizapp.repository.GlobalMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,18 @@ public class DataController {
     @GetMapping("/globalMessages")
     public ResponseEntity<List<GlobalMessage>> getGlobalMessages() {
         return ResponseEntity.ok(globalMessageRepository.findAll());
+    }
+
+    @PostMapping("/globalMessages")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
+    public ResponseEntity<MessageResponse> setGlobalMessages(@RequestBody List<GlobalMessage> globalMessagesRequest) {
+        globalMessageRepository.deleteAll();
+        globalMessageRepository.flush();
+
+        globalMessageRepository.saveAll(globalMessagesRequest);
+        globalMessageRepository.flush();
+
+        return ResponseEntity.ok(new MessageResponse("Done!"));
     }
 
     @Value("${jzitnik.app.disableRegister}")
