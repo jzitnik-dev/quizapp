@@ -21,6 +21,7 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: quizapp
       DATASOURCE_URL: jdbc:mysql://database:3306/QuizAPP
+      DISABLE_REGISTER: false
     depends_on:
       - database
     networks:
