@@ -1,10 +1,8 @@
 package cz.jzitnik.quizapp.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"date", "quiz_id"})})

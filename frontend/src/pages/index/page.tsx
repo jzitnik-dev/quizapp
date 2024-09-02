@@ -10,41 +10,89 @@ import {
   Badge,
   Strong,
   Callout,
+  Spinner,
 } from "@radix-ui/themes";
 import { MouseEvent, useEffect, useRef } from "react";
 import "../../styles/index.css";
 import { Init, MouseMove } from "../../utils/gradient/MultiCardFlexGradient";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { useQuery } from "react-query";
+import getGlobalMessages from "../../api/getGlobalMessages";
 
 export default function Index() {
   const cardsFlex = useRef<HTMLDivElement>(null);
+
+  const { data, status } = useQuery("globalMessages", getGlobalMessages);
 
   useEffect(() => Init(cardsFlex.current), [cardsFlex]);
 
   return (
     <Section>
       <Container>
-        <Flex maxWidth="500px" className="mx-auto" direction="column" gap="4">
-          <Callout.Root color="red">
-            <Callout.Icon>
-              <InfoCircledIcon />
-            </Callout.Icon>
-            <Callout.Text>
-              <strong>QuizAPP bude ukončen!</strong><br /><br />
-              Už neplánuju dlouhodobě hostovat QuizAPP a proto jsem se rozhodl QuizAPP ukončit dne 6.9.2024.<br /><br />
-              Ale QuizAPP kompletně nekončí, bude pokračovat jako jeden z mých úplně zbytečných open-source projektů.
-            </Callout.Text>
-          </Callout.Root>
-          <Callout.Root>
-            <Callout.Icon>
-              <InfoCircledIcon />
-            </Callout.Icon>
-            <Callout.Text>
-              Tato aplikace nyní běží na velice pomalém serveru. Omlouvám se za
-              potíže.
-            </Callout.Text>
-          </Callout.Root>
-        </Flex>
+        {status == "success" ? (
+          data &&
+          data.length !== 0 && (
+            <Flex
+              maxWidth="500px"
+              className="mx-auto"
+              direction="column"
+              gap="4"
+            >
+              {data.map((globalMessage, index) => (
+                <Callout.Root
+                  key={index}
+                  color={
+                    globalMessage.type == "INFO"
+                      ? undefined
+                      : globalMessage.type == "DANGER"
+                        ? "red"
+                        : globalMessage.type == "WARNING"
+                          ? "yellow"
+                          : undefined
+                  }
+                >
+                  <Callout.Icon>
+                    <InfoCircledIcon />
+                  </Callout.Icon>
+                  <Callout.Text
+                    dangerouslySetInnerHTML={{
+                      __html: globalMessage.markdownContent,
+                    }}
+                  ></Callout.Text>
+                </Callout.Root>
+              ))}
+              <Callout.Root color="red">
+                <Callout.Icon>
+                  <InfoCircledIcon />
+                </Callout.Icon>
+                <Callout.Text>
+                  <strong>QuizAPP bude ukončen!</strong>
+                  <br />
+                  <br />
+                  Už neplánuju dlouhodobě hostovat QuizAPP a proto jsem se
+                  rozhodl QuizAPP ukončit dne 6.9.2024.
+                  <br />
+                  <br />
+                  Ale QuizAPP kompletně nekončí, bude pokračovat jako jeden z
+                  mých úplně zbytečných open-source projektů.
+                </Callout.Text>
+              </Callout.Root>
+              <Callout.Root>
+                <Callout.Icon>
+                  <InfoCircledIcon />
+                </Callout.Icon>
+                <Callout.Text>
+                  Tato aplikace nyní běží na velice pomalém serveru. Omlouvám se
+                  za potíže.
+                </Callout.Text>
+              </Callout.Root>
+            </Flex>
+          )
+        ) : (
+          <Flex justify="center">
+            <Spinner size="3" />
+          </Flex>
+        )}
 
         <Section>
           <Flex align="center" direction="column">
