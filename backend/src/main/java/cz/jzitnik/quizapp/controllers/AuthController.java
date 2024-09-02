@@ -15,6 +15,9 @@ import cz.jzitnik.quizapp.services.ActivityService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -96,9 +99,17 @@ public class AuthController {
                     "Refresh token is not in database!"));
   }
 
+  @Value("${jzitnik.app.disableRegister}")
+  private String disableRegister;
 
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    if (disableRegister.equals("true")) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+          new MessageResponse("Chyba: Registrace je zakázaná administrátorem!")
+      );
+    }
+
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity
           .badRequest()

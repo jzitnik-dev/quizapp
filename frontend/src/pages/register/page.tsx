@@ -15,8 +15,14 @@ import { CheckIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { Link, useNavigate } from "react-router-dom";
 import isLogedIn from "../../utils/logedin";
 import "../../styles/register.css";
+import { useQuery } from "react-query";
+import getRegisterAllowed from "../../api/getRegisterAllowed";
 
 export default function Register() {
+  const { data: registerAllowed, status: registerAllowedStatus } = useQuery(
+    "registerAllowed",
+    getRegisterAllowed,
+  );
   const [done, setDone] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -79,6 +85,22 @@ export default function Register() {
             <Callout.Text>{errorMessage}</Callout.Text>
           </Callout.Root>
         ) : null}
+
+        {registerAllowed == false && (
+          <Callout.Root
+            color="red"
+            style={{
+              width: "100%",
+              maxWidth: "500px",
+            }}
+          >
+            <Callout.Icon>
+              <CrossCircledIcon />
+            </Callout.Icon>
+            <Callout.Text>Registrace byla zakázána! Kontaktujte administrátora.</Callout.Text>
+          </Callout.Root>
+        )}
+
         {!done ? (
           <Card
             style={{
@@ -104,6 +126,7 @@ export default function Register() {
                     size="3"
                     placeholder="Uživatelské jméno"
                     value={username}
+                    disabled={registerAllowed == false}
                     onChange={(e) => setUsername(e.target.value)}
                     required
                   ></TextField.Root>
@@ -112,6 +135,7 @@ export default function Register() {
                     size="3"
                     placeholder="Heslo"
                     value={password}
+                    disabled={registerAllowed == false}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   ></TextField.Root>
@@ -119,6 +143,7 @@ export default function Register() {
                     type="password"
                     size="3"
                     placeholder="Heslo znovu"
+                    disabled={registerAllowed == false}
                     value={passwordAgain}
                     onChange={(e) => setPasswordAgain(e.target.value)}
                     required
@@ -126,7 +151,7 @@ export default function Register() {
                 </Flex>
               </Flex>
               <Flex direction="column">
-                <Button size="3" disabled={loading}>
+                <Button size="3" disabled={loading || registerAllowed == false}>
                   {loading ? <Spinner /> : "Registrovat se"}
                 </Button>
               </Flex>

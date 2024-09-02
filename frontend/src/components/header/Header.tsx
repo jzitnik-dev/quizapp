@@ -9,6 +9,7 @@ import {
   Skeleton,
   IconButton,
   Box,
+  Spinner,
 } from "@radix-ui/themes";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -28,8 +29,14 @@ import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import MobileMenu from "./MobileMenu";
 import { useUserProfile } from "./UserProfileProvider";
 import { toast } from "react-toastify";
+import { useQuery } from "react-query";
+import getRegisterAllowed from "../../api/getRegisterAllowed";
 
 export default function Header() {
+  const { data: registerAllowed, status: registerAllowedStatus } = useQuery(
+    "registerAllowed",
+    getRegisterAllowed,
+  );
   const location = useLocation();
   const navigate = useNavigate();
   const logedIn = isLogedIn();
@@ -203,9 +210,15 @@ export default function Header() {
               <Link to="/login">
                 <Button>Přihlásit se</Button>
               </Link>
-              <Link to="/signup">
-                <Button color="gray">Registrovat se</Button>
-              </Link>
+              {registerAllowedStatus == "loading" ? (
+                <Button disabled color="gray">
+                  <Spinner />
+                </Button>
+              ) : registerAllowed == true ? (
+                <Link to="/signup">
+                  <Button color="gray">Registrovat se</Button>
+                </Link>
+              ) : null}
             </Flex>
           )}
         </Flex>
