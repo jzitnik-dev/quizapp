@@ -10,7 +10,6 @@ import {
   Badge,
   Strong,
   Callout,
-  Box,
 } from "@radix-ui/themes";
 import { MouseEvent, useEffect, useRef } from "react";
 import "../../styles/index.css";
@@ -25,7 +24,17 @@ export default function Index() {
   return (
     <Section>
       <Container>
-        <Box maxWidth="500px" className="mx-auto">
+        <Flex maxWidth="500px" className="mx-auto" direction="column" gap="4">
+          <Callout.Root color="red">
+            <Callout.Icon>
+              <InfoCircledIcon />
+            </Callout.Icon>
+            <Callout.Text>
+              <strong>QuizAPP bude ukončen!</strong><br /><br />
+              Už neplánuju dlouhodobě hostovat QuizAPP a proto jsem se rozhodl QuizAPP ukončit dne 6.9.2024.<br /><br />
+              Ale QuizAPP kompletně nekončí, bude pokračovat jako jeden z mých úplně zbytečných open-source projektů.
+            </Callout.Text>
+          </Callout.Root>
           <Callout.Root>
             <Callout.Icon>
               <InfoCircledIcon />
@@ -35,7 +44,7 @@ export default function Index() {
               potíže.
             </Callout.Text>
           </Callout.Root>
-        </Box>
+        </Flex>
 
         <Section>
           <Flex align="center" direction="column">
