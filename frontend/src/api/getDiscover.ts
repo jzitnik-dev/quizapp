@@ -5,24 +5,28 @@ import axiosInstance from "./axios/axiosInstance";
 
 interface Params {
   questionCount?: string;
+  sortType?: string;
 }
 
 export default async function getDiscover(
   page?: string,
   questionAmount?: number,
+  sortType?: string,
 ) {
-  const url = page === undefined ? "/discover/page/1" : "/discover/page/" + page;
-  const params : Params = {};
+  const url =
+    page === undefined ? "/discover/page/1" : "/discover/page/" + page;
+  const params: Params = {};
 
   if (questionAmount) {
-    params["questionCount"] = questionAmount.toString()
+    params["questionCount"] = questionAmount.toString();
   }
-  const response = await axiosInstance.get(
-    url,
-    {
-      params
-    }
-  );
+  if (sortType) {
+    params["sortType"] = sortType;
+  }
+
+  const response = await axiosInstance.get(url, {
+    params,
+  });
 
   return response.data as Page<Quiz>;
 }

@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 export default function Discover() {
   const [questionAmount, setQuestionAmount] = useState<number>();
   const questionAmountDialog = useRef<HTMLButtonElement>(null);
+  const [sortType, setSortType] = useState("");
   const { pagenumber } = useParams();
   const {
     data: quizzes,
@@ -30,7 +31,7 @@ export default function Discover() {
     refetch,
   } = useQuery(
     "discover",
-    async () => await getDiscover(pagenumber, questionAmount),
+    async () => await getDiscover(pagenumber, questionAmount, sortType),
     {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
@@ -41,7 +42,12 @@ export default function Discover() {
     toast.error("Chyba: " + (error as Response).statusText);
   }
 
-  function setSort() {}
+  function setSort(type: string) {
+    setSortType(type);
+    setTimeout(() => {
+      refetch();
+    }, 200);
+  }
 
   function setFilterQuestionAmount() {
     questionAmountDialog.current?.click();
@@ -119,8 +125,17 @@ export default function Discover() {
                     <DropdownMenu.Sub>
                       <DropdownMenu.SubTrigger>Řazení</DropdownMenu.SubTrigger>
                       <DropdownMenu.SubContent>
-                        <DropdownMenu.Item onClick={() => setSort()}>
+                        <DropdownMenu.Item onClick={() => setSort("")}>
                           Nejnovější
+                        </DropdownMenu.Item>
+                        <DropdownMenu.Item onClick={() => setSort("likes")}>
+                          Počet liků
+                        </DropdownMenu.Item>
+                        <DropdownMenu.Item onClick={() => setSort("title")}>
+                          Podle názvu
+                        </DropdownMenu.Item>
+                        <DropdownMenu.Item onClick={() => setSort("time")}>
+                          Podle času na kvíz
                         </DropdownMenu.Item>
                       </DropdownMenu.SubContent>
                     </DropdownMenu.Sub>

@@ -38,9 +38,13 @@ public class DiscoverController {
     }
 
     @GetMapping("/page/{pageNumber}")
-    public ResponseEntity<Page<Quiz>> getAllQuizzes(@PathVariable int pageNumber, @RequestParam(value = "questionCount", required = false) Integer questionCount) {
+    public ResponseEntity<Page<Quiz>> getAllQuizzes(
+        @PathVariable int pageNumber,
+        @RequestParam(value = "questionCount", required = false) Integer questionCount,
+        @RequestParam(value = "sortType", required = false) String sortType
+        ) {
         try {
-            return ResponseEntity.ok(quizService.getAllQuizzes(pageNumber - 1, 15, questionCount));
+            return ResponseEntity.ok(quizService.getAllQuizzes(pageNumber - 1, 15, questionCount, sortType));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
@@ -48,7 +52,7 @@ public class DiscoverController {
 
     @GetMapping("/search")
     public ResponseEntity<Page<Object>> getSearch(@RequestParam(value="query") String query, @RequestParam(value="page", defaultValue = "0") int page) {
-        if (query.length() == 0) {
+        if (query.isEmpty()) {
             return ResponseEntity.ok(Page.empty());
         }
         return ResponseEntity.ok(searchService.searchUsersAndQuizzes(query, page, 15));
