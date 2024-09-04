@@ -24,7 +24,7 @@ Full-Stack Webová aplikace pro vytváření a sdílení kvízů. Backend napsá
 ### Spustit
 
 ```bash
-git clone https://github.com/JZITNIK-github/quizapp
+git clone https://github.com/jzitnik-dev/quizapp
 cd quizapp
 docker-compose up -d
 ```
