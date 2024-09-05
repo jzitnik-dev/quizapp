@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.jzitnik.quizapp.utils.json.LongListJsonConverter;
@@ -66,6 +65,9 @@ public class User {
   @JsonManagedReference(value = "user-activity")
   private List<Activity> activity = new ArrayList<>();
 
+  @ManyToMany(mappedBy = "likedByUsers")
+  @JsonIgnore
+  private Set<Comment> likedComments = new HashSet<>();
 
   public Set<ValidatedQuizAnswer> getValidatedQuizAnswers() {
     return validatedQuizAnswers;
@@ -170,5 +172,13 @@ public class User {
 
   public void setRefreshTokens(Set<RefreshToken> refreshTokens) {
     this.refreshTokens = refreshTokens;
+  }
+
+  public Set<Comment> getLikedComments() {
+    return likedComments;
+  }
+
+  public void setLikedComments(Set<Comment> likedComments) {
+    this.likedComments = likedComments;
   }
 }

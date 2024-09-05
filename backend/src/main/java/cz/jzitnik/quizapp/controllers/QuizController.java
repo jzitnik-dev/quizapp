@@ -107,51 +107,6 @@ public class QuizController {
         return ResponseEntity.ok(quiz.get());
     }
 
-    @PostMapping("/comment")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity comment(@RequestBody CommentRequest commentRequest) {
-        var loggedUser = userService.getCurrentUser();
-        var quizOptional = quizRepository.findById(commentRequest.getQuizId());
-        if (quizOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        if (quizOptional.get().getAuthor().getUsername().equals(loggedUser.getUsername())) {
-            return ResponseEntity.badRequest().build();
-        }
-        var comment = commentRepository.findByAuthorAndQuiz(loggedUser, quizOptional.get());
-
-        if (comment.isPresent()) {
-            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
-        }
-
-        var activity = activityService.submitActivity(EActivity.COMMENT_CREATE, loggedUser);
-
-        var newComment = new Comment(quizOptional.get(), loggedUser, commentRequest.getContent(), activity);
-        commentRepository.save(newComment);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/comment")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity delete(@RequestParam("quizId") Long quizId) {
-        var loggedUser = userService.getCurrentUser();
-        var quizOptional = quizRepository.findById(quizId);
-        if (quizOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        var commentOptional = commentRepository.findByAuthorAndQuiz(loggedUser, quizOptional.get());
-
-        if (commentOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        commentRepository.delete(commentOptional.get());
-
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/author/{id}")
     public ResponseEntity<User> getAuthor(@PathVariable Long id) {
         var quizOptional = quizRepository.findById(id);

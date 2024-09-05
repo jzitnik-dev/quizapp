@@ -18,7 +18,7 @@ import {
   Avatar,
   Strong,
 } from "@radix-ui/themes";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Quiz from "../../../types/Quiz";
 import getQuiz, { getOwned } from "../../../api/getQuiz";
 import { useNavigate, useParams } from "react-router-dom";
@@ -73,6 +73,10 @@ export default function QuizComponent() {
   const [shareUrl, setShareUrl] = useState<string>();
   const { userProfile } = useUserProfile();
   const [playingQuiz, setPlayingQuiz] = useState<Quiz | undefined>();
+
+  const comments = useMemo(() => {
+    return [...data?.comments || []].sort((a, b) => b.likes - a.likes);
+  }, [data?.comments]);
 
   useEffect(() => {
     if (!isLogedIn()) {
@@ -472,7 +476,7 @@ export default function QuizComponent() {
                 </Text>
               ) : (
                 <Flex direction="column" gap="2" mt="5" align="center">
-                  {data?.comments.map((e, index) => (
+                  {comments.map((e, index) => (
                     <Comment
                       key={index}
                       comment={e}

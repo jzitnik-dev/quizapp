@@ -1,7 +1,9 @@
-import User from "./User";
+import UserDTO from "./User";
 
 export default interface Comment {
+  id: number;
   content: string;
-  author: User;
+  author: UserDTO;
   date: Date;
+  likes: number;
 }

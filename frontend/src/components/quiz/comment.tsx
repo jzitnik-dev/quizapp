@@ -12,7 +12,9 @@ import CommentType from "../../types/Comment";
 import { Link } from "react-router-dom";
 import parseUserPath from "../../utils/parseUserPath";
 import { useUserProfile } from "../header/UserProfileProvider";
-import { TrashIcon } from "@radix-ui/react-icons";
+import { StarFilledIcon, StarIcon, TrashIcon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
+import { like, liked } from "../../api/comment";
 
 export default function Comment({
   comment,
@@ -25,6 +27,28 @@ export default function Comment({
   const own =
     userProfile &&
     userProfile.username.trim() == comment.author.username.trim();
+  const [isLiked, setIsLiked] = useState(false);
+  const [likes, setLikes] = useState(comment.likes);
+
+  useEffect(() => {
+    (async () => {
+      const isLikedResponse = await liked(comment.id.toString());
+
+      setIsLiked(isLikedResponse);
+    })();
+  }, []);
+
+  async function handleLike() {
+    const res = await like(comment.id.toString());
+
+    setIsLiked(res);
+
+    if (res) {
+      setLikes(n => n + 1);
+    } else {
+      setLikes(n => n - 1);
+    }
+  }
 
   return (
     <Card style={{ maxWidth: "500px", width: "100%" }}>
@@ -46,6 +70,12 @@ export default function Comment({
                   @{comment.author?.username}
                 </Text>
               </Box>
+              <Box>
+                <Flex align="center" gap="1">
+                  <StarIcon />
+                  <Text>{likes}</Text>
+                </Flex>
+              </Box>
             </Flex>
           </Link>
           <Text mt="4" as="p">
@@ -56,7 +86,11 @@ export default function Comment({
           <IconButton color="red" onClick={handleRemove}>
             <TrashIcon />
           </IconButton>
-        ) : null}
+        ) : (
+          <IconButton color="yellow" onClick={handleLike}>
+            {isLiked ? <StarFilledIcon /> : <StarIcon />}
+          </IconButton>
+        )}
       </Flex>
     </Card>
   );

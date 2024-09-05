@@ -2,10 +2,11 @@ package cz.jzitnik.quizapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Comment {
@@ -26,6 +27,15 @@ public class Comment {
     @JoinColumn(name = "activity_id")
     @JsonIgnore
     private Activity linkedActivity;
+
+    @ManyToMany
+    @JoinTable(
+            name = "comment_likes",
+            joinColumns = @JoinColumn(name = "comment_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnore
+    private Set<User> likedByUsers = new HashSet<>();
 
     private LocalDate date;
 
@@ -65,8 +75,8 @@ public class Comment {
         this.content = content;
     }
 
-    public User getAuthor() {
-        return author;
+    public UserDTO getAuthor() {
+        return new UserDTO(this.author);
     }
 
     public void setAuthor(User author) {
@@ -87,5 +97,17 @@ public class Comment {
 
     public void setLinkedActivity(Activity linkedActivity) {
         this.linkedActivity = linkedActivity;
+    }
+
+    public Set<User> getLikedByUsers() {
+        return likedByUsers;
+    }
+
+    public int getLikes() {
+        return likedByUsers.size();
+    }
+
+    public void setLikedByUsers(Set<User> likedByUsers) {
+        this.likedByUsers = likedByUsers;
     }
 }

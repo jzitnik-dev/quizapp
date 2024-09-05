@@ -195,7 +195,7 @@ export default function Header() {
                     </DropdownMenu.Item>
                   </Link>
 
-                  {userProfile?.roles.some((e) => e.name == "ROLE_ADMIN") ? (
+                  {userProfile?.roles?.some((e) => e.name == "ROLE_ADMIN") ? (
                     <>
                       <DropdownMenu.Separator />
 

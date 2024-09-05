@@ -90,7 +90,7 @@ export default function Index() {
           </Heading>
           <Flex
             gap="3"
-            mt="2"
+            mt="4"
             className="flex-col md:flex-row"
             onMouseMove={(e: MouseEvent) => MouseMove(e, cardsFlex.current)}
             ref={cardsFlex}
@@ -167,6 +167,17 @@ export default function Index() {
               následné uložení odpovědi do databáze.
             </Text>
           </Text>
+        </Section>
+        <Section>
+          <Heading size="7" align="center">
+            QuizAPP je opensource!
+            <br />
+            Zdrojový kód najdete na{" "}
+            <Link target="_blank" href="https://github.com/jzitnik-dev/quizapp">
+              GitHubu
+            </Link>
+            .
+          </Heading>
         </Section>
       </Container>
     </Section>
