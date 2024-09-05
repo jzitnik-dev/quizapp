@@ -15,7 +15,8 @@ export default function Footer() {
   const pages = [
     ["Domov", "/"],
     ["Procházet kvízy", "/discover"],
-    ["Vyhledávání", "/search"]
+    ["Vyhledávání", "/search"],
+    ["Zdrojový kód", "https://github.com/jzitnik-dev/quizapp"],
   ];
 
   return (
@@ -44,19 +45,30 @@ export default function Footer() {
           </Box>
           <Flex align="end" direction="column">
             <Heading>Stránky</Heading>
-            {pages.map((page, index) => (
-              <Link
-                href={page[1]}
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate(page[1]);
-                }}
-                style={{textAlign: "end"}}
-                key={index}
-              >
-                {page[0]}
-              </Link>
-            ))}
+            {pages.map((page, index) =>
+              page[1].startsWith("https://") ? (
+                <Link
+                  href={page[1]}
+                  target="_blank"
+                  style={{ textAlign: "end" }}
+                  key={index}
+                >
+                  {page[0]}
+                </Link>
+              ) : (
+                <Link
+                  href={page[1]}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate(page[1]);
+                  }}
+                  style={{ textAlign: "end" }}
+                  key={index}
+                >
+                  {page[0]}
+                </Link>
+              ),
+            )}
           </Flex>
         </Flex>
       </Container>

@@ -114,6 +114,7 @@ export default function Header() {
               onClick={(e) => {
                 // If you reading this, sadly this is the only way to use Radix.ui TabNav.Link element with react-router-dom.
                 // If i wrapped this with Link component from react-router-dom, it will cause hydration error. Yeah, react is shit.
+                // Edit: No it is probably not the only way but I'm just too lazy to RTFM.
                 e.preventDefault();
                 navigate("/");
               }}
