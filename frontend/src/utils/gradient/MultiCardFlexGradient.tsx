@@ -12,7 +12,7 @@ export function MouseMove(e: MouseEvent, cardsFlex: HTMLDivElement | null) {
   const widthCard = parseInt(cardStyle.width, 10);
 
   for (let i = 0; i < cardsFlex.children.length; i++) {
-    const el = cardsFlex.children[i] as HTMLDivElement;
+    const el = cardsFlex.children[i] as HTMLElement;
     const final = x - widthpx / 2 - widthCard * (i - 1);
     el.style.backgroundPositionX = `${final}px`;
   }

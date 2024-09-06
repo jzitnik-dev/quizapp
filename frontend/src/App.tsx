@@ -18,6 +18,7 @@ import Footer from "./components/footer/Footer";
 import { UserProfileProvider } from "./components/header/UserProfileProvider";
 import RoutesComponent from "./Routes";
 import ScrollToTop from "./utils/ScrollToTop";
+import LocalizationProvider from "./localization/Localization";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -30,23 +31,25 @@ export default function App() {
             <ScrollToTop />
             <UserProfileProvider>
               <QueryClientProvider client={queryClient}>
-                <Header />
-                <ToastContainer
-                  position="top-left"
-                  autoClose={5000}
-                  hideProgressBar={false}
-                  newestOnTop
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                  theme="dark"
-                />
-                <Box style={{ paddingTop: "55px" }}>
-                  <RoutesComponent />
-                </Box>
-                <Footer />
+                <LocalizationProvider>
+                  <Header />
+                  <ToastContainer
+                    position="top-left"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                  />
+                  <Box style={{ paddingTop: "55px" }}>
+                    <RoutesComponent />
+                  </Box>
+                  <Footer />
+                </LocalizationProvider>
               </QueryClientProvider>
             </UserProfileProvider>
           </BrowserRouter>

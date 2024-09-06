@@ -18,6 +18,7 @@ import { Init, MouseMove } from "../../utils/gradient/MultiCardFlexGradient";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { useQuery } from "react-query";
 import getGlobalMessages from "../../api/getGlobalMessages";
+import { LocalizationText } from "../../localization/Localization";
 
 export default function Index() {
   const cardsFlex = useRef<HTMLDivElement>(null);
@@ -80,13 +81,13 @@ export default function Index() {
 
             <Separator size="3" />
             <Text align="center" as="p" size="5">
-              Vytvářejte a sdílejte kvízy s ostatními.
+              <LocalizationText>create_and_share</LocalizationText>
             </Text>
           </Flex>
         </Section>
         <Section>
           <Heading size="8" align="center">
-            Proč zrovna QuizAPP?
+            <LocalizationText>why_quizapp</LocalizationText>
           </Heading>
           <Flex
             gap="3"
