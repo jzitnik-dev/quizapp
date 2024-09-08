@@ -8,15 +8,16 @@ import {
   Box,
 } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
+import { LocalizationText } from "../../localization/Localization";
 
 export default function Footer() {
   const navigate = useNavigate();
 
   const pages = [
-    ["Domov", "/"],
-    ["Procházet kvízy", "/discover"],
-    ["Vyhledávání", "/search"],
-    ["Zdrojový kód", "https://github.com/jzitnik-dev/quizapp"],
+    [<LocalizationText>home</LocalizationText>, "/"],
+    [<LocalizationText>discover_quizzes</LocalizationText>, "/discover"],
+    [<LocalizationText>search</LocalizationText>, "/search"],
+    [<LocalizationText>source_code</LocalizationText>, "https://github.com/jzitnik-dev/quizapp"],
   ];
 
   return (
@@ -33,18 +34,20 @@ export default function Footer() {
               <Heading size="8">QuizAPP</Heading>
             </Flex>
             <Text mt="2" as="p" color="gray">
-              Vytvářejte a sdílejte kvízy s ostatními.
+              <LocalizationText>create_and_share</LocalizationText>
             </Text>
             <Text mt="2" as="p">
               © Copyright{" "}
               <Link href="https://jzitnik.dev" target="_blank">
                 Jakub Žitník
               </Link>
-              . Všechna práva vyhrazena.
+              . <LocalizationText>all_right_reserved</LocalizationText>
             </Text>
           </Box>
           <Flex align="end" direction="column">
-            <Heading>Stránky</Heading>
+            <Heading>
+              <LocalizationText>pages</LocalizationText>
+            </Heading>
             {pages.map((page, index) =>
               page[1].startsWith("https://") ? (
                 <Link

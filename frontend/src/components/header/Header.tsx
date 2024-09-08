@@ -10,20 +10,18 @@ import {
   IconButton,
   Box,
   Spinner,
+  Dialog,
+  Select,
 } from "@radix-ui/themes";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import isLogedIn from "../../utils/logedin";
 import {
   CaretDownIcon,
-  ExitIcon,
-  GearIcon,
   HamburgerMenuIcon,
   MagnifyingGlassIcon,
-  PersonIcon,
   PlusIcon,
   QuestionMarkIcon,
-  StarIcon,
 } from "@radix-ui/react-icons";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import MobileMenu from "./MobileMenu";
@@ -31,6 +29,12 @@ import { useUserProfile } from "./UserProfileProvider";
 import { toast } from "react-toastify";
 import { useQuery } from "react-query";
 import getRegisterAllowed from "../../api/getRegisterAllowed";
+import {
+  LocalizationText,
+  getCurrentLang,
+  useChangeLang,
+} from "../../localization/Localization";
+import DropdownMenuContent from "./DropdownMenuContent";
 
 export default function Header() {
   const { data: registerAllowed, status: registerAllowedStatus } = useQuery(
@@ -39,6 +43,7 @@ export default function Header() {
   );
   const location = useLocation();
   const navigate = useNavigate();
+  const changeLang = useChangeLang();
   const logedIn = isLogedIn();
   const {
     userProfile,
@@ -47,6 +52,9 @@ export default function Header() {
     setUserProfile,
   } = useUserProfile();
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false);
+  const [languageDialogOpened, setLanguageDialogOpened] = useState(false);
+  const [languageDialogSelect, setLanguageDialogSelect] =
+    useState(getCurrentLang());
 
   const name = userProfile?.displayName || "";
   const username = userProfile?.username || "";
@@ -63,6 +71,46 @@ export default function Header() {
 
   return (
     <Box>
+      <Dialog.Root
+        open={languageDialogOpened}
+        onOpenChange={setLanguageDialogOpened}
+      >
+        <Dialog.Content maxWidth="450px">
+          <Dialog.Title>Change language</Dialog.Title>
+          <Dialog.Description size="2" mb="4">
+            <LocalizationText>change_language_sub</LocalizationText>
+          </Dialog.Description>
+
+          <Select.Root
+            value={languageDialogSelect}
+            onValueChange={setLanguageDialogSelect}
+          >
+            <Select.Trigger />
+            <Select.Content>
+              <Select.Item value="en">English</Select.Item>
+              <Select.Item value="cs">Čeština</Select.Item>
+            </Select.Content>
+          </Select.Root>
+
+          <Flex gap="3" mt="4" justify="end">
+            <Dialog.Close>
+              <Button variant="soft" color="gray">
+                <LocalizationText>cancel</LocalizationText>
+              </Button>
+            </Dialog.Close>
+            <Dialog.Close>
+              <Button
+                onClick={() => {
+                  changeLang(languageDialogSelect);
+                }}
+              >
+                <LocalizationText>save</LocalizationText>
+              </Button>
+            </Dialog.Close>
+          </Flex>
+        </Dialog.Content>
+      </Dialog.Root>
+
       <Box
         position="fixed"
         className={
@@ -82,6 +130,7 @@ export default function Header() {
         logout={logout}
         roles={userProfile?.roles || []}
         registerAllowed={registerAllowed}
+        setLanguageDialog={setLanguageDialogOpened}
       />
 
       <Flex
@@ -120,7 +169,7 @@ export default function Header() {
               }}
               active={location.pathname == "/"}
             >
-              Domov
+              <LocalizationText>home</LocalizationText>
             </TabNav.Link>
             <TabNav.Link
               href="/discover"
@@ -130,7 +179,7 @@ export default function Header() {
               }}
               active={location.pathname == "/discover"}
             >
-              Procházet kvízy
+              <LocalizationText>discover_quizzes</LocalizationText>
             </TabNav.Link>
           </TabNav.Root>
           <Link to="/search">
@@ -143,13 +192,13 @@ export default function Header() {
               <Link to="/quiz/random">
                 <Button>
                   <QuestionMarkIcon />
-                  Náhodný kvíz
+                  <LocalizationText>random_quiz</LocalizationText>
                 </Button>
               </Link>
               <Link to="/create">
                 <Button>
                   <PlusIcon />
-                  Vytvořit kvíz
+                  <LocalizationText>create_quiz</LocalizationText>
                 </Button>
               </Link>
             </>
@@ -180,43 +229,12 @@ export default function Header() {
                   </Flex>
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content>
-                  <Link to="/me">
-                    <DropdownMenu.Item style={{ cursor: "pointer" }}>
-                      <PersonIcon /> Profil
-                    </DropdownMenu.Item>
-                  </Link>
-                  <Link to="/me/favourites">
-                    <DropdownMenu.Item style={{ cursor: "pointer" }}>
-                      <StarIcon /> Oblíbené
-                    </DropdownMenu.Item>
-                  </Link>
-                  <Link to="/me/changePassword">
-                    <DropdownMenu.Item style={{ cursor: "pointer" }}>
-                      <GearIcon /> Změnit heslo
-                    </DropdownMenu.Item>
-                  </Link>
-
-                  {userProfile?.roles?.some((e) => e.name == "ROLE_ADMIN") ? (
-                    <>
-                      <DropdownMenu.Separator />
-
-                      <Link to="/admin">
-                        <DropdownMenu.Item style={{ cursor: "pointer" }}>
-                          <GearIcon /> Admin Panel
-                        </DropdownMenu.Item>
-                      </Link>
-                    </>
-                  ) : null}
-
-                  <DropdownMenu.Separator />
-
-                  <DropdownMenu.Item
-                    style={{ cursor: "pointer" }}
-                    color="red"
-                    onClick={logout}
-                  >
-                    <ExitIcon /> Odhlásit se
-                  </DropdownMenu.Item>
+                  <DropdownMenuContent
+                    setMobileMenuOpened={() => {}}
+                    logout={logout}
+                    roles={userProfile?.roles || []}
+                    setLanguageDialog={setLanguageDialogOpened}
+                  />
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
             )

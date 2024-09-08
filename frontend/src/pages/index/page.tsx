@@ -8,7 +8,6 @@ import {
   Card,
   Link,
   Badge,
-  Strong,
   Callout,
   Spinner,
 } from "@radix-ui/themes";
@@ -97,85 +96,101 @@ export default function Index() {
             ref={cardsFlex}
           >
             <Card className="basis-full indexgradient">
-              <Heading>Jednoduché vytváření</Heading>
+              <Heading>
+                <LocalizationText>easy_creation</LocalizationText>
+              </Heading>
               <Text mt="1" as="p">
-                Jednoduché vytváření a publikování kvízu. Vytvoření kvízu Vám
-                zabere jen pár minut.
+                <LocalizationText>easy_creation_sub</LocalizationText>
               </Text>
             </Card>
             <Card className="basis-full indexgradient">
-              <Heading>Ukládání odpovědí</Heading>
+              <Heading>
+                <LocalizationText>answer_saving</LocalizationText>
+              </Heading>
               <Text mt="1" as="p">
-                Pokud si zahrajete kvíz, QuizAPP uloží vaše odpovědi, proto
-                nikdy nepříjdete o Vaše odpovědi.
+                <LocalizationText>answer_saving_sub</LocalizationText>
               </Text>
             </Card>
             <Card className="basis-full indexgradient">
-              <Heading>Jednoduché vyhodnocení kvízu</Heading>
+              <Heading>
+                <LocalizationText>easy_validation</LocalizationText>
+              </Heading>
               <Text mt="1" as="p">
-                QuizAPP vyhodnotí Vaše odpovědi a dá Vám detailní analýzu vašich
-                odpovědí.
+                <LocalizationText>easy_validation_sub</LocalizationText>
               </Text>
             </Card>
           </Flex>
         </Section>
         <Section>
           <Heading size="8" align="center">
-            FAQ
+            <LocalizationText>faq</LocalizationText>
           </Heading>
           <Heading size="7" mt="5">
-            Jak si vytvořit svůj vlastní kvíz?
+            <LocalizationText>how_to_create_quiz</LocalizationText>
           </Heading>
-          <Heading mt="2">1. Založte si účet na QuizAPP</Heading>
+          <Heading mt="2">
+            <LocalizationText>step_1_create_quiz</LocalizationText>
+          </Heading>
           <Text>
-            Vytvořte si účet na QuizAPP pomoci registračního formuláře.
+            <LocalizationText>step_1_create_quiz_sub</LocalizationText>
           </Text>{" "}
           <Link href="/signup" target="_blank">
-            Otevřít registraci
+            <LocalizationText>open_register</LocalizationText>
           </Link>
-          <Heading mt="2">2. Vytvořit si kvíz</Heading>
+          <Heading mt="2">
+            <LocalizationText>step_2_create_quiz</LocalizationText>
+          </Heading>
           <Text>
-            Pomocí tlačítka vytvořit kvíz si vytvořte kvíz. Vymyslete si jméno a
-            popis kvízu. Následně vložíte otázky.
-            <br />
-            Na výběr máte následující typy otázek:
+            <LocalizationText>step_2_create_quiz_sub</LocalizationText>
             <Flex gap="1" wrap="wrap">
-              <Badge color="gray">Výchozí</Badge>
-              <Badge color="gray">Pravda / Nepravda</Badge>
-              <Badge color="gray">Otázka s jednou odpovědí</Badge>
-              <Badge color="gray">Otázka s několika odpověďmi</Badge>
+              <Badge color="gray">
+                <LocalizationText>question_type_default</LocalizationText>
+              </Badge>
+              <Badge color="gray">
+                <LocalizationText>question_type_truefalse</LocalizationText>
+              </Badge>
+              <Badge color="gray">
+                <LocalizationText>
+                  question_type_one_answer_select
+                </LocalizationText>
+              </Badge>
+              <Badge color="gray">
+                <LocalizationText>
+                  question_type_multiple_answers_select
+                </LocalizationText>
+              </Badge>
             </Flex>
-            <Heading mt="2">3. Hotovo</Heading>
+            <Heading mt="2">
+              <LocalizationText>step_3_done</LocalizationText>
+            </Heading>
             <Text>
-              Nyní jste si vytvořili kvíz na QuizAPP. Nyní si kdokoliv může
-              zahrát Váš kvíz.
+              <LocalizationText>step_3_done_sub</LocalizationText>
             </Text>
             <Separator size="4" mt="3" />
             <Heading size="7" mt="3">
-              Ukládá QuizAPP soukromé informace?
+              <LocalizationText>does_quizapp_save</LocalizationText>
             </Heading>
             <Text>
-              <Strong>Ne</Strong>, QuizAPP neukládá žádné soukromé informace a
-              sledovací data. QuizAPP ukládá pouze list uživatelů, vytvořené
-              kvízy a odpovědi uživatelů.
+              <LocalizationText>does_quizapp_save_sub</LocalizationText>
             </Text>
             <Separator size="4" mt="3" />
             <Heading size="7" mt="3">
-              Můžu si zahrát kvíz aniž bych byl přihlášen?
+              <LocalizationText>
+                can_i_play_quiz_no_registration
+              </LocalizationText>
             </Heading>
             <Text>
-              Bohužel ne, QuizAPP potřebuje aby byl uživatel přihlášen pro
-              následné uložení odpovědi do databáze.
+              <LocalizationText>
+                can_i_play_quiz_no_registration_sub
+              </LocalizationText>
             </Text>
           </Text>
         </Section>
         <Section>
           <Heading size="7" align="center">
-            QuizAPP je opensource!
-            <br />
-            Zdrojový kód najdete na{" "}
+            <LocalizationText>quizapp_is_opensource</LocalizationText>
             <Link target="_blank" href="https://github.com/jzitnik-dev/quizapp">
-              GitHubu
+              <LocalizationText>quizapp_is_opensource_github</LocalizationText>
             </Link>
             .
           </Heading>

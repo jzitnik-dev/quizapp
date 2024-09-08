@@ -1,4 +1,5 @@
-import { Skeleton } from "@radix-ui/themes";
+import { Skeleton, Strong } from "@radix-ui/themes";
+import React from "react";
 import {
   ReactNode,
   createContext,
@@ -60,19 +61,79 @@ export default function LocalizationProvider({
   );
 }
 
+export function useChangeLang() {
+  const { setLocales } = useLocales();
+
+  return async (lang: string) => {
+    const res = await fetch(`/localization/sources/${lang}.json`);
+    setLocales(await res.json());
+    localStorage.setItem("lang", lang);
+  };
+}
+
+export function getCurrentLang() {
+  const userLang =
+    localStorage.getItem("lang") || navigator.language.split("-")[0];
+  return supported.includes(userLang) ? userLang : defaultLang;
+}
+
 const useLocales = () => useContext(LocalesContext);
 
-export function GetString(key: string) {
+function formatStr(str: string, props: string[]) {
+  // @ts-expect-error For some reason str.replace in typescript does not accept function, but this is valid JS.
+  return str.replace(/{}/g, function () {
+    return props.shift();
+  });
+}
+
+export function GetString(key: string, props?: string[]) {
   const { locales, loading } = useLocales();
 
   if (loading) {
     return key;
   }
 
-  return locales[key] || key;
+  return formatStr(locales[key], props || []) || key;
 }
 
-export function LocalizationText({ children }: { children: string }) {
+function formatStrReact(str: string) {
+  const regex = /\*\*(.*?)\*\*/g;
+
+  return str.split("\n").map((line: string, index: number) => {
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(line)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(line.substring(lastIndex, match.index));
+      }
+
+      parts.push(<Strong key={parts.length}>{match[1]}</Strong>);
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < line.length) {
+      parts.push(line.substring(lastIndex));
+    }
+
+    return (
+      <React.Fragment key={index}>
+        {parts}
+        {index !== str.split("\n").length - 1 && <br />}
+      </React.Fragment>
+    );
+  });
+}
+
+export function LocalizationText({
+  children,
+  props = [],
+}: {
+  children: string;
+  props?: string[];
+}) {
   const { locales, loading } = useLocales();
   const key = children.trim();
 
@@ -80,5 +141,9 @@ export function LocalizationText({ children }: { children: string }) {
     return <Skeleton />;
   }
 
-  return locales[key] || key;
+  if (!locales[key]) {
+    return key;
+  }
+
+  return formatStrReact(formatStr(locales[key], props));
 }

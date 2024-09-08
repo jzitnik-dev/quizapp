@@ -12,13 +12,11 @@ import {
   PlusIcon,
   CaretDownIcon,
   QuestionMarkIcon,
-  PersonIcon,
-  GearIcon,
-  ExitIcon,
-  StarIcon,
 } from "@radix-ui/react-icons";
 import getProfilePictureUrl from "../../api/getProfilePictureUrl";
 import Role from "../../types/Role";
+import { LocalizationText } from "../../localization/Localization";
+import DropdownMenuContent from "./DropdownMenuContent";
 
 export default function MobileMenu({
   fetching,
@@ -30,11 +28,13 @@ export default function MobileMenu({
   roles,
   logout,
   registerAllowed,
+  setLanguageDialog
 }: {
   fetching: boolean;
   logedIn: boolean;
   mobileMenuOpened: boolean;
   setMobileMenuOpened: (value: boolean) => any;
+  setLanguageDialog: (value: boolean) => any;
   name: string;
   username: string;
   roles: Role[];
@@ -49,26 +49,29 @@ export default function MobileMenu({
     >
       <Flex height="100%" direction="column" justify="center" gap="15px">
         <Link onClick={() => setMobileMenuOpened(false)} to="/">
-          Domov
+          <LocalizationText>home</LocalizationText>
         </Link>
         <Link onClick={() => setMobileMenuOpened(false)} to="/discover">
-          Proházet kvízy
+          <LocalizationText>discover_quizzes</LocalizationText>
         </Link>
         <Link onClick={() => setMobileMenuOpened(false)} to="/search">
           <Flex align="center" justify="center" gap="2">
-            <MagnifyingGlassIcon height="30px" width="30px" /> Vyhledávání
+            <MagnifyingGlassIcon height="30px" width="30px" />{" "}
+            <LocalizationText>search</LocalizationText>
           </Flex>
         </Link>
         {logedIn ? (
           <>
             <Link onClick={() => setMobileMenuOpened(false)} to="/quiz/random">
               <Flex align="center" justify="center" gap="2">
-                <QuestionMarkIcon height="30px" width="30px" /> Náhodný kvíz
+                <QuestionMarkIcon height="30px" width="30px" />{" "}
+                <LocalizationText>random_quiz</LocalizationText>
               </Flex>
             </Link>
-            <Link onClick={() => setMobileMenuOpened(false)} to="/disvover">
+            <Link onClick={() => setMobileMenuOpened(false)} to="/create">
               <Flex align="center" justify="center" gap="2">
-                <PlusIcon height="30px" width="30px" /> Vytvořit kvíz
+                <PlusIcon height="30px" width="30px" />{" "}
+                <LocalizationText>create_quiz</LocalizationText>
               </Flex>
             </Link>
           </>
@@ -106,55 +109,12 @@ export default function MobileMenu({
                   </Flex>
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content>
-                  <Link to="/me">
-                    <DropdownMenu.Item
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setMobileMenuOpened(false)}
-                    >
-                      <PersonIcon /> Profil
-                    </DropdownMenu.Item>
-                  </Link>
-                  <Link to="/me/favourites">
-                    <DropdownMenu.Item
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setMobileMenuOpened(false)}
-                    >
-                      <StarIcon /> Oblíbené
-                    </DropdownMenu.Item>
-                  </Link>
-                  <Link to="/me/changePassword">
-                    <DropdownMenu.Item
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setMobileMenuOpened(false)}
-                    >
-                      <GearIcon /> Změnit heslo
-                    </DropdownMenu.Item>
-                  </Link>
-
-                  {roles.some((e) => e.name == "ROLE_ADMIN") ? (
-                    <>
-                      <DropdownMenu.Separator />
-
-                      <Link to="/admin">
-                        <DropdownMenu.Item style={{ cursor: "pointer" }}>
-                          <GearIcon /> Admin Panel
-                        </DropdownMenu.Item>
-                      </Link>
-                    </>
-                  ) : null}
-
-                  <DropdownMenu.Separator />
-
-                  <DropdownMenu.Item
-                    style={{ cursor: "pointer" }}
-                    color="red"
-                    onClick={() => {
-                      logout();
-                      setMobileMenuOpened(false);
-                    }}
-                  >
-                    <ExitIcon /> Odhlásit se
-                  </DropdownMenu.Item>
+                  <DropdownMenuContent
+                    setMobileMenuOpened={setMobileMenuOpened}
+                    roles={roles}
+                    logout={logout}
+                    setLanguageDialog={setLanguageDialog}
+                  />
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
             </Flex>
